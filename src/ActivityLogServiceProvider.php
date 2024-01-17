@@ -55,10 +55,10 @@ class ActivityLogServiceProvider extends ServiceProvider
     {
         if ($this->doesntHaveTables()) {
             $timestamp = date('Y_m_d_His', time());
-
+            $extraTimestamp =  date('Y_m_d_His', time() + 10);
             $this->publishes([
                 ACTIVITY_LOG_PATH.'/database/migrations/create_communication_logs_table.stub.php' => database_path('migrations/'.$timestamp.'_create_communication_logs_table.php'),
-                ACTIVITY_LOG_PATH.'/database/migrations/create_activity_logs_table.stub.php' => database_path('migrations/'.$timestamp.'_create_activity_logs_table.php'),
+                ACTIVITY_LOG_PATH.'/database/migrations/create_activity_logs_table.stub.php' => database_path('migrations/'.$extraTimestamp.'_create_activity_logs_table.php'),
             ], 'activity-log-migrations');
         }
 

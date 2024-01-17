@@ -44,7 +44,7 @@ npm run dev
 
 ## Configuration
 
-Most of configuration has been set the fair defaults. However you can review the configuration file at `config/form-builder.php` and adjust as needed
+Most of configuration has been set the fair defaults. However you can review the configuration file at `config/activity-log.php` and adjust as needed
 
 ```
 return [
