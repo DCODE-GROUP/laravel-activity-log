@@ -1,6 +1,6 @@
 <?php
 
-namespace Dcodegroup\ActivityLog\Controllers;
+namespace Dcodegroup\ActivityLog\Http\API\Controllers;
 
 use Illuminate\Routing\Controller;
 use Dcodegroup\ActivityLog\Http\Requests\ExistingRequest;

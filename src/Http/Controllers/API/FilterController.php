@@ -1,6 +1,6 @@
 <?php
 
-namespace Dcodegroup\ActivityLog\Controllers;
+namespace Dcodegroup\ActivityLog\Http\API\Controllers;
 
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Illuminate\Database\Eloquent\Builder;

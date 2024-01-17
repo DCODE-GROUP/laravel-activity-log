@@ -1,6 +1,6 @@
 <?php
 
-namespace Dcodegroup\ActivityLog\Controllers;
+namespace Dcodegroup\ActivityLog\Http\API\Controllers;
 
 use Dcodegroup\ActivityLog\Support\DateRangeFilter;
 use Dcodegroup\ActivityLog\Support\TermFilter;
