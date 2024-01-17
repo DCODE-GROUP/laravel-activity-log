@@ -59,6 +59,7 @@ return [
     'date_format' => 'd.m.Y',
     'default_filter_pagination' => 50,
     'user_model' => '', // eg 'User',
+    'user_table' => 'users', // eg 'users',
     'filter_builder_path' => '', //eg 'FilterBuilder class: App\Support\QueryBuilder\Filters\FilterBuilder'
     'open_modal_event' => 'openModal', // eg 'openModal'
     'reload_event' => 'getActivities',
@@ -90,4 +91,11 @@ src\Support\TermFilter.php
 Located in
 ```
 src\Http\Models\Traits\ActivityLoggable.php
+```
+
+## Using <activity-log-list> or <v-activity-log> to display activity log list. Pass filter as a slot if filter functionality is needed
+```
+      <ActivityLogList :model-id="tender.id" :model-class="tenderModel">
+        <v-filter entity="activity-logs" class="flex flex-row-reverse space-x-2 space-x-reverse"> </v-filter>
+      </ActivityLogList>
 ```
