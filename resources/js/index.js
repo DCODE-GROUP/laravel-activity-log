@@ -4,7 +4,7 @@ window.Vue = Vue;
 import VActivityLog from "./components/VActivityLog.vue";
 import ActivityLogList from "./components/ActivityLogList.vue";
 import ActivityEmail from "./components/ActivityEmail.vue";
-import "../sass/index.pcss";
+import "../sass/index.scss";
 
 const app = window.Vue.createApp({});
 app.component("VActivityLog", VActivityLog);

@@ -14,6 +14,7 @@ return [
     'date_format' => 'd.m.Y',
     'default_filter_pagination' => 50,
     'user_model' => '', // eg 'User',
+    'user_table' => 'users', // eg 'users',
     'filter_builder_path' => '', //eg 'FilterBuilder class: App\Support\QueryBuilder\Filters\FilterBuilder'
     'open_modal_event' => 'openModal', // eg 'openModal'
     'reload_event' => 'getActivities',

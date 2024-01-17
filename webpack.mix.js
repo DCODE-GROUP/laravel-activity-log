@@ -24,7 +24,7 @@ mix.options({
 })
     .setPublicPath('public')
     .js('resources/js/index.js', 'public')
-    .sass('resources/sass/index.pcss', 'public')
+    .sass('resources/sass/index.scss', 'public')
     .vue()
     .version()
     .webpackConfig({

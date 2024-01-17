@@ -1,6 +1,6 @@
 <?php
 
-namespace Dcodegroup\ActivityLog\Controllers\API;
+namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
 use Dcodegroup\ActivityLog\Support\DateRangeFilter;
 use Dcodegroup\ActivityLog\Support\TermFilter;
@@ -15,10 +15,6 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class ActivityLogController extends Controller
 {
-    public function __construct()
-    {
-    }
-
     public function __invoke(ExistingRequest $request): AnonymousResourceCollection
     {
         /** @phpstan-ignore-next-line */
