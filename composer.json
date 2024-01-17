@@ -28,7 +28,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Dcodegroup\\FormBuilder\\": "src"
+            "Dcodegroup\\ActivityLog\\": "src"
         }
     },
     "scripts": {
@@ -49,6 +49,5 @@
         }
     },
     "require-dev": {
-        "laravel/pint": "^0.2.3"
     }
 }

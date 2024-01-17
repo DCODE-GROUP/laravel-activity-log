@@ -28,7 +28,7 @@ class ActivityLogController extends Controller
                 'created_by',
                 AllowedFilter::exact('type'),
                 AllowedFilter::custom('date', new DateRangeFilter('created_at')),
-                AllowedFilter::custom('name', new TermFilter()),
+                AllowedFilter::custom('term', new TermFilter()),
             ])
             ->allowedSorts([
                 'id',

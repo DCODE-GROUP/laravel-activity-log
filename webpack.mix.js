@@ -24,7 +24,7 @@ mix.options({
 })
     .setPublicPath('public')
     .js('resources/js/index.js', 'public')
-    .sass('resources/sass/index.scss', 'public')
+    .sass('resources/sass/index.pcss', 'public')
     .vue()
     .version()
     .webpackConfig({
@@ -33,6 +33,9 @@ mix.options({
             alias: {
                 '@': path.resolve(__dirname, 'resources/js/'),
             },
+        },
+        stats: {
+            children: true,
         },
         optimization: {
             minimize: false

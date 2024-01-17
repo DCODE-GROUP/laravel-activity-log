@@ -1,48 +1,67 @@
 <template>
-  <table class="min-w-full border-separate border-spacing-y-2 text-sm font-medium text-gray-900">
-    <caption class="py-3 text-left font-semibold">
-      {{
-        $t("activity-log.headings.title")
-      }}
-    </caption>
-    <colgroup>
-      <col class="w-2/12" />
-      <col class="w-6/12" />
-      <col class="w-2/12" />
-      <col class="w-2/12" />
-    </colgroup>
-    <tbody class="">
+  <div class="w-full text-sm font-medium text-gray-900">
+    <div class="flex items-center justify-between space-x-2">
+      <div class="flex py-3 text-left font-semibold">
+        {{ $t("tender.labels.activity_log") }}
+      </div>
+      <div class="flex w-[21.875rem] space-x-1">
+        <label class="relative block w-full">
+          <input
+              class="pl-8"
+              type="text"
+              name="name"
+              v-model="searchKey"
+              :placeholder="$t('activity_log.search.placeholder')"
+              v-on:keyup.enter="searchTerm"
+          />
+          <button class="absolute left-2.5 top-1/2 -translate-y-1/2" type="button" @click="searchTerm">
+            <v-icon icon="MagnifyingGlassIcon" classes="text-primary-400 w-4 h-4"></v-icon>
+          </button>
+        </label>
+        <slot />
+      </div>
+
+    </div>
+
+    <table class="min-w-full border-separate border-spacing-y-2">
+      <colgroup>
+        <col class="w-2/12" />
+        <col class="w-6/12" />
+        <col class="w-2/12" />
+        <col class="w-2/12" />
+      </colgroup>
+      <tbody class="">
       <tr :key="activity.id" v-for="activity in activities">
         <td class="bg-slate-50 py-4 pl-3">
-          {{ activity.meta ? activity.meta.action : $t("activity-log.update_entity") }}
+          {{ activity.meta ? activity.meta.action : $t("tender.labels.tender_updated") }}
         </td>
         <td class="whitespace-nowrap bg-slate-50 py-4">
           <div class="">
             <v-icon
-              v-if="activity.communication"
-              classes="w-5 h-5 mr-xsSpace inline cursor-pointer hover:text-blue-400"
-              icon="EnvelopeIcon"
-              @click="openModal(activity)"
+                v-if="activity.communication"
+                classes="w-5 h-5 mr-xsSpace inline cursor-pointer hover:text-blue-400"
+                icon="EnvelopeIcon"
+                @click="openModal(activity)"
             ></v-icon>
             <span v-html="activity.description"></span>
           </div>
         </td>
         <td class="bg-slate-50 py-4">
-          {{ activity?.meta?.created_by_label || $t("activity-log.labels.created_by") }}:
+          {{ activity?.meta?.created_by_label || $t("generic.created_by") }}:
           {{ activity?.meta?.created_by || activity.user }}
         </td>
         <td class="bg-slate-50 px-3 py-4 text-right">
           {{ activity.created_at_date }}
         </td>
       </tr>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
 </template>
 <script>
 import axios from "axios";
 
 export default {
-  name: "ActivityLogList",
   inject: ["bus"],
   props: {
     getUrl: {
@@ -71,30 +90,42 @@ export default {
     },
     modalEvent: {
       type: String,
-      default: 'openModal',
+      default: "openModal",
     },
-    reloadEvent: {
+    filterEvent: {
       type: String,
-      default: 'getActivities',
-    }
+      default: "activityLogFilterChange",
+    },
   },
   data() {
     return {
       loading: false,
       comment: null,
       activities: [],
+      filters: {
+        "filter[term]": null,
+      },
     };
   },
-  mounted() {
-    this.bus.$on(this.reloadEvent, () => {
-      this.getActivityLog();
+  created() {
+    this.bus.$on(this.filterEvent, ({ params }) => {
+      this.filters = Object.assign({}, params, {
+        "filter[term]": this.filters["filter[term]"],
+      });
+      this.$nextTick(() => this.getActivityLog());
     });
+  },
+  mounted() {
     this.getActivityLog();
   },
   methods: {
+    searchTerm() {
+      this.filters[`filter[term]`] = this.searchKey;
+      this.$nextTick(() => this.getActivityLog());
+    },
     openModal(activity) {
       this.bus.$emit(this.modalEvent, {
-        componentName: "ActivityEmail",
+        componentName: "SummaryEmail",
         componentData: {
           content: activity.communication.content,
           to: activity.communication.to,
@@ -107,14 +138,15 @@ export default {
       const params = {
         modelClass: this.modelClass,
         modelId: this.modelId,
+        ...this.filters,
       };
       axios
-        .get(this.getUrl, { params })
-        .then(({ data }) => {
-          this.loading = false;
-          this.convertItems(data);
-        })
-        .catch(console.error);
+          .get(this.getUrl, { params })
+          .then(({ data }) => {
+            this.loading = false;
+            this.convertItems(data);
+          })
+          .catch(console.error);
     },
     convertItems(data) {
       this.activities = data.data;
