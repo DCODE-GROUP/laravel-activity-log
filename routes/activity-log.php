@@ -2,7 +2,7 @@
 
 use Dcodegroup\ActivityLog\Controllers\API\CommentController;
 use Dcodegroup\ActivityLog\Controllers\API\FilterController;
-use Dcodegroup\FormBuilder\Http\Controllers\FormController;
+use Dcodegroup\ActivityLog\Controllers\API\ActivityLogController;
 use Illuminate\Support\Facades\Route;
 
 Route::get(config('activity-log.route_path'), ActivityLogController::class)->name(config('activity-log.route_name'));
