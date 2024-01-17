@@ -1,8 +1,8 @@
 <?php
 
-use Dcodegroup\ActivityLog\Http\API\Controllers\CommentController;
-use Dcodegroup\ActivityLog\Http\API\Controllers\FilterController;
-use Dcodegroup\ActivityLog\Http\API\Controllers\ActivityLogController;
+use Dcodegroup\ActivityLog\Http\Controllers\API\CommentController;
+use Dcodegroup\ActivityLog\Http\Controllers\API\FilterController;
+use Dcodegroup\ActivityLog\Http\Controllers\API\ActivityLogController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/'.config('activity-log.route_path'), ActivityLogController::class)->name(config('activity-log.route_name'));
