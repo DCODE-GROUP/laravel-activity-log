@@ -1,0 +1,79 @@
+
+.activity {
+    @apply flex gap-x-3;
+
+    .activity__user--avatar {
+        @apply flex h-lgSpace w-lgSpace cursor-pointer items-center justify-center rounded-full bg-gray-600 ring-0 ring-neutral-500;
+
+        span {
+            @apply justify-center text-xs tracking-widest text-white;
+        }
+    }
+
+    .content {
+        @apply relative flex-auto;
+
+        .content__text {
+            @apply overflow-hidden rounded-lg pb-12 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-indigo-600;
+
+            .content__text--textarea {
+                @apply block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6;
+            }
+        }
+
+        .content__action {
+            @apply absolute inset-x-0 bottom-0 flex justify-between py-xsSpace pl-smSpace pr-xsSpace;
+
+            .content__action-attachment {
+                @apply flex items-center space-x-5 pl-smSpace;
+            }
+
+            .content__action-button {
+                @apply rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50;
+            }
+        }
+    }
+
+    &--min {
+        @apply mt-smSpace px-xsSpace relative;
+
+        .activity__line {
+            @apply absolute left-px top-5 -bottom-smSpace flex w-6 justify-center;
+
+            div {
+                @apply w-px bg-gray-200;
+            }
+        }
+
+        .activity__user {
+            @apply flex h-2.5 w-2.5 cursor-pointer items-center justify-center rounded-full bg-green-600 ring-0 ring-neutral-500 mt-1.5;
+        }
+
+        .activity__user--avatar {
+            @apply flex h-lgSpace w-lgSpace cursor-pointer items-center justify-center rounded-full bg-gray-600 ring-0 ring-neutral-500 -ml-1.5 mt-0;
+
+            span {
+                @apply justify-center text-xs tracking-widest text-white;
+            }
+        }
+
+        .content {
+            @apply relative flex-auto;
+
+            .content__status {
+                @apply flex min-w-0 flex-1 justify-between space-x-4 text-gray-500 text-sm  py-0.5;
+
+                .content__status--meta {
+                }
+
+                .content__status--time {
+                    @apply whitespace-nowrap text-right;
+                }
+            }
+
+            .content__comment {
+                @apply mt-2xsSpace text-sm text-gray-700 px-1;
+            }
+        }
+    }
+}
