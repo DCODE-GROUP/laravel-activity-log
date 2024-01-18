@@ -28,18 +28,20 @@
       </div>
     </div>
     <div class="flex items-center justify-end space-x-2 pt-4">
-      <div class="flex w-[21.875rem] justify-end space-x-1">
-        <label class="block">
+      <div class="flex w-[21.875rem] space-x-1">
+        <label class="relative block w-full">
           <input
-              class="block w-full rounded-md border border-tertiary-200 px-xsSpace py-2xsSpace !text-sm"
+              class="pl-8"
               type="text"
               name="name"
               v-model="searchKey"
               :placeholder="$t('activity_log.search.placeholder')"
               v-on:keyup.enter="searchTerm"
           />
+        <button class="absolute left-2.5 top-1/2 -translate-y-1/2" type="button" @click="searchTerm">
+          <v-icon icon="MagnifyingGlassIcon" classes="text-primary-400 w-4 h-4"></v-icon>
+        </button>
         </label>
-        <button class="btn-secondary btn-sm" type="button" @click="searchTerm">Search</button>
       </div>
       <slot/>
     </div>
