@@ -2,15 +2,14 @@
 
 namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
+use Dcodegroup\ActivityLog\Http\Requests\ExistingRequest;
+use Dcodegroup\ActivityLog\Models\ActivityLog;
+use Dcodegroup\ActivityLog\Resources\ActivityLog as ActivityLogResource;
 use Dcodegroup\ActivityLog\Support\DateRangeFilter;
 use Dcodegroup\ActivityLog\Support\TermFilter;
-use Illuminate\Routing\Controller;
-use Dcodegroup\ActivityLog\Http\Requests\ExistingRequest;
-use Dcodegroup\ActivityLog\Resources\ActivityLog as ActivityLogResource;
-use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Routing\Controller;
 use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class ActivityLogController extends Controller

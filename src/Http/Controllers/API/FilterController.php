@@ -4,9 +4,9 @@ namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Routing\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 
 class FilterController extends Controller

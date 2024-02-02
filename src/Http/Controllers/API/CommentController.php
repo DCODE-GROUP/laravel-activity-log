@@ -2,10 +2,10 @@
 
 namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
-use Illuminate\Routing\Controller;
 use Dcodegroup\ActivityLog\Http\Requests\ExistingRequest;
-use Dcodegroup\ActivityLog\Resources\ActivityLogCollection;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
+use Dcodegroup\ActivityLog\Resources\ActivityLogCollection;
+use Illuminate\Routing\Controller;
 
 class CommentController extends Controller
 {
@@ -19,8 +19,8 @@ class CommentController extends Controller
             ActivityLog::query()->create([
                 'activitiable_type' => $modelClass,
                 'activitiable_id' => $modelId,
-                'description' => "add a comment" . ' in ' . $baseClass . ' history </br>'
-                    . $request->input('comment'),
+                'description' => 'add a comment'.' in '.$baseClass.' history </br>'
+                    .$request->input('comment'),
             ]);
         }
 
