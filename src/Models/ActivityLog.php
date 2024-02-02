@@ -43,6 +43,11 @@ class ActivityLog extends Model
         'created_by',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'diff' => 'array',
         'meta' => 'array',
