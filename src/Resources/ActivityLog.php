@@ -15,7 +15,7 @@ class ActivityLog extends JsonResource
     {
         return [
             'id' => $this->resource->id,
-            'user' => $this->resource->user?->full_name,
+            'user' => $this->resource->loadMissing('user')->user?->full_name,
             'description' => $this->resource->description,
             'activitiable_type' => $this->resource->activitiable_type,
             'type' => $this->resource->type,
