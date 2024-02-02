@@ -46,7 +46,7 @@ npm run dev
 
 Most of configuration has been set the fair defaults. However you can review the configuration file at `config/activity-log.php` and adjust as needed
 
-```
+```php
 return [
     'middleware' => ['web', 'auth'],
     'layout_path' => 'layouts.app',
@@ -93,8 +93,8 @@ Located in
 src\Http\Models\Traits\ActivityLoggable.php
 ```
 
-## Using <activity-log-list> or <v-activity-log> to display activity log list. Pass filter as a slot if filter functionality is needed
-```
+Using `<activity-log-list>` or `<v-activity-log>` to display activity log list. Pass filter as a slot if filter functionality is needed
+```html
       <ActivityLogList :model-id="tender.id" :model-class="tenderModel">
         <v-filter entity="activity-logs" class="flex flex-row-reverse space-x-2 space-x-reverse"> </v-filter>
       </ActivityLogList>
