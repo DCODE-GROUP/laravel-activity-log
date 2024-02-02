@@ -1,1 +1,11 @@
 pint.cache
+composer.lock
+package-lock.json
+vendor
+coverage
+.phpunit.result.cache
+.idea
+.php_cs.cache
+tests/temp
+.php-cs-fixer.cache
+build
