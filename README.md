@@ -16,6 +16,14 @@ Then run the install command.
 php artisan activity-log:install
 ```
 
+Add the publish command to your composer.json 
+
+```yaml
+  "post-autoload-dump": [
+        "@php artisan vendor:publish --tag=activity-log-assets --force"
+    ]
+```
+
 This will publish the configuration file and the migration file.
 
 Run the migrations
@@ -39,7 +47,7 @@ There is a new generated file under `public/vendor/activity-log/index.css`. You 
 Run the npm build (dev/prod)
 
 ```bash
-npm run dev
+npm run prod
 ```
 
 ## Configuration

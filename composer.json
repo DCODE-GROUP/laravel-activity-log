@@ -33,10 +33,7 @@
     },
     "scripts": {
         "psalm": "vendor/bin/psalm",
-        "format": "vendor/bin/pint",
-        "post-autoload-dump": [
-            "@php artisan vendor:publish --tag=activity-log-assets --force"
-        ]
+        "format": "vendor/bin/pint"
     },
     "config": {
         "sort-packages": true
