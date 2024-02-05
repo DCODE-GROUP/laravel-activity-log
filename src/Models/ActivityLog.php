@@ -2,7 +2,7 @@
 
 namespace Dcodegroup\ActivityLog\Models;
 
-use App\Support\Traits\LastModifiedBy;
+use Dcodegroup\ActivityLog\Models\Traits\LastModifiedBy;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
