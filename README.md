@@ -19,7 +19,8 @@ php artisan activity-log:install
 Add the publish command to your composer.json 
 
 ```yaml
-  "post-autoload-dump": [
+  "post-update-cmd": [
+        ...
         "@php artisan vendor:publish --tag=activity-log-assets --force"
     ]
 ```
