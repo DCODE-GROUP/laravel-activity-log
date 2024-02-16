@@ -27,9 +27,10 @@ class InstallCommand extends Command
      */
     public function handle()
     {
-        if (! Schema::hasTable('activity_logs') && ! DB::table('migrations')->where('migration', 'like', '%create_activity_logs_table')->exists()) {
+        if (app()->environment('local')) {
             $this->comment('Publishing Activity Log Migrations');
-            $this->callSilent('vendor:publish', ['--tag' => 'activity-log-migrations']);
+                $this->callSilent('vendor:publish', ['--tag' => 'activity-log-migrations']);
+
         }
 
         $this->comment('Publishing Activity Log Configuration...');
