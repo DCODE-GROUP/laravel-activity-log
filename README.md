@@ -1,4 +1,4 @@
-# Laravel Form Builder
+# Laravel Activity Log
 
 This package provides the standard activity log functionality used in most projects.
 
