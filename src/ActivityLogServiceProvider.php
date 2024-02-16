@@ -3,7 +3,6 @@
 namespace Dcodegroup\ActivityLog;
 
 use Dcodegroup\ActivityLog\Commands\InstallCommand;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;

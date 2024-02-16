@@ -3,8 +3,6 @@
 namespace Dcodegroup\ActivityLog\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class InstallCommand extends Command
 {
@@ -29,7 +27,7 @@ class InstallCommand extends Command
     {
         if (app()->environment('local')) {
             $this->comment('Publishing Activity Log Migrations');
-                $this->callSilent('vendor:publish', ['--tag' => 'activity-log-migrations']);
+            $this->callSilent('vendor:publish', ['--tag' => 'activity-log-migrations']);
 
         }
 
