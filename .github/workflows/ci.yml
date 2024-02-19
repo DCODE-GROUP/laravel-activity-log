@@ -7,7 +7,7 @@ on:
 
 jobs:
   php-cs-fixer:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     permissions:
       # Give the default GITHUB_TOKEN write permission to commit and push the
@@ -42,7 +42,7 @@ jobs:
 
   phpstan:
     name: phpstan
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: true
