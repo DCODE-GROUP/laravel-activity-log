@@ -62,18 +62,11 @@ class ActivityLogServiceProvider extends ServiceProvider
     protected function setupMigrations()
     {
         if ($this->app->environment('local')) {
-            if (! Schema::hasTable('activity_logs')) {
+            if (! Schema::hasTable('activity_logs') && ! Schema::hasTable('communication_logs')) {
                 $this->publishes([
-                    __DIR__.'/../database/migrations/create_activity_logs_table.stub.php' => $this->app->databasePath('migrations/'.date('Y_m_d_His', time()).'_create_activity_logs_table.php'),
+                    __DIR__.'/../database/migrations/create_activity_logs_tables.stub.php' => $this->app->databasePath('migrations/'.date('Y_m_d_His', time()).'_create_activity_logs_tables.php'),
                 ], 'activity-log-migrations');
             }
-
-            if (! Schema::hasTable('communication_logs')) {
-                $this->publishes([
-                    __DIR__.'/../database/migrations/create_communication_logs_table.stub.php' => $this->app->databasePath('migrations/'.date('Y_m_d_His', time()).'_create_communication_logs_table.php'),
-                ], 'activity-log-migrations');
-            }
-
         }
     }
 
