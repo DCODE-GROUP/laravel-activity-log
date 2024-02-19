@@ -103,19 +103,20 @@ They are
 
 [example.com/activity-logs] Which is where you will form index. This is by default protected auth middleware but you can modify in the configuration. This is where you want to link to in your admin and possibly a new window
 
-## Override supports
+## QueryBuilder Filters
 
 Located in
 ```
-src\Support\DateRangeFilter.php
-src\Support\TermFilter.php
+src\Support\QueryBuilder\Filters\DateRangeFilter.php
+src\Support\QueryBuilder\Filters\TermFilter.php
 ```
 
 ## Traits for activity log model
 
 Located in
 ```
-src\Http\Models\Traits\ActivityLoggable.php
+src\Support\Traits\ActivityLoggable.php
+src\Support\Traits\LastModifiedBy.php
 ```
 
 Using `<activity-log-list>` or `<v-activity-log>` to display activity log list. Pass filter as a slot if filter functionality is needed

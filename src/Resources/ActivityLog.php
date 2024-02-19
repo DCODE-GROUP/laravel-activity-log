@@ -3,6 +3,7 @@
 namespace Dcodegroup\ActivityLog\Resources;
 
 use Dcodegroup\ActivityLog\Models\ActivityLog as ActivityLogModel;
+use Dcodegroup\ActivityLog\Models\CommunicationLog;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -28,7 +29,7 @@ class ActivityLog extends JsonResource
 
     private function getCommunicationLog(): ?array
     {
-        if (! $this->resource->communicationLog) {
+        if (! $this->resource->communicationLog instanceof CommunicationLog) {
             return null;
         }
 
