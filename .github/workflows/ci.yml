@@ -39,3 +39,36 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Fix PHP Syntax Styling
+
+  phpstan:
+    name: phpstan
+    runs-on: self-hosted
+
+    strategy:
+      fail-fast: true
+      matrix:
+        php: [ '8.3' ]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: "dom, curl, libxml, mbstring, zip, fileinfo, redis, bcmath"
+          coverage: none
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      - name: Install Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress
+        env:
+          APP_ENV: testing
+
+      - name: Run PHPStan
+        run: ./vendor/bin/phpstan --error-format=github
