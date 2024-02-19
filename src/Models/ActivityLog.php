@@ -3,7 +3,7 @@
 namespace Dcodegroup\ActivityLog\Models;
 
 use Carbon\Carbon;
-use Dcodegroup\ActivityLog\Models\Traits\LastModifiedBy;
+use Dcodegroup\ActivityLog\Support\Traits\LastModifiedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;

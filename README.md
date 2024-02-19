@@ -33,6 +33,24 @@ Run the migrations
 php artisan migrate
 ```
 
+## User Model
+
+Add the following contract to the `User` model.
+
+```php  
+
+use Dcodegroup\ActivityLog\Contracts\HasActivityUser;
+
+class User extends Authenticatable implements HasActivityUser
+{
+...
+
+public function getActivityLogUserName(): string
+{
+    return $this->name;
+}
+```
+
 #### JS
 
 Include this built file to your layouts:

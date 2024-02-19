@@ -1,6 +1,6 @@
 <?php
 
-namespace Dcodegroup\ActivityLog\Models\Traits;
+namespace Dcodegroup\ActivityLog\Support\Traits;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;

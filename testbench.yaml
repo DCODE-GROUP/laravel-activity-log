@@ -1,0 +1,8 @@
+providers:
+  - Dcodegroup\ActivityLog\ActivityLogServiceProvider
+  # - Workbench\App\Providers\WorkbenchServiceProvider
+
+#workbench:
+#  discovers:
+#    web: true
+#    views: true
