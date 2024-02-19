@@ -26,7 +26,7 @@
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": "^8.2||^8.3",
         "laravel/framework": "^10.0 || ^11.0",
         "nesbot/carbon": "^2.72",
         "spatie/laravel-query-builder": "^4.0.4 || ^5.7"
@@ -62,17 +62,6 @@
     },
     "scripts": {
         "analyse": "vendor/bin/phpstan analyse",
-        "format": "vendor/bin/pint",
-        "post-autoload-dump": "@composer run prepare",
-        "prepare": "@php vendor/bin/testbench package:discover --ansi",
-        "build": [
-            "@composer run prepare",
-            "@php vendor/bin/testbench workbench:build --ansi"
-        ],
-        "serve": [
-            "Composer\\Config::disableProcessTimeout",
-            "@composer run build",
-            "@php vendor/bin/testbench serve"
-        ]
+        "format": "vendor/bin/pint"
     }
 }

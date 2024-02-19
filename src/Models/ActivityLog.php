@@ -13,17 +13,22 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $id
  * @property Carbon $created_at
  * @property CommunicationLog|null $communicationLog
+ * @property string $activitiable_type
+ * @property int $activitiable_id
+ * @property string $type
+ * @property array $meta
+ * @property string $description
  */
 class ActivityLog extends Model
 {
     use LastModifiedBy;
     use SoftDeletes;
 
-    const TYPE_GENERAL = 'General';
+    final public const TYPE_GENERAL = 'General';
 
-    const TYPE_SMS = 'Sms';
+    final public const TYPE_SMS = 'Sms';
 
-    const TYPE_EMAIL = 'Email';
+    final public const TYPE_EMAIL = 'Email';
 
     /**
      * The attributes that are mass assignable.
