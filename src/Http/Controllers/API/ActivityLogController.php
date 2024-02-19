@@ -4,11 +4,9 @@ namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
 use Dcodegroup\ActivityLog\Http\Requests\ExistingRequest;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
-use Dcodegroup\ActivityLog\Resources\ActivityLog as ActivityLogResource;
 use Dcodegroup\ActivityLog\Resources\ActivityLogCollection;
 use Dcodegroup\ActivityLog\Support\DateRangeFilter;
 use Dcodegroup\ActivityLog\Support\TermFilter;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
