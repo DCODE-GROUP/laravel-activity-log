@@ -47,7 +47,7 @@
     </div>
     <div
         v-show="loading"
-        :aria-label="{{ $t('activity-log.words.loading') }}"
+        :aria-label="$t('activity-log.words.loading')"
         role="status"
         class="flex h-full items-center justify-center space-x-2 py-8"
     >
