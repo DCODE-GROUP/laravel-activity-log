@@ -17,3 +17,4 @@ parameters:
     ignoreErrors:
         - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder::allowedFilters#'
         - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Model::getActivityLogUserName#'
+        - '#Class App\\Models\\User not found#'
