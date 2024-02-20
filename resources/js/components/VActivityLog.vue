@@ -47,12 +47,12 @@
     </div>
     <div
         v-show="loading"
-        aria-label="Loading..."
+        :aria-label="{{ $t('activity-log.words.loading') }}"
         role="status"
         class="flex h-full items-center justify-center space-x-2 py-8"
     >
       <v-icon icon="ArrowPathIcon" class="h-lgSpace w-lgSpace animate-spin"/>
-      <span class="text-lg font-medium text-tertiary-500">Loading . . .</span>
+      <span class="text-lg font-medium text-tertiary-500">{{ $t('activity-log.words.loading') }}</span>
     </div>
     <div class="activity activity--min" v-for="activity in activities">
       <div class="activity__user activity__user--avatar">
