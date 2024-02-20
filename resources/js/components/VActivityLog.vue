@@ -143,6 +143,7 @@ export default {
       this.filters[`filter[term]`] = this.searchKey;
       this.$nextTick(() => this.getActivityLog());
     },
+
     getActivityLog() {
       this.loading = true;
       this.activities = [];
