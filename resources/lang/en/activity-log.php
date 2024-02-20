@@ -30,7 +30,7 @@ return [
     ],
 
     'words' => [
-      'loading' => 'Loading . . .',
+        'loading' => 'Loading . . .',
     ],
 
 ];
