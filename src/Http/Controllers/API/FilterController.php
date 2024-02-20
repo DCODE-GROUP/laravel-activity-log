@@ -2,7 +2,6 @@
 
 namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
-use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

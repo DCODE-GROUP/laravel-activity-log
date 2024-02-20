@@ -3,7 +3,6 @@
 namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
 use Dcodegroup\ActivityLog\Http\Requests\ExistingRequest;
-use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Resources\ActivityLogCollection;
 use Illuminate\Routing\Controller;
 
