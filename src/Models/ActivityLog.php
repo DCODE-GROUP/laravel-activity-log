@@ -71,7 +71,7 @@ class ActivityLog extends Model
         return $this->belongsTo(CommunicationLog::class, 'communication_log_id');
     }
 
-    public static function getAvailableTypes(): array
+    public function getAvailableTypes(): array
     {
         return [
             [
