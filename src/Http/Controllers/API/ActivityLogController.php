@@ -3,7 +3,6 @@
 namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
 use Dcodegroup\ActivityLog\Http\Requests\ExistingRequest;
-use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Resources\ActivityLogCollection;
 use Dcodegroup\ActivityLog\Support\QueryBuilder\Filters\DateRangeFilter;
 use Dcodegroup\ActivityLog\Support\QueryBuilder\Filters\TermFilter;
@@ -15,8 +14,11 @@ class ActivityLogController extends Controller
 {
     public function __invoke(ExistingRequest $request): ActivityLogCollection
     {
-        $query = QueryBuilder::for(ActivityLog::class)
-            ->with(['user', 'communicationLog'])
+        $query = QueryBuilder::for(config('activity-log.activity_log_model'))
+            ->with([
+                config('activity-log.user_relationship'),
+                config('activity-log.communication_log_relationship'),
+            ])
             ->allowedFilters([
                 'created_by',
                 AllowedFilter::exact('type'),

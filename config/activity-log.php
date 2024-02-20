@@ -43,7 +43,7 @@ return [
    */
 
     'binding' => env('LARAVEL_ACTIVITY_LOG_MODEL_BINDING', 'activity-logs'),
-    'model' => ActivityLog::class,
+    'activity_log_model' => ActivityLog::class,
 
     /*
      |--------------------------------------------------------------------------
@@ -77,8 +77,21 @@ return [
      | eg 'User'
     */
 
+    'user_relationship' => env('LARAVEL_ACTIVITY_LOG_USER_RELATIONSHIP', 'user'),
     'user_model' => \App\Models\User::class,
     'user_table' => env('LARAVEL_ACTIVITY_LOG_USERS_TABLE', 'users'),
+
+    /*
+     |--------------------------------------------------------------------------
+     | Communication log
+     |--------------------------------------------------------------------------
+     |
+     |
+    */
+
+    'communication_log_model' => \Dcodegroup\ActivityLog\Models\CommunicationLog::class,
+    'communication_log_table' => env('LARAVEL_ACTIVITY_LOG_COMMUNICATION_LOG_TABLE', 'communication_logs'),
+    'communication_log_relationship' => env('LARAVEL_ACTIVITY_LOG_COMMUNICATION_LOG_RELATIONSHIP', 'communicationLog'),
 
     /*
      |--------------------------------------------------------------------------
