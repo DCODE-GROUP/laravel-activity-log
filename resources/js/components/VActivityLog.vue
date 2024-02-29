@@ -89,11 +89,11 @@
 </template>
 <script>
 import axios from "axios";
+import VIcon from "./VIcon.vue";
 
 export default {
-  name: "VActivityLog",
-  components: {},
   inject: ["bus"],
+  components: { VIcon },
   props: {
     getUrl: {
       type: String,

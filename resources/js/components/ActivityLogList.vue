@@ -70,9 +70,11 @@
 </template>
 <script>
 import axios from "axios";
+import VIcon from "./VIcon.vue";
 
 export default {
   inject: ["bus"],
+  components: { VIcon },
   props: {
     getUrl: {
       type: String,

@@ -9,6 +9,7 @@
   "name": "activity-log",
   "devDependencies": {
     "@babel/eslint-parser": "^7.23.0",
+    "@heroicons/vue": "^2.1.1",
     "@vue/compiler-sfc": "^3.2.33",
     "autoprefixer": "10.4.5",
     "axios": "^0.21.1",
