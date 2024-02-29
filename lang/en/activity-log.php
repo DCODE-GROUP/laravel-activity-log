@@ -30,7 +30,7 @@ return [
     ],
 
     'buttons' => [
-      'save_comment' => 'Comment',
+        'save_comment' => 'Comment',
     ],
 
     'placeholders' => [
