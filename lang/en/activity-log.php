@@ -30,7 +30,7 @@ return [
     ],
 
     'placeholders' => [
-      'add_comment' => 'Add your comment...',
+        'add_comment' => 'Add your comment...',
     ],
 
     'words' => [
