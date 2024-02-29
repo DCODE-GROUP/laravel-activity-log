@@ -6,7 +6,8 @@
         {{ $t("activity-log::headings.title") }}<br />
         {{ $t("activity-log::activity-log.headings.title") }}<br />
         {{ $t("activity-log-translations::activity-log.headings.title") }}<br />
-        {{ $t("activity-log.headings.title") }}
+        {{ $t("activity-log.headings.title") }}<br />
+        {{ $t("vendor.dcodegroup.activity-log.headings.title")
       </div>
       <div class="flex w-[21.875rem] space-x-1">
         <label class="relative block w-full">
