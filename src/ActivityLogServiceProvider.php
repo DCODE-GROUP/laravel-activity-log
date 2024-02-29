@@ -14,6 +14,10 @@ class ActivityLogServiceProvider extends ServiceProvider
         $this->offerPublishing();
         $this->registerRoutes();
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'activity-log-translations');
+
+        $this->publishes([
+            __DIR__.'/../lang' => $this->app->langPath('vendor/dcodegroup/activity-log'),
+        ]);
         $this->registerCommands();
 
         Route::model(config('activity-log.binding'), config('activity-log.model'));
