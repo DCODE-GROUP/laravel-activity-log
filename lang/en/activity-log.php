@@ -29,6 +29,10 @@ return [
         'update_entity' => 'update an entity',
     ],
 
+    'buttons' => [
+      'save_comment' => 'Comment',
+    ],
+
     'placeholders' => [
         'add_comment' => 'Add your comment...',
     ],
