@@ -127,10 +127,15 @@ export default {
     };
   },
   created() {
-    this.bus.$on(this.filterEvent, ({params}) => {
+    this.bus.$on("activityLogTableFilterChange", ({ params }) => {
       this.filters = Object.assign({}, params, {
         "filter[term]": this.filters["filter[term]"],
       });
+      this.$nextTick(() => this.getActivityLog());
+    });
+
+    this.bus.$on("activityLogTermChanged", ({ term, name }) => {
+      this.filters[`filter[${name}]`] = term;
       this.$nextTick(() => this.getActivityLog());
     });
   },
