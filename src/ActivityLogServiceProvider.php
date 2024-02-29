@@ -9,7 +9,6 @@ use Illuminate\Support\ServiceProvider;
 
 class ActivityLogServiceProvider extends ServiceProvider
 {
-
     public function boot(): void
     {
         $this->offerPublishing();
@@ -67,7 +66,6 @@ class ActivityLogServiceProvider extends ServiceProvider
             }
         }
     }
-
 
     protected function registerRoutes()
     {
