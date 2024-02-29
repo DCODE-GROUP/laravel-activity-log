@@ -6,6 +6,8 @@
         {{ $t("activity-log::headings.title") }}<br />
         {{ $t("activity-log::activity-log.headings.title") }}<br />
         {{ $t("activity-log-translations::activity-log.headings.title") }}<br />
+        {{ $t("activity-log::headings.title") }}<br />
+        {{ $t("activity-log-translations::headings.title") }}<br />
         {{ $t("activity-log.headings.title") }}<br />
         {{ $t("vendor.dcodegroup.activity-log.headings.title") }}
       </div>
