@@ -4,6 +4,8 @@
       <div class="flex py-3 text-left font-semibold">
         {{ $t("activity-log-translations::headings.title") }}<br />
         {{ $t("activity-log::headings.title") }}<br />
+        {{ $t("activity-log::activity-log.headings.title") }}<br />
+        {{ $t("activity-log-translations::activity-log.headings.title") }}<br />
         {{ $t("activity-log.headings.title") }}
       </div>
       <div class="flex w-[21.875rem] space-x-1">
