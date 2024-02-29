@@ -72,7 +72,7 @@ class ActivityLogServiceProvider extends ServiceProvider
 
     protected function registerResources()
     {
-        $this->loadTranslationsFrom(ACTIVITY_LOG_PATH.'/resources/lang', 'activity-log-translations');
+        $this->loadTranslationsFrom(ACTIVITY_LOG_PATH.'/lang', 'activity-log-translations');
     }
 
     protected function registerRoutes()
