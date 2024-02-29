@@ -2,7 +2,7 @@
   <div class="w-full text-sm font-medium text-gray-900">
     <div class="flex items-center justify-between space-x-2">
       <div class="flex py-3 text-left font-semibold">
-        {{ $t("tender.labels.activity_log") }}
+        {{ $t("tender.fields.activity_log") }}
       </div>
       <div class="flex w-[21.875rem] space-x-1">
         <label class="relative block w-full">
@@ -33,7 +33,7 @@
       <tbody class="">
       <tr :key="activity.id" v-for="activity in activities">
         <td class="bg-slate-50 py-4 pl-3">
-          {{ activity.meta ? activity.meta.action : $t("tender.labels.tender_updated") }}
+          {{ activity.meta ? activity.meta.action : $t("activity-log.fields.tender_updated") }}
         </td>
         <td class="whitespace-nowrap bg-slate-50 py-4">
           <div class="">

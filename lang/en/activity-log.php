@@ -7,7 +7,7 @@ return [
         'page_title' => 'Activity Log - Page',
     ],
 
-    'labels' => [
+    'fields' => [
         'user' => 'User',
         'type' => 'Type',
         'description' => 'Description',
@@ -27,6 +27,10 @@ return [
         'create' => ' create a ',
         'add_comment' => ' add a comment',
         'update_entity' => 'update an entity',
+    ],
+
+    'placeholders' => [
+      'add_comment' => 'Add your comment...',
     ],
 
     'words' => [

@@ -9,3 +9,4 @@ tests/temp
 .php-cs-fixer.cache
 build
 node_modules
+package-lock.json

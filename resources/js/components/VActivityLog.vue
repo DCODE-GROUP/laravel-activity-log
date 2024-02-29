@@ -11,7 +11,7 @@
               class="content__text--textarea focus:ring-0"
               v-model="comment"
               rows="3"
-              placeholder="Add your comment..."
+              :placeholder="$t('activity-log.placeholders.add_comment')"
           ></textarea>
         </div>
 
