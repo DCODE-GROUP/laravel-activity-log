@@ -2,7 +2,7 @@
   <div class="w-full text-sm font-medium text-gray-900">
     <div class="flex items-center justify-between space-x-2">
       <div class="flex py-3 text-left font-semibold">
-        {{ $t("tender.fields.activity_log") }}
+        {{ $t("activity-log.headings.activity_log") }}
       </div>
       <div class="flex w-[21.875rem] space-x-1">
         <label class="relative block w-full">
