@@ -9,14 +9,12 @@ use Illuminate\Support\ServiceProvider;
 
 class ActivityLogServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap the application events.
-     */
-    public function boot()
+
+    public function boot(): void
     {
         $this->offerPublishing();
         $this->registerRoutes();
-        $this->registerResources();
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'activity-log-translations');
         $this->registerCommands();
 
         Route::model(config('activity-log.binding'), config('activity-log.model'));
@@ -70,10 +68,6 @@ class ActivityLogServiceProvider extends ServiceProvider
         }
     }
 
-    protected function registerResources()
-    {
-        $this->loadTranslationsFrom(ACTIVITY_LOG_PATH.'/lang', 'activity-log-translations');
-    }
 
     protected function registerRoutes()
     {
