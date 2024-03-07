@@ -19,11 +19,11 @@ class CommentController extends Controller
             ActivityLog::query()->create([
                 'activitiable_type' => $modelClass,
                 'activitiable_id' => $modelId,
-                'description' => "add a comment" . ' in ' . $baseClass . ' history </br>'
+                'description' => " add a comment" . ' in ' . $baseClass . ' history </br>'
                     . $request->input('comment'),
             ]);
         }
 
-        return new ActivityLogCollection($model->activityLogs()->orderByDesc('created_at')->get());
+        return new ActivityLogCollection($model->activityLogs()->with(['user', 'communicationLog'])->orderByDesc('created_at')->get());
     }
 }
