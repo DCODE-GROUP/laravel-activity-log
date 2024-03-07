@@ -1970,7 +1970,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 676:
+/***/ 104:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -18948,7 +18948,7 @@ registerRuntimeCompiler(compileToFunction);
 
 
 
-;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/VActivityLog.vue?vue&type=template&id=4e648fe0
+;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/VActivityLog.vue?vue&type=template&id=a0250214
 
 var _hoisted_1 = {
   "class": "pt-lgSpace"
@@ -18976,10 +18976,10 @@ var _hoisted_8 = {
   "class": "flex items-center justify-end space-x-2 pt-4"
 };
 var _hoisted_9 = {
-  "class": "flex w-[21.875rem] justify-end space-x-1"
+  "class": "flex w-[21.875rem] space-x-1"
 };
 var _hoisted_10 = {
-  "class": "block"
+  "class": "relative block w-full"
 };
 var _hoisted_11 = ["placeholder"];
 var _hoisted_12 = {
@@ -19013,7 +19013,7 @@ var _hoisted_20 = ["innerHTML"];
 var _hoisted_21 = {
   "class": "content__status--time"
 };
-function VActivityLogvue_type_template_id_4e648fe0_render(_ctx, _cache, $props, $setup, $data, $options) {
+function VActivityLogvue_type_template_id_a0250214_render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_v_icon = resolveComponent("v-icon");
   return openBlock(), createElementBlock("div", _hoisted_1, [$props.allowComment ? (openBlock(), createElementBlock("div", _hoisted_2, [createBaseVNode("div", _hoisted_3, [createBaseVNode("span", null, toDisplayString($props.currentUser.charAt(0).toUpperCase() + $props.currentUser.charAt(1).toUpperCase()), 1)]), createBaseVNode("div", _hoisted_4, [createBaseVNode("div", _hoisted_5, [withDirectives(createBaseVNode("textarea", {
     onKeyup: _cache[0] || (_cache[0] = withKeys(function () {
@@ -19033,7 +19033,7 @@ function VActivityLogvue_type_template_id_4e648fe0_render(_ctx, _cache, $props, 
       return $options.addComment && $options.addComment.apply($options, arguments);
     })
   }, toDisplayString(_ctx.$t("generic.buttons.comment")), 3)])])])) : createCommentVNode("", true), createBaseVNode("div", _hoisted_8, [createBaseVNode("div", _hoisted_9, [createBaseVNode("label", _hoisted_10, [withDirectives(createBaseVNode("input", {
-    "class": "block w-full rounded-md border border-tertiary-200 px-xsSpace py-2xsSpace !text-sm",
+    "class": "pl-8",
     type: "text",
     name: "name",
     "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
@@ -19043,13 +19043,16 @@ function VActivityLogvue_type_template_id_4e648fe0_render(_ctx, _cache, $props, 
     onKeyup: _cache[4] || (_cache[4] = withKeys(function () {
       return $options.searchTerm && $options.searchTerm.apply($options, arguments);
     }, ["enter"]))
-  }, null, 40, _hoisted_11), [[vModelText, $data.searchKey]])]), createBaseVNode("button", {
-    "class": "btn-secondary btn-sm",
+  }, null, 40, _hoisted_11), [[vModelText, $data.searchKey]]), createBaseVNode("button", {
+    "class": "absolute left-2.5 top-1/2 -translate-y-1/2",
     type: "button",
     onClick: _cache[5] || (_cache[5] = function () {
       return $options.searchTerm && $options.searchTerm.apply($options, arguments);
     })
-  }, "Search")]), renderSlot(_ctx.$slots, "default")]), withDirectives(createBaseVNode("div", _hoisted_12, [createVNode(_component_v_icon, {
+  }, [createVNode(_component_v_icon, {
+    icon: "MagnifyingGlassIcon",
+    classes: "text-primary-400 w-4 h-4"
+  })])])]), renderSlot(_ctx.$slots, "default")]), withDirectives(createBaseVNode("div", _hoisted_12, [createVNode(_component_v_icon, {
     icon: "ArrowPathIcon",
     "class": "h-lgSpace w-lgSpace animate-spin"
   }), _hoisted_13], 512), [[vShow, $data.loading]]), (openBlock(true), createElementBlock(Fragment, null, renderList($data.activities, function (activity) {
@@ -19058,7 +19061,7 @@ function VActivityLogvue_type_template_id_4e648fe0_render(_ctx, _cache, $props, 
     }, null, 8, _hoisted_20)]), createBaseVNode("div", _hoisted_21, toDisplayString(activity.created_at), 1)])])]);
   }), 256))]);
 }
-;// CONCATENATED MODULE: ./resources/js/components/VActivityLog.vue?vue&type=template&id=4e648fe0
+;// CONCATENATED MODULE: ./resources/js/components/VActivityLog.vue?vue&type=template&id=a0250214
 
 // EXTERNAL MODULE: ./node_modules/axios/index.js
 var axios = __webpack_require__(669);
@@ -19082,7 +19085,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     commentUrl: {
       type: String,
-      "default": "api/generic/activity-logs/comments"
+      "default": "/api/generic/activity-logs/comments"
     },
     modelClass: {
       type: String,
@@ -19199,7 +19202,7 @@ var exportHelper = __webpack_require__(744);
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,exportHelper/* default */.Z)(VActivityLogvue_type_script_lang_js, [['render',VActivityLogvue_type_template_id_4e648fe0_render]])
+const __exports__ = /*#__PURE__*/(0,exportHelper/* default */.Z)(VActivityLogvue_type_script_lang_js, [['render',VActivityLogvue_type_template_id_a0250214_render]])
 
 /* harmony default export */ const VActivityLog = (__exports__);
 ;// CONCATENATED MODULE: ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/components/ActivityLogList.vue?vue&type=template&id=d70deb72
@@ -19877,7 +19880,7 @@ module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"P
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	__webpack_require__.O(undefined, [826], () => (__webpack_require__(676)))
+/******/ 	__webpack_require__.O(undefined, [826], () => (__webpack_require__(104)))
 /******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, [826], () => (__webpack_require__(773)))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
