@@ -2,24 +2,23 @@
 
 namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
-use Dcodegroup\ActivityLog\Support\DateRangeFilter;
-use Dcodegroup\ActivityLog\Support\TermFilter;
-use Illuminate\Routing\Controller;
 use Dcodegroup\ActivityLog\Http\Requests\ExistingRequest;
-use Dcodegroup\ActivityLog\Resources\ActivityLog as ActivityLogResource;
-use Dcodegroup\ActivityLog\Models\ActivityLog;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Dcodegroup\ActivityLog\Resources\ActivityLogCollection;
+use Dcodegroup\ActivityLog\Support\QueryBuilder\Filters\DateRangeFilter;
+use Dcodegroup\ActivityLog\Support\QueryBuilder\Filters\TermFilter;
+use Illuminate\Routing\Controller;
 use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class ActivityLogController extends Controller
 {
-    public function __invoke(ExistingRequest $request): AnonymousResourceCollection
+    public function __invoke(ExistingRequest $request): ActivityLogCollection
     {
-        /** @phpstan-ignore-next-line */
-        $query = QueryBuilder::for(ActivityLog::class)
-            ->with(['user', 'communicationLog'])
+        $query = QueryBuilder::for(config('activity-log.activity_log_model'))
+            ->with([
+                config('activity-log.user_relationship'),
+                config('activity-log.communication_log_relationship'),
+            ])
             ->allowedFilters([
                 'created_by',
                 AllowedFilter::exact('type'),
@@ -38,7 +37,7 @@ class ActivityLogController extends Controller
         $query->when($request->has('modelClass'), fn () => $query->where('activitiable_type', $request->input('modelClass')));
         $query->when($request->has('modelId'), fn () => $query->where('activitiable_id', $request->input('modelId')));
 
-        return ActivityLogResource::collection(
+        return new ActivityLogCollection(
             $query->paginate(config('activity-log.default_filter_pagination'))
         );
     }

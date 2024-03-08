@@ -2,11 +2,10 @@
 
 namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
-use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Routing\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 
 class FilterController extends Controller
@@ -18,8 +17,9 @@ class FilterController extends Controller
     public function __invoke(Request $request): JsonResponse
     {
         return new JsonResponse(
-            resolve(config('activity-log.filter_builder_path'))->make()
-                ->refineItems('type', 'Type', collect(ActivityLog::getAvailableTypes()), valueField: 'name', apiMode: false)
+            resolve(config('activity-log.filter_builder_path'))
+                ->make()
+                ->refineItems('type', 'Type', collect(resolve(config('activity-log.activity_log_model'))->getAvailableTypes()), valueField: 'name', apiMode: false)
                 ->dateRange('date', 'Date')
                 ->refineItems('created_by', 'User', $this->filterQuery(config('activity-log.user_model')::query(), $request, searchTermField: ['email']), searchField: 'full_name')
         );

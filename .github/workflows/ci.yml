@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  push:
+
+jobs:
+  php-cs-fixer:
+    runs-on: ubuntu-latest
+
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # added or changed files to the repository.
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache Pint
+        uses: actions/cache@v3
+        with:
+          path: ./pint.cache
+          key: ${{ runner.os }}-pint-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-pint-
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: pint
+
+      - name: Run Laravel Pint (PHP CS Fixer)
+        run: pint
+        continue-on-error: true
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Fix PHP Syntax Styling
+
+  phpstan:
+    name: phpstan
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+      matrix:
+        php: [ '8.3' ]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: "dom, curl, libxml, mbstring, zip, fileinfo, redis, bcmath"
+          coverage: none
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      - name: Install Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress
+        env:
+          APP_ENV: testing
+
+      - name: Run PHPStan
+        run: ./vendor/bin/phpstan --error-format=github

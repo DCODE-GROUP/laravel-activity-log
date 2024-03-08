@@ -3,6 +3,7 @@
 namespace Dcodegroup\ActivityLog\Resources;
 
 use Dcodegroup\ActivityLog\Models\ActivityLog as ActivityLogModel;
+use Dcodegroup\ActivityLog\Models\CommunicationLog;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,8 +16,9 @@ class ActivityLog extends JsonResource
     {
         return [
             'id' => $this->resource->id,
-            'user' => $this->resource->user?->full_name ?: "Guest",
+            'user' => $this->resource->loadMissing('user')->user?->getActivityLogUserName(),
             'description' => $this->resource->description,
+            'activitiable_id' => $this->resource->activitiable_id,
             'activitiable_type' => $this->resource->activitiable_type,
             'type' => $this->resource->type,
             'meta' => $this->resource->meta,
@@ -28,7 +30,7 @@ class ActivityLog extends JsonResource
 
     private function getCommunicationLog(): ?array
     {
-        if (! $this->resource->communicationLog) {
+        if (! $this->resource->communicationLog instanceof CommunicationLog) {
             return null;
         }
 

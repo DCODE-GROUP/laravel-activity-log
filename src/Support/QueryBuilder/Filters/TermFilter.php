@@ -1,6 +1,6 @@
 <?php
 
-namespace Dcodegroup\ActivityLog\Support;
+namespace Dcodegroup\ActivityLog\Support\QueryBuilder\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\Filters\Filter;

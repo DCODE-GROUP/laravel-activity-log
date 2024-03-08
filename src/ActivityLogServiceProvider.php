@@ -3,21 +3,18 @@
 namespace Dcodegroup\ActivityLog;
 
 use Dcodegroup\ActivityLog\Commands\InstallCommand;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class ActivityLogServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap the application events.
-     */
-    public function boot()
+    public function boot(): void
     {
         $this->offerPublishing();
         $this->registerRoutes();
-        $this->registerResources();
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'activity-log-translations');
+
         $this->registerCommands();
 
         Route::model(config('activity-log.binding'), config('activity-log.model'));
@@ -53,32 +50,23 @@ class ActivityLogServiceProvider extends ServiceProvider
      */
     protected function offerPublishing()
     {
-        if ($this->doesntHaveTables()) {
-            $timestamp = date('Y_m_d_His', time());
-            $extraTimestamp =  date('Y_m_d_His', time() + 10);
-            $this->publishes([
-                ACTIVITY_LOG_PATH.'/database/migrations/create_communication_logs_table.stub.php' => database_path('migrations/'.$timestamp.'_create_communication_logs_table.php'),
-                ACTIVITY_LOG_PATH.'/database/migrations/create_activity_logs_table.stub.php' => database_path('migrations/'.$extraTimestamp.'_create_activity_logs_table.php'),
-            ], 'activity-log-migrations');
-        }
+        $this->setupMigrations();
 
         $this->publishes([ACTIVITY_LOG_PATH.'/config/activity-log.php' => config_path('activity-log.php')], 'activity-log-config');
         $this->publishes([ACTIVITY_LOG_PATH.'/resources/sass' => resource_path('sass/activity-log')], 'activity-log-sass');
         $this->publishes([ACTIVITY_LOG_PATH.'/public' => public_path('vendor/activity-log')], ['activity-log-assets']);
+        $this->publishes([__DIR__.'/../lang' => $this->app->langPath('vendor/dcodegroup/activity-log')], 'activity-log-translations');
     }
 
-    private function doesntHaveTables()
+    protected function setupMigrations()
     {
-        return
-            $this->app->environment('local') &&
-            ! Schema::hasTable('communication_logs') &&
-            (Schema::hasTable('migrations') && ! DB::table('migrations')->where('migration', 'like', '%create_communication_logs_table')->exists());
-    }
-
-    protected function registerResources()
-    {
-        $this->loadTranslationsFrom(ACTIVITY_LOG_PATH.'/resources/lang', 'activity-log-translations');
-        $this->loadViewsFrom(ACTIVITY_LOG_PATH.'/resources/views', 'activity-log-views');
+        if ($this->app->environment('local')) {
+            if (! Schema::hasTable('activity_logs') && ! Schema::hasTable('communication_logs')) {
+                $this->publishes([
+                    __DIR__.'/../database/migrations/create_activity_logs_tables.stub.php' => $this->app->databasePath('migrations/'.date('Y_m_d_His', time()).'_create_activity_logs_tables.php'),
+                ], 'activity-log-migrations');
+            }
+        }
     }
 
     protected function registerRoutes()

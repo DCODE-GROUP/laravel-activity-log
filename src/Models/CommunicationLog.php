@@ -2,16 +2,18 @@
 
 namespace Dcodegroup\ActivityLog\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
+ * @property string $to
+ * @property string|null $cc
+ * @property string|null $bcc
+ * @property string|null $subject
+ * @property string|null $content
  */
 class CommunicationLog extends Model
 {
-    use HasFactory;
-
     /**
      * The attributes that are mass assignable.
      *

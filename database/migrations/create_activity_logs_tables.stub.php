@@ -15,6 +15,15 @@ return new class extends Migration
      */
     public function up()
     {
+        Schema::create('communication_logs', function (Blueprint $table) {
+            $table->id();
+            $table->text('to')->nullable();
+            $table->text('cc')->nullable();
+            $table->text('bcc')->nullable();
+            $table->string('subject')->nullable();
+            $table->text('content')->nullable();
+            $table->timestamps();
+        });
 
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->increments('id');
@@ -42,5 +51,6 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('activity_logs');
+        Schema::dropIfExists('communication_logs');
     }
 };
