@@ -101,7 +101,7 @@ export default {
     },
     commentUrl: {
       type: String,
-      default: "api/generic/activity-logs/comments",
+      default: "/api/generic/activity-logs/comments",
     },
     modelClass: {
       type: String,

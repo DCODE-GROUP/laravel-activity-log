@@ -1,6 +1,6 @@
 # Laravel Activity Log
 
-This package provides the standard activity log functionality used in most projects.
+The `dcodegroup/activity-log` package provides a simple and unified approach to track and record activity / interactions against your Laravel models (and relations). Capture changes, updates, and user interactions to enhance transparency and auditing in your application in a centralised and consistent approach.
 
 ## Installation
 #### PHP
@@ -213,6 +213,12 @@ return [
 
 ```
 
+| Value           | Options | Description                                                                                 |
+|-----------------|---------|---------------------------------------------------------------------------------------------|
+| middleware      |         | Include a specification of what middleware this package should include.                     |
+| layout_path     |         | The dot notation path to the resource/view that you would like to use for the Activity Log. |
+| content_section |         | The variable in the view that will contain the output of the Activtity Log.                 |
+
 ## Usage
 
 The package provides an endpoints which you can use. See the full list by running
@@ -246,3 +252,30 @@ Using `<activity-log-list>` or `<v-activity-log>` to display activity log list. 
         <v-filter entity="activity-logs" class="flex flex-row-reverse space-x-2 space-x-reverse"> </v-filter>
       </ActivityLogList>
 ```
+
+# Changelog
+
+Please see [CHANGELOG](./CHANGELOG.md) for more information about recent changes.
+
+# Contributing
+
+We believe in the power of collaboration! If you share our passion for pushing the boundaries of business software, feel free to contribute, report issues, or suggest improvements. Your insights make us better.
+
+
+# Security
+
+If you've found an issue related to this package that includes any security concerns; please email [security@dcodegroup.com](mailto:security@dcodegroup.com) to ensure that we can prioritise the concerns in a confidential manner.
+
+# Credits
+
+This project is supported & funded by [Dcode Group](https://github.com/dcodegroup) and the team - both past and present.  Special mention to:
+- [Dcode Group](https://github.com/dcodegroup)
+- [All Contributors](./graphs/contributors)
+
+## About Dcode Group
+
+Dcode Group specializes in crafting tailored software solutions utilizing the Laravel framework. Our focus lies in developing business, financial, and process-driven systems designed to support unique business operations. Leveraging packages like this one, we streamline common features/functions across projects, ensuring swift integration of broad functionalities while enhancing overall code base maintenance and management.  Find out more about 
+
+# License
+
+

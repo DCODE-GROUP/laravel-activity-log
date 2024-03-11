@@ -24,7 +24,7 @@ return [
     ],
 
     'actions' => [
-        'create' => ' create a ',git instanceof
+        'create' => ' create a ',
         'add_comment' => ' add a comment',
         'update_entity' => 'update an entity',
     ],

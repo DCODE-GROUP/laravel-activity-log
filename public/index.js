@@ -19117,7 +19117,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     commentUrl: {
       type: String,
-      "default": "api/generic/activity-logs/comments"
+      "default": "/api/generic/activity-logs/comments"
     },
     modelClass: {
       type: String,
