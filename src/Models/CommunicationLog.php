@@ -17,7 +17,7 @@ class CommunicationLog extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<string>
+     * @var array
      */
     protected $fillable = [
         'to',
