@@ -10,7 +10,7 @@
         {{ $t("activity-log-translations::headings.title") }}<br />
         {{ $t("activity-log.headings.title") }}<br />
         {{ $t("vendor.dcodegroup.activity-log.headings.title") }} <br />
-        {{ $t("dcodegroup.activity-log.en.activity-log.headings.title") }}
+        {{ $t("dcodegroup.activity-log.en.activity-log.headings.title") }} <br />
         {{ $t("activity-log.en.activity-log.headings.title") }}
         <br />
       </div>
