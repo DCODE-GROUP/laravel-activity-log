@@ -13,12 +13,7 @@
             type="text"
             name="name"
             v-model="searchKey"
-            placeholder="{{
-
-              $t(
-                'vendor.dcodegroup.activity-log.en.activity_log.search.placeholder',
-              )
-            }}"
+            placeholder="{{ $t('vendor.dcodegroup.activity-log.en.activity_log.search.placeholder') }}"
             v-on:keyup.enter="searchTerm"
           />
           <button
