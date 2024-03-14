@@ -8,6 +8,7 @@ return [
     ],
 
     'fields' => [
+        'updated_model' => 'Updated',
         'user' => 'User',
         'type' => 'Type',
         'description' => 'Description',
@@ -17,12 +18,10 @@ return [
         'created_by' => 'Created by',
         'to' => 'To',
         'subject' => 'Subject',
+        'collapsed_view' => 'Collapsed view',
+        'my_activities' => 'My activities',
+        'system' => 'System',
     ],
-
-    'search' => [
-        'placeholder' => 'Search by description',
-    ],
-
     'actions' => [
         'create' => ' create a ',
         'add_comment' => ' add a comment',
@@ -35,6 +34,7 @@ return [
 
     'placeholders' => [
         'add_comment' => 'Add your comment...',
+        'search_description' => 'Search by description',
     ],
 
     'words' => [

@@ -3,8 +3,8 @@
     <div class="activity activity--comment" v-if="allowComment">
       <div class="activity__user--avatar">
         <span>{{
-          currentUser.charAt(0).toUpperCase() +
-          currentUser.charAt(1).toUpperCase()
+          username.charAt(0).toUpperCase() +
+          username.charAt(1).toUpperCase()
         }}</span>
       </div>
       <div class="content">
@@ -30,15 +30,20 @@
         </div>
       </div>
     </div>
-    <div class="flex items-center justify-end space-x-2 pt-4">
-      <div class="flex w-[21.875rem] space-x-1">
+    <div class="flex items-end justify-between space-x-2 pt-4 pl-xlSpace">
+      <div class="flex justify-start">
+        <toggle :value="isCollapsedView" :title="$t('activity-log.fields.collapsed_view')"
+                @input="collapView($event)" class="pr-smSpace"></toggle>
+        <toggle :value="isFilterUser" :title="$t('activity-log.fields.my_activities')" @input="filterUser"></toggle>
+      </div>
+      <div class="flex justify-end w-[21.875rem] space-x-1">
         <label class="relative block w-full">
           <input
             class="pl-8"
             type="text"
             name="name"
             v-model="searchKey"
-            :placeholder="$t('activity_log.search.placeholder')"
+            :placeholder="$t('activity-log.placeholders.search_description')"
             v-on:keyup.enter="searchTerm"
           />
           <button
@@ -46,14 +51,14 @@
             type="button"
             @click="searchTerm"
           >
-            <v-icon
+            <icon
               icon="MagnifyingGlassIcon"
               classes="text-primary-400 w-4 h-4"
-            ></v-icon>
+            ></icon>
           </button>
         </label>
+        <slot />
       </div>
-      <slot />
     </div>
     <div
       v-show="loading"
@@ -61,27 +66,34 @@
       role="status"
       class="flex h-full items-center justify-center space-x-2 py-8"
     >
-      <v-icon icon="ArrowPathIcon" class="h-lgSpace w-lgSpace animate-spin" />
+      <icon icon="ArrowPathIcon" class="h-lgSpace w-lgSpace animate-spin" />
       <span class="text-lg font-medium text-tertiary-500">{{
         $t("activity-log.words.loading")
       }}</span>
     </div>
-    <div class="activity activity--min" v-for="activity in activities">
+    <div class="activity activity--min" v-for="(activity,index) in activities">
       <div class="activity__user activity__user--avatar">
         <span>{{
-          activity.user.charAt(0).toUpperCase() +
-          activity.user.charAt(1).toUpperCase()
+            username.charAt(0).toUpperCase() +
+            username.charAt(1).toUpperCase()
         }}</span>
       </div>
       <div class="content">
         <div class="content__status">
           <div class="content__status--meta">
-            <a href="#" class="font-medium text-gray-900">{{
-              activity.user
-            }}</a>
-            <span v-html="activity.description"></span>
+            <a href="#" class="font-medium text-gray-900">{{ activity.user }}</a>
+            <span v-html="activity.title"></span>
+            <br>
+            <span v-if="!collapseStage[index]" v-html="activity.description"></span>
           </div>
-          <div class="content__status--time">{{ activity.created_at }}</div>
+          <div class="content__status--time">
+            {{ activity.created_at_date_time }}
+            <a class="cursor-pointer px-smSpace items-center"
+               @click.prevent="collapseStage[index] = !collapseStage[index]">
+              <icon v-if="collapseStage[index]" icon="ChevronUpIcon" classes="text-primary-400 w-4 h-4"></icon>
+              <icon v-else icon="ChevronDownIcon" classes="text-primary-400 w-4 h-4"></icon>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -89,11 +101,12 @@
 </template>
 <script>
 import axios from "axios";
-import VIcon from "./VIcon.vue";
+import Icon from "./common/Icon.vue";
+import Toggle from "./common/Toggle.vue";
 
 export default {
   inject: ["bus"],
-  components: { VIcon },
+  components: { Icon, Toggle },
   props: {
     getUrl: {
       type: String,
@@ -120,13 +133,10 @@ export default {
       default: false,
     },
     currentUser: {
-      type: String,
-      default: "Guest",
+      type: Object,
+      required: false
     },
-    modalEvent: {
-      type: String,
-      default: "openModal",
-    },
+
     filterEvent: {
       type: String,
       default: "activityLogFilterChange",
@@ -134,6 +144,10 @@ export default {
   },
   data() {
     return {
+      username: this.currentUser.full_name ?? this.$t("activity-log.fields.system"),
+      collapseStage: {},
+      isCollapsedView: false,
+      isFilterUser: false,
       loading: false,
       filters: {
         "filter[term]": null,
@@ -209,6 +223,24 @@ export default {
         })
         .catch(console.error);
     },
+    collapView($event) {
+      if ($event) {
+        this.collapseStage = this.activities.map((value, index) => {
+          return { index: true };
+        });
+      } else {
+        this.collapseStage = {};
+      }
+      this.isCollapsedView = $event;
+    },
+    filterUser() {
+      this.isFilterUser = !this.isFilterUser;
+      if (this.currentUser && this.currentUser.id) {
+        this.filters[`filter[created_by]`] = this.currentUser.id;
+        this.bus.$emit("tableFilterChange", { params: this.filters });
+        this.$nextTick(() => this.getActivityLog());
+      }
+    }
   },
 };
 </script>
