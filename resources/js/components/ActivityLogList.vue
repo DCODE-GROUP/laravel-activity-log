@@ -13,7 +13,11 @@
             type="text"
             name="name"
             v-model="searchKey"
-            :placeholder="$t('activity_log.search.placeholder')"
+            :placeholder="
+              $t(
+                'vendor.dcodegroup.activity-log.en.activity_log.search.placeholder',
+              )
+            "
             v-on:keyup.enter="searchTerm"
           />
           <button
@@ -44,7 +48,9 @@
             {{
               activity.meta
                 ? activity.meta.action
-                : $t("activity-log.fields.tender_updated")
+                : $t(
+                    "vendor.dcodegroup.activity-log.en.activity-log.fields.tender_updated",
+                  )
             }}
           </td>
           <td class="whitespace-nowrap bg-slate-50 py-4">

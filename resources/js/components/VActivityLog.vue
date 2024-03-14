@@ -14,7 +14,11 @@
             class="content__text--textarea focus:ring-0"
             v-model="comment"
             rows="3"
-            :placeholder="$t('activity-log.placeholders.add_comment')"
+            :placeholder="
+              $t(
+                'vendor.dcodegroup.activity-log.en.activity-log.placeholders.add_comment',
+              )
+            "
           ></textarea>
         </div>
 
@@ -38,7 +42,11 @@
             type="text"
             name="name"
             v-model="searchKey"
-            :placeholder="$t('activity_log.search.placeholder')"
+            :placeholder="
+              $t(
+                'vendor.dcodegroup.activity-log.en.activity_log.search.placeholder',
+              )
+            "
             v-on:keyup.enter="searchTerm"
           />
           <button
@@ -57,13 +65,15 @@
     </div>
     <div
       v-show="loading"
-      :aria-label="$t('activity-log.words.loading')"
+      :aria-label="
+        $t('vendor.dcodegroup.activity-log.en.activity-log.words.loading')
+      "
       role="status"
       class="flex h-full items-center justify-center space-x-2 py-8"
     >
       <v-icon icon="ArrowPathIcon" class="h-lgSpace w-lgSpace animate-spin" />
       <span class="text-lg font-medium text-tertiary-500">{{
-        $t("activity-log.words.loading")
+        $t("vendor.dcodegroup.activity-log.en.activity-log.words.loading")
       }}</span>
     </div>
     <div class="activity activity--min" v-for="activity in activities">
