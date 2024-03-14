@@ -2,24 +2,9 @@
   <div class="w-full text-sm font-medium text-gray-900">
     <div class="flex items-center justify-between space-x-2">
       <div class="flex py-3 text-left font-semibold">
-        {{ $t("activity-log-translations::headings.title") }}<br />
-        {{ $t("activity-log::headings.title") }}<br />
-        {{ $t("activity-log::activity-log.headings.title") }}<br />
-        {{ $t("activity-log-translations::activity-log.headings.title") }}<br />
-        {{ $t("activity-log::headings.title") }}<br />
-        {{ $t("activity-log-translations::headings.title") }}<br />
-        {{ $t("activity-log.headings.title") }}<br />
-        {{ $t("vendor.dcodegroup.activity-log.headings.title") }} <br />
-        {{ $t("dcodegroup.activity-log.en.activity-log.headings.title") }}
-        <br />
         {{
           $t("vendor.dcodegroup.activity-log.en.activity-log.headings.title")
         }}
-        <br />
-        {{ $t("activity-log.headings.title") }} <br />
-        {{ $t("activity-log.headings.title") }} <br />
-        <br />
-        <br />
       </div>
       <div class="flex w-[21.875rem] space-x-1">
         <label class="relative block w-full">
@@ -74,7 +59,12 @@
             </div>
           </td>
           <td class="bg-slate-50 py-4">
-            {{ activity?.meta?.created_by_label || $t("generic.created_by") }}:
+            {{
+              activity?.meta?.created_by_label ||
+              $t(
+                "vendor.dcodegroup.activity-log.en.activity-log.words.created_at",
+              )
+            }}:
             {{ activity?.meta?.created_by || activity.user }}
           </td>
           <td class="bg-slate-50 px-3 py-4 text-right">

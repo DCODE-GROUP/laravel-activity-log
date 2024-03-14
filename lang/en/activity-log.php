@@ -38,7 +38,8 @@ return [
     ],
 
     'words' => [
-        'loading' => 'Loading . . .',
+        'loading' => 'Loading ...',
+        'created_at' => 'Created',
     ],
 
 ];
