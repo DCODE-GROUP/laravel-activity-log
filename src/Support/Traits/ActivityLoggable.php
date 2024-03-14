@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 
 trait ActivityLoggable
 {
-//    abstract protected function activityRelations(): Collection;
+    //    abstract protected function activityRelations(): Collection;
 
     protected function activityRelations(): Collection
     {
