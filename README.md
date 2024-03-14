@@ -261,6 +261,21 @@ Using `<activity-log-list>` or `<v-activity-log>` to display activity log list. 
       </ActivityLogList>
 ```
 
+## Usage
+
+In order to log anthing add the following trait to a model you want to log on.
+
+```php
+...
+use Dcodegroup\FormBuilder\Support\Traits\ActivityLoggable;
+
+class Order extends Model
+{
+    use ActivityLoggable;
+    ...
+}
+```
+
 # Changelog
 
 Please see [CHANGELOG](./CHANGELOG.md) for more information about recent changes.
