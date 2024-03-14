@@ -1,6 +1,6 @@
 <?php
 
-namespace Dcodegroup\FormBuilder\Support\Traits;
+namespace Dcodegroup\ActivityLog\Support\Traits;
 
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Models\CommunicationLog;
