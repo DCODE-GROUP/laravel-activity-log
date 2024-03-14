@@ -2,7 +2,9 @@
   <div class="w-full text-sm font-medium text-gray-900">
     <div class="flex items-center justify-between space-x-2">
       <div class="flex py-3 text-left font-semibold">
-        {{ $t("vendor.dcodegroup.activity-log.en.activity-log.headings.title")
+        {{
+          $t("vendor.dcodegroup.activity-log.en.activity-log.headings.title")
+        }}
         <br />
         {{
           $t(
