@@ -2,9 +2,7 @@
   <div class="w-full text-sm font-medium text-gray-900">
     <div class="flex items-center justify-between space-x-2">
       <div class="flex py-3 text-left font-semibold">
-        {{
-          $t("vendor.dcodegroup.activity-log.en.activity-log.headings.title")
-        }}
+        {{ $t("activity-log.headings.title") }}
       </div>
       <div class="flex w-[21.875rem] space-x-1">
         <label class="relative block w-full">
@@ -13,11 +11,7 @@
             type="text"
             name="name"
             v-model="searchKey"
-            :placeholder="
-              $t(
-                'vendor.dcodegroup.activity-log.en.activity-log.search.placeholder',
-              )
-            "
+            :placeholder="$t('activity-log.search.placeholder')"
             v-on:keyup.enter="searchTerm"
           />
           <button
@@ -48,9 +42,7 @@
             {{
               activity.meta
                 ? activity.meta.action
-                : $t(
-                    "vendor.dcodegroup.activity-log.en.activity-log.fields.tender_updated",
-                  )
+                : $t("activity-log.fields.tender_updated")
             }}
           </td>
           <td class="whitespace-nowrap bg-slate-50 py-4">
@@ -67,9 +59,7 @@
           <td class="bg-slate-50 py-4">
             {{
               activity?.meta?.created_by_label ||
-              $t(
-                "vendor.dcodegroup.activity-log.en.activity-log.words.created_at",
-              )
+              $t("activity-log.words.created_at")
             }}:
             {{ activity?.meta?.created_by || activity.user }}
           </td>

@@ -2,13 +2,11 @@
   <div class="w-[600px] px-smSpace">
     <div class="border-b pb-mdSpace pt-smSpace">
       <div>
-        {{ $t("vendor.dcodegroup.activity-log.en.activity-log.fields.to") }}
+        {{ $t("activity-log.fields.to") }}
         <span class="font-semibold">{{ to }}</span>
       </div>
       <div>
-        {{
-          $t("vendor.dcodegroup.activity-log.en.activity-log.fields.subject")
-        }}
+        {{ $t("activity-log.fields.subject") }}
         <span class="font-semibold">{{ subject }}</span>
       </div>
     </div>
