@@ -21,7 +21,7 @@ Add the publish command to your composer.json
 ```yaml
   "post-update-cmd": [
         ...
-        "@php artisan vendor:publish --tag=activity-log-assets --force"
+        "@php artisan vendor:publish --tag=activity-log-translations --force",
     ]
 ```
 
@@ -53,10 +53,22 @@ public function getActivityLogUserName(): string
 
 #### JS
 
-Include this built file to your layouts:
+Add the following js to your `index.js` file.
 
-```html
-<script type="text/javascript" src="/vendor/activity-log/index.js" defer></script>
+```javascript
+import VActivityLog from "@dcode/activity-log/resources/js/components/VActivityLog.vue";
+import ActivityLogList from "@dcode/activity-log/resources/js/components/ActivityLogList.vue";
+import ActivityEmail from "@dcode/activity-log/resources/js/components/ActivityEmail.vue";
+
+app.component("VActivityLog", VActivityLog);
+app.component("ActivityLogList", ActivityLogList);
+app.component("ActivityEmail", ActivityEmail);
+```
+
+In your `app.scss` file add the following
+
+```scss
+@import "activity-log/index.scss";
 ```
 
 Seem to need this in `tailwind.config.js` under spacing: 
@@ -75,14 +87,10 @@ spacing: {
 },
 ```
 
-#### SCSS
-
-There is a new generated file under `public/vendor/activity-log/index.css`. You must use this file in your main scss file
-
 Run the npm build (dev/prod)
 
 ```bash
-npm run prod
+npm run prod:assets
 ```
 
 ## Configuration

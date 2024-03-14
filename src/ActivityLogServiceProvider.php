@@ -54,7 +54,7 @@ class ActivityLogServiceProvider extends ServiceProvider
 
         $this->publishes([ACTIVITY_LOG_PATH.'/config/activity-log.php' => config_path('activity-log.php')], 'activity-log-config');
         $this->publishes([ACTIVITY_LOG_PATH.'/resources/sass' => resource_path('sass/activity-log')], 'activity-log-sass');
-        $this->publishes([ACTIVITY_LOG_PATH.'/public' => public_path('vendor/activity-log')], ['activity-log-assets']);
+//        $this->publishes([ACTIVITY_LOG_PATH.'/public' => public_path('vendor/activity-log')], ['activity-log-assets']);
         $this->publishes([__DIR__.'/../lang' => $this->app->langPath('en/vendor/dcodegroup/activity-log')], 'activity-log-translations');
         //        $this->publishes([__DIR__.'/../lang' => $this->app->langPath('activity-log')], 'activity-log-translations');
     }
