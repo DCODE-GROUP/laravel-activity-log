@@ -12,7 +12,9 @@
         {{ $t("vendor.dcodegroup.activity-log.headings.title") }} <br />
         {{ $t("dcodegroup.activity-log.en.activity-log.headings.title") }}
         <br />
-        {{ $t("dcodegroup.activity-log.en.activity-log.headings.title") }}
+        {{
+          $t("vendor.dcodegroup.activity-log.en.activity-log.headings.title")
+        }}
         <br />
         {{ $t("activity-log.headings.title") }} <br />
         {{ $t("activity-log.headings.title") }} <br />
