@@ -5,12 +5,6 @@
         {{
           $t("vendor.dcodegroup.activity-log.en.activity-log.headings.title")
         }}
-        <br />
-        {{
-          $t(
-            "vendor.dcodegroup.activity-log.en.activity_log.search.placeholder",
-          )
-        }}
       </div>
       <div class="flex w-[21.875rem] space-x-1">
         <label class="relative block w-full">
@@ -21,7 +15,7 @@
             v-model="searchKey"
             :placeholder="
               $t(
-                'vendor.dcodegroup.activity-log.en.activity_log.search.placeholder',
+                'vendor.dcodegroup.activity-log.en.activity-log.search.placeholder',
               )
             "
             v-on:keyup.enter="searchTerm"

@@ -44,7 +44,7 @@
             v-model="searchKey"
             :placeholder="
               $t(
-                'vendor.dcodegroup.activity-log.en.activity_log.search.placeholder',
+                'vendor.dcodegroup.activity-log.en.activity-log.search.placeholder',
               )
             "
             v-on:keyup.enter="searchTerm"
