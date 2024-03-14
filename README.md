@@ -16,17 +16,6 @@ Then run the install command.
 php artisan activity-log:install
 ```
 
-Add the publish command to your composer.json 
-
-```yaml
-  "post-update-cmd": [
-        ...
-        "@php artisan vendor:publish --tag=activity-log-translations --force",
-    ]
-```
-
-This will publish the configuration file and the migration file.
-
 Run the migrations
 
 ```bash
@@ -86,6 +75,17 @@ spacing: {
     "3xsSpace": "2px",
 },
 ```
+
+Update the vue il8n package to load additional paths
+
+```javascript
+i18n({
+  // you can also change your langPath here
+  // langPath: 'locales'
+  additionalLangPaths: [
+    "vendor/dcodegroup/activity-log/lang", // Load translations from this path too!
+  ],
+}),
 
 Run the npm build (dev/prod)
 
