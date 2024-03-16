@@ -16,17 +16,6 @@ Then run the install command.
 php artisan activity-log:install
 ```
 
-Add the publish command to your composer.json 
-
-```yaml
-  "post-update-cmd": [
-        ...
-        "@php artisan vendor:publish --tag=activity-log-assets --force"
-    ]
-```
-
-This will publish the configuration file and the migration file.
-
 Run the migrations
 
 ```bash
@@ -53,10 +42,22 @@ public function getActivityLogUserName(): string
 
 #### JS
 
-Include this built file to your layouts:
+Add the following js to your `index.js` file.
 
-```html
-<script type="text/javascript" src="/vendor/activity-log/index.js" defer></script>
+```javascript
+import VActivityLog from "@dcode/activity-log/resources/js/components/VActivityLog.vue";
+import ActivityLogList from "@dcode/activity-log/resources/js/components/ActivityLogList.vue";
+import ActivityEmail from "@dcode/activity-log/resources/js/components/ActivityEmail.vue";
+
+app.component("VActivityLog", VActivityLog);
+app.component("ActivityLogList", ActivityLogList);
+app.component("ActivityEmail", ActivityEmail);
+```
+
+In your `app.scss` file add the following
+
+```scss
+@import "activity-log/index.scss";
 ```
 
 Seem to need this in `tailwind.config.js` under spacing: 
@@ -75,14 +76,21 @@ spacing: {
 },
 ```
 
-#### SCSS
+Update the vue il8n package to load additional paths
 
-There is a new generated file under `public/vendor/activity-log/index.css`. You must use this file in your main scss file
+```javascript
+i18n({
+  // you can also change your langPath here
+  // langPath: 'locales'
+  additionalLangPaths: [
+    "vendor/dcodegroup/activity-log/lang", // Load translations from this path too!
+  ],
+}),
 
 Run the npm build (dev/prod)
 
 ```bash
-npm run prod
+npm run prod:assets
 ```
 
 ## Configuration
@@ -251,6 +259,21 @@ Using `<activity-log-list>` or `<v-activity-log>` to display activity log list. 
       <ActivityLogList :model-id="tender.id" :model-class="tenderModel">
         <v-filter entity="activity-logs" class="flex flex-row-reverse space-x-2 space-x-reverse"> </v-filter>
       </ActivityLogList>
+```
+
+## Usage
+
+In order to log anything add the following trait to a model you want to log on.
+
+```php
+...
+use Dcodegroup\ActivityLog\Support\Traits\ActivityLoggable;
+
+class Order extends Model
+{
+    use ActivityLoggable;
+    ...
+}
 ```
 
 # Changelog

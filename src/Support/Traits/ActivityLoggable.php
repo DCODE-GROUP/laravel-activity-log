@@ -1,6 +1,6 @@
 <?php
 
-namespace Dcodegroup\FormBuilder\Support\Traits;
+namespace Dcodegroup\ActivityLog\Support\Traits;
 
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Models\CommunicationLog;
@@ -10,7 +10,14 @@ use Illuminate\Support\Str;
 
 trait ActivityLoggable
 {
-    abstract protected function activityRelations(): Collection;
+    //    abstract protected function activityRelations(): Collection;
+
+    protected function activityRelations(): Collection
+    {
+        return collect([
+            'activityLogs',
+        ]);
+    }
 
     public function activities(): Collection
     {
