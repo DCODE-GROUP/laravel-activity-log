@@ -13,13 +13,12 @@ class CommentController extends Controller
         $modelClass = $request->input('modelClass');
         $modelId = $request->input('modelId');
         $model = $modelClass::find($modelId);
-        $baseClass = class_basename($modelClass);
         if ($request->filled('comment')) {
             resolve(config('activity-log.activity_log_model'))->query()->create([
                 'activitiable_type' => $modelClass,
                 'activitiable_id' => $modelId,
-                'description' => 'add a comment'.' in '.$baseClass.' history </br>'
-                    .$request->input('comment'),
+                'title' => 'left a comment.',
+                'description' => $request->input('comment'),
             ]);
         }
 

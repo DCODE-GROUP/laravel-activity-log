@@ -15,7 +15,7 @@ return new class extends Migration
     {
 
         Schema::table('activity_logs', function (Blueprint $table) {
-            $table->text('title')->nullable()->after('description');
+            $table->string('title')->nullable()->default('make a change')->after('description');
         });
     }
 

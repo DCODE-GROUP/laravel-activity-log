@@ -76,3 +76,7 @@
         }
     }
 }
+
+.activity__db-content {
+    @apply bg-success-100 text-success-700 inline-flex items-center rounded-full px-smSpace py-2xsSpace text-xs font-medium mb-2xsSpace mr-2xsSpace
+}

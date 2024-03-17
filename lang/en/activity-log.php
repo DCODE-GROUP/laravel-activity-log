@@ -30,6 +30,7 @@ return [
 
     'buttons' => [
         'save_comment' => 'Comment',
+        'preview_email' => '  Preview Email',
     ],
 
     'placeholders' => [
