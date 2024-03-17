@@ -67,7 +67,7 @@ class ActivityLogServiceProvider extends ServiceProvider
                     __DIR__.'/../database/migrations/create_activity_logs_tables.stub.php' => $this->app->databasePath('migrations/'.date('Y_m_d_His', time()).'_create_activity_logs_tables.php'),
                 ], 'activity-log-migrations');
             }
-            if (Schema::hasTable('activity_logs') && !Schema::hasColumn('activity_logs', 'title')) {
+            if (Schema::hasTable('activity_logs') && ! Schema::hasColumn('activity_logs', 'title')) {
                 $this->publishes([
                     __DIR__.'/../database/migrations/add_title_to_activity_logs_table.stub.php' => $this->app->databasePath('migrations/'.date('Y_m_d_His', time()).'_add_title_to_activity_logs_table.php'),
                 ], 'activity-log-migrations');

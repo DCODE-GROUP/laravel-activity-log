@@ -50,7 +50,7 @@ trait ActivityLoggable
             $from = $row['from'];
             $to = $row['to'];
 
-            return sprintf('%s: %s -> %s', '<b>' . Str::ucfirst(Str::replace('_', ' ', $attribute)) . '</b>', '<b style="text-decoration: line-through;">' . $from . '</b>', '<b>' . $to . '</b>');
+            return sprintf('%s: %s -> %s', '<b>'.Str::ucfirst(Str::replace('_', ' ', $attribute)).'</b>', '<b style="text-decoration: line-through;">'.$from.'</b>', '<b>'.$to.'</b>');
         })->join('<br>');
     }
 
@@ -59,7 +59,6 @@ trait ActivityLoggable
         return collect(array_keys($this->getDirty()))->map(function ($attribute) {
             $from = is_array($this->getOriginal($attribute)) ? collect($this->getOriginal($attribute))->join('|') : $this->getOriginal($attribute);
             $to = is_array($this->{$attribute}) ? collect($this->{$attribute})->join('|') : $this->{$attribute};
-
 
             return $this->prepareModelChange($attribute, $from, $to);
         })->toArray();
@@ -71,6 +70,7 @@ trait ActivityLoggable
             $modelClass = $entity['modelClass'];
             $formLabel = $modelClass && $modelClass::find($from) ? $modelClass::find($from)->{$entity['modelKey']} : '+';
             $toLabel = $modelClass && $modelClass::find($to) ? $modelClass::find($to)->{$entity['modelKey']} : '+';
+
             return [
                 'key' => $entity['label'],
                 'from' => sprintf('<span class="activity__db-content">%s</span>', $formLabel),
