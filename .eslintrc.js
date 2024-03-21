@@ -30,7 +30,7 @@ module.exports = {
     "jest": true,
     "node": true
   },
-  "plugins": ["jsx-a11y", "prettier", "typescript", "jsx", "flow"],
+  "plugins": ["jsx-a11y", "prettier", "@typescript-eslint", "jsx", "flow"],
   "rules": {
     "semi": 0,
     "max-len": [2, 120, 2],
@@ -45,4 +45,4 @@ module.exports = {
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-var-requires": "off",
   }
-}
+};

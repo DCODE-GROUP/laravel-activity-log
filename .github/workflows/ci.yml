@@ -72,3 +72,28 @@ jobs:
 
       - name: Run PHPStan
         run: ./vendor/bin/phpstan --error-format=github
+
+  eslint:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: package-lock-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Modules
+        run: npm install
+
+      - name: Run eslint fix
+        run: npm run lint:fix
+        continue-on-error: true
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Fix eslint issues

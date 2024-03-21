@@ -8,7 +8,6 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   EnvelopeIcon,
-
 } from "@heroicons/vue/24/outline";
 
 export default {
@@ -16,18 +15,18 @@ export default {
   components: {
     MagnifyingGlassIcon,
     ChevronDownIcon,
-    ChevronUpIcon
+    ChevronUpIcon,
   },
   props: {
     icon: {
       type: String,
-      required: true
+      required: true,
     },
     classes: {
       type: String,
       required: false,
-      default: "w-5 h-5"
-    }
-  }
+      default: "w-5 h-5",
+    },
+  },
 };
 </script>

@@ -3,27 +3,26 @@
     <div class="activity activity--comment" v-if="allowComment">
       <div class="activity__user--avatar">
         <span>{{
-            username.charAt(0).toUpperCase() +
-            username.charAt(1).toUpperCase()
-          }}</span>
+          username.charAt(0).toUpperCase() + username.charAt(1).toUpperCase()
+        }}</span>
       </div>
       <div class="content">
         <div class="content__text">
           <textarea
-              @keyup.enter="addComment"
-              class="content__text--textarea focus:ring-0"
-              v-model="comment"
-              rows="3"
-              :placeholder="$t('activity-log.placeholders.add_comment')"
+            @keyup.enter="addComment"
+            class="content__text--textarea focus:ring-0"
+            v-model="comment"
+            rows="3"
+            :placeholder="$t('activity-log.placeholders.add_comment')"
           ></textarea>
         </div>
 
         <div class="content__action">
           <div class="content__action-attachment"></div>
           <div
-              class="content__action-button cursor-pointer"
-              :class="{ 'content__action-button--disable': !comment }"
-              @click="addComment"
+            class="content__action-button cursor-pointer"
+            :class="{ 'content__action-button--disable': !comment }"
+            @click="addComment"
           >
             {{ $t("activity-log.buttons.save_comment") }}
           </div>
@@ -32,29 +31,36 @@
     </div>
     <div class="flex items-end justify-between space-x-2 py-smSpace pl-xlSpace">
       <div class="flex justify-start">
-        <toggle :value="isCollapsedView" :title="$t('activity-log.fields.collapsed_view')"
-                @input="collapView($event)" class="pr-smSpace"></toggle>
-        <toggle :value="isFilterUser" :title="$t('activity-log.fields.my_activities')"
-                @input="filterUser($event)"></toggle>
+        <toggle
+          :value="isCollapsedView"
+          :title="$t('activity-log.fields.collapsed_view')"
+          @input="collapView($event)"
+          class="pr-smSpace"
+        ></toggle>
+        <toggle
+          :value="isFilterUser"
+          :title="$t('activity-log.fields.my_activities')"
+          @input="filterUser($event)"
+        ></toggle>
       </div>
       <div class="flex justify-end w-[21.875rem] space-x-1">
         <label class="relative block w-full">
           <input
-              class="pl-8"
-              type="text"
-              name="name"
-              v-model="searchKey"
-              :placeholder="$t('activity-log.placeholders.search_description')"
-              v-on:keyup.enter="searchTerm"
+            class="pl-8"
+            type="text"
+            name="name"
+            v-model="searchKey"
+            :placeholder="$t('activity-log.placeholders.search_description')"
+            v-on:keyup.enter="searchTerm"
           />
           <button
-              class="absolute left-2.5 top-1/2 -translate-y-1/2"
-              type="button"
-              @click="searchTerm"
+            class="absolute left-2.5 top-1/2 -translate-y-1/2"
+            type="button"
+            @click="searchTerm"
           >
             <icon
-                icon="MagnifyingGlassIcon"
-                classes="text-primary-400 w-4 h-4"
+              icon="MagnifyingGlassIcon"
+              classes="text-primary-400 w-4 h-4"
             ></icon>
           </button>
         </label>
@@ -72,39 +78,50 @@
         $t("activity-log.words.loading")
       }}</span>
     </div>
-    <div class="activity activity--min" v-for="(activity,index) in activities">
+    <div class="activity activity--min" v-for="(activity, index) in activities">
       <div class="activity__user activity__user--avatar">
         <span>{{
-            username.charAt(0).toUpperCase() +
-            username.charAt(1).toUpperCase()
-          }}</span>
+          username.charAt(0).toUpperCase() + username.charAt(1).toUpperCase()
+        }}</span>
       </div>
       <div class="content">
         <div class="content__status">
           <div class="content__status--meta">
-            <a href="#" class="font-medium text-gray-900">{{ activity.user }}</a>&nbsp
+            <a href="#" class="font-medium text-gray-900">{{ activity.user }}</a
+            >&nbsp
             <span v-html="activity.title"></span>
-            <br>
+            <br />
             <div v-if="!collapseStage[index]" class="pt-smSpace">
-              <button v-if="activity.communication" class="btn btn--secondary flex-row-reverse space-x-reverse"
-                      type="button" @click="openModal(activity)">
-
+              <button
+                v-if="activity.communication"
+                class="btn btn--secondary flex-row-reverse space-x-reverse"
+                type="button"
+                @click="openModal(activity)"
+              >
                 $t("activity-log.words.preview_email")
                 <div class="btn-icon btn__icon--left">
                   <icon icon="EnvelopeIcon"></icon>
                 </div>
-
               </button>
               <span v-html="activity.description"></span>
             </div>
-
           </div>
           <div class="content__status--time flex">
             {{ activity.created_at_date }}
-            <a class="cursor-pointer px-smSpace items-center"
-               @click.prevent="collapseStage[index] = !collapseStage[index]">
-              <icon v-if="collapseStage[index]" icon="ChevronUpIcon" classes="text-primary-400 w-4 h-4"></icon>
-              <icon v-else icon="ChevronDownIcon" classes="text-primary-400 w-4 h-4"></icon>
+            <a
+              class="cursor-pointer px-smSpace items-center"
+              @click.prevent="collapseStage[index] = !collapseStage[index]"
+            >
+              <icon
+                v-if="collapseStage[index]"
+                icon="ChevronUpIcon"
+                classes="text-primary-400 w-4 h-4"
+              ></icon>
+              <icon
+                v-else
+                icon="ChevronDownIcon"
+                classes="text-primary-400 w-4 h-4"
+              ></icon>
             </a>
           </div>
         </div>
@@ -123,35 +140,35 @@ export default {
   props: {
     getUrl: {
       type: String,
-      default: "/api/generic/activity-logs"
+      default: "/api/generic/activity-logs",
     },
     commentUrl: {
       type: String,
-      default: "/api/generic/activity-logs/comments"
+      default: "/api/generic/activity-logs/comments",
     },
     modelClass: {
       type: String,
-      required: true
+      required: true,
     },
     modelId: {
       type: String,
-      required: true
+      required: true,
     },
     allowComment: {
       type: Boolean,
-      default: false
+      default: false,
     },
     refreshSelf: {
       type: Boolean,
-      default: false
+      default: false,
     },
     currentUser: {
       type: Object,
-      required: false
+      required: false,
     },
     filterEvent: {
       type: String,
-      default: "activityLogFilterChange"
+      default: "activityLogFilterChange",
     },
     modalEvent: {
       type: String,
@@ -160,23 +177,24 @@ export default {
   },
   data() {
     return {
-      username: this.currentUser.full_name ?? this.$t("activity-log.fields.system"),
+      username:
+        this.currentUser.full_name ?? this.$t("activity-log.fields.system"),
       collapseStage: {},
       isCollapsedView: false,
       isFilterUser: false,
       loading: false,
       filters: {
-        "filter[term]": null
+        "filter[term]": null,
       },
       searchKey: null,
       comment: null,
-      activities: []
+      activities: [],
     };
   },
   created() {
     this.bus.$on("activityLogTableFilterChange", ({ params }) => {
       this.filters = Object.assign({}, params, {
-        "filter[term]": this.filters["filter[term]"]
+        "filter[term]": this.filters["filter[term]"],
       });
       this.$nextTick(() => this.getActivityLog());
     });
@@ -202,18 +220,18 @@ export default {
       const params = {
         modelClass: this.modelClass,
         modelId: this.modelId,
-        ...this.filters
+        ...this.filters,
       };
       axios
-          .get(this.getUrl, { params })
-          .then(({ data }) => {
-            this.loading = false;
-            this.activities = [];
-            if (data.data.length) {
-              this.activities = data.data;
-            }
-          })
-          .catch(console.error);
+        .get(this.getUrl, { params })
+        .then(({ data }) => {
+          this.loading = false;
+          this.activities = [];
+          if (data.data.length) {
+            this.activities = data.data;
+          }
+        })
+        .catch(console.error);
     },
 
     addComment() {
@@ -221,23 +239,23 @@ export default {
         return;
       }
       axios
-          .post(this.commentUrl, {
-            modelClass: this.modelClass,
-            modelId: this.modelId,
-            comment: this.comment
-          })
-          .then(({ data }) => {
-            this.activities = [];
-            this.comment = null;
-            if (data.data.length) {
-              this.activities = data.data;
-            }
+        .post(this.commentUrl, {
+          modelClass: this.modelClass,
+          modelId: this.modelId,
+          comment: this.comment,
+        })
+        .then(({ data }) => {
+          this.activities = [];
+          this.comment = null;
+          if (data.data.length) {
+            this.activities = data.data;
+          }
 
-            if (this.refreshSelf) {
-              this.getActivityLog();
-            }
-          })
-          .catch(console.error);
+          if (this.refreshSelf) {
+            this.getActivityLog();
+          }
+        })
+        .catch(console.error);
     },
     collapView($event) {
       if ($event) {
@@ -256,7 +274,10 @@ export default {
         this.filters[`filter[created_by]`] = "";
       }
       this.isFilterUser = $event;
-      this.bus.$emit("tableFilterChange", { params: this.filters, field: "created_by" });
+      this.bus.$emit("tableFilterChange", {
+        params: this.filters,
+        field: "created_by",
+      });
       this.$nextTick(() => this.getActivityLog());
     },
     openModal(activity) {
@@ -265,10 +286,10 @@ export default {
         componentData: {
           content: activity.communication.content,
           to: activity.communication.to,
-          subject: activity.communication.subject
-        }
+          subject: activity.communication.subject,
+        },
       });
-    }
-  }
+    },
+  },
 };
 </script>
