@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $type
  * @property array $meta
  * @property string $description
+ * @property string $title
  */
 class ActivityLog extends Model
 {
@@ -42,6 +43,7 @@ class ActivityLog extends Model
         'type',
         'meta',
         'description',
+        'title',
         'diff',
         'created_by',
     ];

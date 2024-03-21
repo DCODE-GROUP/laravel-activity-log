@@ -1,10 +1,9 @@
 <template>
-  <div class="pt-lgSpace">
+  <div class="pt-lgSpace w-full">
     <div class="activity activity--comment" v-if="allowComment">
       <div class="activity__user--avatar">
         <span>{{
-          currentUser.charAt(0).toUpperCase() +
-          currentUser.charAt(1).toUpperCase()
+          username.charAt(0).toUpperCase() + username.charAt(1).toUpperCase()
         }}</span>
       </div>
       <div class="content">
@@ -30,15 +29,28 @@
         </div>
       </div>
     </div>
-    <div class="flex items-center justify-end space-x-2 pt-4">
-      <div class="flex w-[21.875rem] space-x-1">
+    <div class="flex items-end justify-between space-x-2 py-smSpace pl-xlSpace">
+      <div class="flex justify-start">
+        <toggle
+          :value="isCollapsedView"
+          :title="$t('activity-log.fields.collapsed_view')"
+          @input="collapView($event)"
+          class="pr-smSpace"
+        ></toggle>
+        <toggle
+          :value="isFilterUser"
+          :title="$t('activity-log.fields.my_activities')"
+          @input="filterUser($event)"
+        ></toggle>
+      </div>
+      <div class="flex justify-end w-[21.875rem] space-x-1">
         <label class="relative block w-full">
           <input
             class="pl-8"
             type="text"
             name="name"
             v-model="searchKey"
-            :placeholder="$t('activity-log.search.placeholder')"
+            :placeholder="$t('activity-log.placeholders.search_description')"
             v-on:keyup.enter="searchTerm"
           />
           <button
@@ -46,14 +58,14 @@
             type="button"
             @click="searchTerm"
           >
-            <v-icon
+            <icon
               icon="MagnifyingGlassIcon"
               classes="text-primary-400 w-4 h-4"
-            ></v-icon>
+            ></icon>
           </button>
         </label>
+        <slot />
       </div>
-      <slot />
     </div>
     <div
       v-show="loading"
@@ -61,27 +73,57 @@
       role="status"
       class="flex h-full items-center justify-center space-x-2 py-8"
     >
-      <v-icon icon="ArrowPathIcon" class="h-lgSpace w-lgSpace animate-spin" />
+      <icon icon="ArrowPathIcon" class="h-lgSpace w-lgSpace animate-spin" />
       <span class="text-lg font-medium text-tertiary-500">{{
         $t("activity-log.words.loading")
       }}</span>
     </div>
-    <div class="activity activity--min" v-for="activity in activities">
+    <div class="activity activity--min" v-for="(activity, index) in activities">
       <div class="activity__user activity__user--avatar">
         <span>{{
-          activity.user.charAt(0).toUpperCase() +
-          activity.user.charAt(1).toUpperCase()
+          username.charAt(0).toUpperCase() + username.charAt(1).toUpperCase()
         }}</span>
       </div>
       <div class="content">
         <div class="content__status">
           <div class="content__status--meta">
-            <a href="#" class="font-medium text-gray-900">{{
-              activity.user
-            }}</a>
-            <span v-html="activity.description"></span>
+            <a href="#" class="font-medium text-gray-900">{{ activity.user }}</a
+            >&nbsp
+            <span v-html="activity.title"></span>
+            <br />
+            <div v-if="!collapseStage[index]" class="pt-smSpace">
+              <button
+                v-if="activity.communication"
+                class="btn btn--secondary flex-row-reverse space-x-reverse"
+                type="button"
+                @click="openModal(activity)"
+              >
+                $t("activity-log.words.preview_email")
+                <div class="btn-icon btn__icon--left">
+                  <icon icon="EnvelopeIcon"></icon>
+                </div>
+              </button>
+              <span v-html="activity.description"></span>
+            </div>
           </div>
-          <div class="content__status--time">{{ activity.created_at }}</div>
+          <div class="content__status--time flex">
+            {{ activity.created_at_date }}
+            <a
+              class="cursor-pointer px-smSpace items-center"
+              @click.prevent="collapseStage[index] = !collapseStage[index]"
+            >
+              <icon
+                v-if="collapseStage[index]"
+                icon="ChevronUpIcon"
+                classes="text-primary-400 w-4 h-4"
+              ></icon>
+              <icon
+                v-else
+                icon="ChevronDownIcon"
+                classes="text-primary-400 w-4 h-4"
+              ></icon>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -89,11 +131,12 @@
 </template>
 <script>
 import axios from "axios";
-import VIcon from "./VIcon.vue";
+import Icon from "./common/Icon.vue";
+import Toggle from "./common/Toggle.vue";
 
 export default {
   inject: ["bus"],
-  components: { VIcon },
+  components: { Icon, Toggle },
   props: {
     getUrl: {
       type: String,
@@ -120,20 +163,25 @@ export default {
       default: false,
     },
     currentUser: {
-      type: String,
-      default: "Guest",
-    },
-    modalEvent: {
-      type: String,
-      default: "openModal",
+      type: Object,
+      required: false,
     },
     filterEvent: {
       type: String,
       default: "activityLogFilterChange",
     },
+    modalEvent: {
+      type: String,
+      default: "openModal",
+    },
   },
   data() {
     return {
+      username:
+        this.currentUser.full_name ?? this.$t("activity-log.fields.system"),
+      collapseStage: {},
+      isCollapsedView: false,
+      isFilterUser: false,
       loading: false,
       filters: {
         "filter[term]": null,
@@ -208,6 +256,39 @@ export default {
           }
         })
         .catch(console.error);
+    },
+    collapView($event) {
+      if ($event) {
+        this.collapseStage = this.activities.map((value, index) => {
+          return { index: true };
+        });
+      } else {
+        this.collapseStage = {};
+      }
+      this.isCollapsedView = $event;
+    },
+    filterUser($event) {
+      if ($event && this.currentUser && this.currentUser.id) {
+        this.filters[`filter[created_by]`] = this.currentUser.id;
+      } else {
+        this.filters[`filter[created_by]`] = "";
+      }
+      this.isFilterUser = $event;
+      this.bus.$emit("tableFilterChange", {
+        params: this.filters,
+        field: "created_by",
+      });
+      this.$nextTick(() => this.getActivityLog());
+    },
+    openModal(activity) {
+      this.bus.$emit(this.modalEvent, {
+        componentName: "SummaryEmail",
+        componentData: {
+          content: activity.communication.content,
+          to: activity.communication.to,
+          subject: activity.communication.subject,
+        },
+      });
     },
   },
 };

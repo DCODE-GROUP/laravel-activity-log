@@ -1,0 +1,26 @@
+# Composer
+composer.json
+composer-lock.json
+
+# Language
+lang/
+
+# Package
+package.json
+package-lock.json
+
+# ESLint Config
+.eslintrc.js
+
+# Git
+.gitignore
+
+# Public Folders
+public/
+storage/
+
+# PHP Package
+vendor/
+
+# Node Modules
+node_modules/

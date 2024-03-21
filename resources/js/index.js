@@ -11,4 +11,4 @@ app.component("VActivityLog", VActivityLog);
 app.component("ActivityLogList", ActivityLogList);
 app.component("ActivityEmail", ActivityEmail);
 
-app.mount('#activity-log-app');
+app.mount("#activity-log-app");

@@ -17,13 +17,14 @@ class ActivityLog extends JsonResource
         return [
             'id' => $this->resource->id,
             'user' => $this->resource->loadMissing('user')->user?->getActivityLogUserName() ?: 'System',
+            'title' => $this->resource->title,
             'description' => $this->resource->description,
             'activitiable_id' => $this->resource->activitiable_id,
             'activitiable_type' => $this->resource->activitiable_type,
             'type' => $this->resource->type,
             'meta' => $this->resource->meta,
             'created_at' => $this->resource->created_at->diffForHumans(),
-            'created_at_date' => $this->resource->created_at->format(config('activity-log.date_format')),
+            'created_at_date' => $this->resource->created_at->format(config('activity-log.datetime_format')),
             'communication' => $this->getCommunicationLog(),
         ];
     }

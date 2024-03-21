@@ -19,10 +19,10 @@
             type="button"
             @click="searchTerm"
           >
-            <v-icon
+            <icon
               icon="MagnifyingGlassIcon"
               classes="text-primary-400 w-4 h-4"
-            ></v-icon>
+            ></icon>
           </button>
         </label>
         <slot />
@@ -42,25 +42,22 @@
             {{
               activity.meta
                 ? activity.meta.action
-                : $t("activity-log.fields.tender_updated")
+                : $t("activity-log.fields.updated_model")
             }}
           </td>
           <td class="whitespace-nowrap bg-slate-50 py-4">
             <div class="">
-              <v-icon
+              <icon
                 v-if="activity.communication"
                 classes="w-5 h-5 mr-xsSpace inline cursor-pointer hover:text-blue-400"
                 icon="EnvelopeIcon"
                 @click="openModal(activity)"
-              ></v-icon>
+              ></icon>
               <span v-html="activity.description"></span>
             </div>
           </td>
           <td class="bg-slate-50 py-4">
-            {{
-              activity?.meta?.created_by_label ||
-              $t("activity-log.words.created_at")
-            }}:
+            {{ activity?.meta?.created_by_label || $t("generic.created_by") }}:
             {{ activity?.meta?.created_by || activity.user }}
           </td>
           <td class="bg-slate-50 px-3 py-4 text-right">
@@ -73,11 +70,11 @@
 </template>
 <script>
 import axios from "axios";
-import VIcon from "./VIcon.vue";
+import Icon from "./common/Icon.vue";
 
 export default {
   inject: ["bus"],
-  components: { VIcon },
+  components: { Icon },
   props: {
     getUrl: {
       type: String,
