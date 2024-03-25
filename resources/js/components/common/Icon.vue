@@ -8,6 +8,11 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   EnvelopeIcon,
+  ChatBubbleBottomCenterIcon,
+  ChatBubbleLeftEllipsisIcon,
+  BellIcon,
+  PencilIcon,
+  ArrowPathIcon,
 } from "@heroicons/vue/24/outline";
 
 export default {
@@ -16,6 +21,12 @@ export default {
     MagnifyingGlassIcon,
     ChevronDownIcon,
     ChevronUpIcon,
+    EnvelopeIcon,
+    ChatBubbleBottomCenterIcon,
+    ChatBubbleLeftEllipsisIcon,
+    BellIcon,
+    PencilIcon,
+    ArrowPathIcon,
   },
   props: {
     icon: {

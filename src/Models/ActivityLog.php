@@ -25,11 +25,24 @@ class ActivityLog extends Model
     use LastModifiedBy;
     use SoftDeletes;
 
-    final public const TYPE_GENERAL = 'General';
+    final public const TYPE_DATA = 'Change of Data';
+    final public const TYPE_STATUS = 'Change of Status';
+    final public const TYPE_COMMENT = 'Comment';
+    final public const TYPE_NOTIFICATION = 'Notification';
 
-    final public const TYPE_SMS = 'Sms';
+    final public const ICON_TYPE_MAP = [
+        self::TYPE_DATA => "PencilIcon",
+        self::TYPE_STATUS => "ArrowPathIcon",
+        self::TYPE_COMMENT => "ChatBubbleLeftEllipsisIcon",
+        self::TYPE_NOTIFICATION => "BellIcon",
+    ];
 
-    final public const TYPE_EMAIL = 'Email';
+    final public const COLOR_TYPE_MAP = [
+        self::TYPE_DATA => "pink",
+        self::TYPE_STATUS => "violet",
+        self::TYPE_COMMENT => "teal",
+        self::TYPE_NOTIFICATION => "orange",
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -75,16 +88,11 @@ class ActivityLog extends Model
 
     public function getAvailableTypes(): array
     {
-        return [
-            [
-                'name' => static::TYPE_GENERAL,
-            ],
-            [
-                'name' => static::TYPE_SMS,
-            ],
-            [
-                'name' => static::TYPE_EMAIL,
-            ],
-        ];
+        return collect([
+            static::TYPE_DATA,
+            static::TYPE_STATUS,
+            static::TYPE_COMMENT,
+            static::TYPE_NOTIFICATION,
+        ])->map(fn (string $type) => ['name' => $type])->toArray();
     }
 }

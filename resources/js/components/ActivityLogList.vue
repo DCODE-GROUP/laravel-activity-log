@@ -50,7 +50,7 @@
               <icon
                 v-if="activity.communication"
                 classes="w-5 h-5 mr-xsSpace inline cursor-pointer hover:text-blue-400"
-                icon="EnvelopeIcon"
+                :icon="activity.communication.icon"
                 @click="openModal(activity)"
               ></icon>
               <span v-html="activity.description"></span>
