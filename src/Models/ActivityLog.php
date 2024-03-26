@@ -26,22 +26,25 @@ class ActivityLog extends Model
     use SoftDeletes;
 
     final public const TYPE_DATA = 'Change of Data';
+
     final public const TYPE_STATUS = 'Change of Status';
+
     final public const TYPE_COMMENT = 'Comment';
+
     final public const TYPE_NOTIFICATION = 'Notification';
 
     final public const ICON_TYPE_MAP = [
-        self::TYPE_DATA => "PencilIcon",
-        self::TYPE_STATUS => "ArrowPathIcon",
-        self::TYPE_COMMENT => "ChatBubbleLeftEllipsisIcon",
-        self::TYPE_NOTIFICATION => "BellIcon",
+        self::TYPE_DATA => 'PencilIcon',
+        self::TYPE_STATUS => 'ArrowPathIcon',
+        self::TYPE_COMMENT => 'ChatBubbleLeftEllipsisIcon',
+        self::TYPE_NOTIFICATION => 'BellIcon',
     ];
 
     final public const COLOR_TYPE_MAP = [
-        self::TYPE_DATA => "pink",
-        self::TYPE_STATUS => "violet",
-        self::TYPE_COMMENT => "teal",
-        self::TYPE_NOTIFICATION => "orange",
+        self::TYPE_DATA => 'pink',
+        self::TYPE_STATUS => 'violet',
+        self::TYPE_COMMENT => 'teal',
+        self::TYPE_NOTIFICATION => 'orange',
     ];
 
     /**
