@@ -7,7 +7,7 @@ on:
 
 jobs:
   php-cs-fixer:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -37,7 +37,7 @@ jobs:
 
   phpstan:
     name: phpstan
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: true
@@ -69,7 +69,7 @@ jobs:
         run: ./vendor/bin/phpstan --error-format=github
 
   eslint:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
