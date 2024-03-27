@@ -20,8 +20,8 @@ class CommunicationLog extends Model
     final public const TYPE_EMAIL = 'Email';
 
     final public const ICON_TYPE_MAP = [
-        self::TYPE_SMS => "ChatBubbleBottomCenterText",
-        self::TYPE_EMAIL => "EnvelopeIcon",
+        self::TYPE_SMS => 'ChatBubbleBottomCenterText',
+        self::TYPE_EMAIL => 'EnvelopeIcon',
     ];
 
     /**
