@@ -78,7 +78,10 @@
         $t("activity-log.words.loading")
       }}</span>
     </div>
-    <div class="activity activity--min relative !mt-0 pt-3" v-for="(activity, index) in activities">
+    <div
+      class="activity activity--min relative !mt-0 pt-3"
+      v-for="(activity, index) in activities"
+    >
       <div class="absolute left-[31px] h-full w-[1px] bg-slate-200"></div>
       <div
         class="flex justify-center items-center relative rounded-xl w-[48px] h-[48px] cursor-pointer"
@@ -89,9 +92,12 @@
           :classes="'w-[24px] h-[24px] text-' + activity.color + '-500'"
           :icon="activity.icon"
         ></icon>
-        <span class="absolute -right-1 -bottom-1 justify-center text-[10px] font-bold tracking-widest w-[24px] h-[24px] flex justify-center items-center text-white rounded-full bg-gray-600 ring-0 ring-neutral-500">{{
-          username.charAt(0).toUpperCase() + username.charAt(1).toUpperCase()
-        }}</span>
+        <span
+          class="absolute -right-1 -bottom-1 justify-center text-[10px] font-bold tracking-widest w-[24px] h-[24px] flex justify-center items-center text-white rounded-full bg-gray-600 ring-0 ring-neutral-500"
+          >{{
+            username.charAt(0).toUpperCase() + username.charAt(1).toUpperCase()
+          }}</span
+        >
       </div>
       <div class="content">
         <div class="content__status">
@@ -199,14 +205,14 @@ export default {
       comment: null,
       activities: [],
       colors: [
-        'bg-violet-50',
-        'text-violet-500',
-        'bg-teal-50',
-        'text-teal-500',
-        'bg-orange-50',
-        'text-orange-500',
-        'bg-pink-50',
-        'text-pink-500',
+        "bg-violet-50",
+        "text-violet-500",
+        "bg-teal-50",
+        "text-teal-500",
+        "bg-orange-50",
+        "text-orange-500",
+        "bg-pink-50",
+        "text-pink-500",
       ],
     };
   },
