@@ -17,6 +17,7 @@ return new class extends Migration
     {
         Schema::create('communication_logs', function (Blueprint $table) {
             $table->id();
+            $table->string('type')->default(CommunicationLog::TYPE_EMAIL);
             $table->text('to')->nullable();
             $table->text('cc')->nullable();
             $table->text('bcc')->nullable();
@@ -28,7 +29,7 @@ return new class extends Migration
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->increments('id');
             $table->morphs('activitiable');
-            $table->string('type')->default(ActivityLog::TYPE_GENERAL);
+            $table->string('type')->default(ActivityLog::TYPE_DATA);
             $table->foreignIdFor(CommunicationLog::class)->nullable();
             $table->foreign('communication_log_id')->references('id')->on('communication_logs');
             $table->string('title')->nullable()->default('make a change');

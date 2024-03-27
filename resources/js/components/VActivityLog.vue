@@ -1,8 +1,8 @@
 <template>
   <div class="pt-lgSpace w-full">
     <div class="activity activity--comment" v-if="allowComment">
-      <div class="activity__user--avatar">
-        <span>{{
+      <div class="activity__user--avatar !w-[48px] !h-[48px]">
+        <span class="font-bold !text-lg">{{
           username.charAt(0).toUpperCase() + username.charAt(1).toUpperCase()
         }}</span>
       </div>
@@ -78,11 +78,26 @@
         $t("activity-log.words.loading")
       }}</span>
     </div>
-    <div class="activity activity--min" v-for="(activity, index) in activities">
-      <div class="activity__user activity__user--avatar">
-        <span>{{
-          username.charAt(0).toUpperCase() + username.charAt(1).toUpperCase()
-        }}</span>
+    <div
+      class="activity activity--min relative !mt-0 pt-3"
+      v-for="(activity, index) in activities"
+    >
+      <div class="absolute left-[31px] h-full w-[1px] bg-slate-200"></div>
+      <div
+        class="flex justify-center items-center relative rounded-xl w-[48px] h-[48px] cursor-pointer"
+        :class="'bg-' + activity.color + '-50'"
+      >
+        <icon
+          v-if="activity.type"
+          :classes="'w-[24px] h-[24px] text-' + activity.color + '-500'"
+          :icon="activity.icon"
+        ></icon>
+        <span
+          class="absolute -right-1 -bottom-1 justify-center text-[10px] font-bold tracking-widest w-[24px] h-[24px] flex justify-center items-center text-white rounded-full bg-gray-600 ring-0 ring-neutral-500"
+          >{{
+            username.charAt(0).toUpperCase() + username.charAt(1).toUpperCase()
+          }}</span
+        >
       </div>
       <div class="content">
         <div class="content__status">
@@ -189,6 +204,16 @@ export default {
       searchKey: null,
       comment: null,
       activities: [],
+      colors: [
+        "bg-violet-50",
+        "text-violet-500",
+        "bg-teal-50",
+        "text-teal-500",
+        "bg-orange-50",
+        "text-orange-500",
+        "bg-pink-50",
+        "text-pink-500",
+      ],
     };
   },
   created() {

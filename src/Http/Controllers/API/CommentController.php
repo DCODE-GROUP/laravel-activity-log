@@ -3,6 +3,7 @@
 namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
 use Dcodegroup\ActivityLog\Http\Requests\ExistingRequest;
+use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Resources\ActivityLogCollection;
 use Illuminate\Routing\Controller;
 
@@ -17,6 +18,7 @@ class CommentController extends Controller
             resolve(config('activity-log.activity_log_model'))->query()->create([
                 'activitiable_type' => $modelClass,
                 'activitiable_id' => $modelId,
+                'type' => ActivityLog::TYPE_COMMENT,
                 'title' => 'left a comment.',
                 'description' => $request->input('comment'),
             ]);
