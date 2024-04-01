@@ -79,8 +79,8 @@ trait ActivityLoggable
         } else {
             return [
                 'key' => $attribute,
-                'from' => $from,
-                'to' => $to,
+                'from' =>  sprintf('<span class="activity__db-content">%s</span>', $from ?? '+'),
+                'to' => sprintf('<span class="activity__db-content">%s</span>', $to ?? '+'),
             ];
         }
     }
