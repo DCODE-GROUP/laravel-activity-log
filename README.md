@@ -75,7 +75,14 @@ spacing: {
     "3xsSpace": "2px",
 },
 ```
-
+Update the module exports under content:
+```js
+content: [
+    ...
+    "./vendor/dcodegroup/**/*.{blade.php,vue,js,ts}",
+    ...
+],
+```
 Update the vue il8n package to load additional paths
 
 ```javascript
