@@ -113,7 +113,7 @@
                 type="button"
                 @click="openModal(activity)"
               >
-              {{  $t("activity-log.buttons.preview_email") }}
+                {{ $t("activity-log.buttons.preview_email") }}
                 <div class="btn-icon btn__icon--left">
                   <icon icon="EnvelopeIcon"></icon>
                 </div>
