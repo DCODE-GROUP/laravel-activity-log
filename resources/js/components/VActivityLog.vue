@@ -68,7 +68,7 @@
       </div>
     </div>
     <div
-      v-show="loading"
+      v-if="loading"
       :aria-label="$t('activity-log.words.loading')"
       role="status"
       class="flex h-full items-center justify-center space-x-2 py-8"
