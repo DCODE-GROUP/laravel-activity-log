@@ -24,7 +24,7 @@ class FilterController extends Controller
                 ->refineItems(
                     'created_by',
                     'User',
-                    $this->filterQuery(config('activity-log.user_model')::query(), $request, searchTermField: [config('activity-log.user_search_term')]),
+                    $this->filterQuery(config('activity-log.user_model')::query(), $request, searchField: 'filter.created_by', searchTermField: [config('activity-log.user_search_term')]),
                     searchField: 'full_name',
                     itemSelected: $request->filled('filter.created_by')
                 )
