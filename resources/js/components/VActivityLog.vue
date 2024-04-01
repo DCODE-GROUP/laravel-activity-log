@@ -44,7 +44,7 @@
         ></toggle>
       </div>
       <div class="flex justify-end w-[21.875rem] space-x-1">
-        <label class="relative block w-full">
+        <label class="relative block w-9/12">
           <input
             class="pl-8"
             type="text"
@@ -64,7 +64,7 @@
             ></icon>
           </button>
         </label>
-        <slot />
+        <slot class="w-3/12" />
       </div>
     </div>
     <div

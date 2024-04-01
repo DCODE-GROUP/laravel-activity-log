@@ -25,8 +25,8 @@ class ActivityLog extends JsonResource
             'created_at' => $this->resource->created_at->diffForHumans(),
             'created_at_date' => $this->resource->created_at->format(config('activity-log.datetime_format')),
             'communication' => $this->getCommunicationLog(),
-            'icon' => ActivityLogModel::ICON_TYPE_MAP[$this->resource->type],
-            'color' => ActivityLogModel::COLOR_TYPE_MAP[$this->resource->type],
+            'icon' => ActivityLogModel::ICON_TYPE_MAP[$this->resource->type] ?? ActivityLogModel::ICON_TYPE_MAP[ActivityLogModel::TYPE_DATA],
+            'color' => ActivityLogModel::COLOR_TYPE_MAP[$this->resource->type] ?? ActivityLogModel::COLOR_TYPE_MAP[ActivityLogModel::TYPE_DATA],
         ];
     }
 
