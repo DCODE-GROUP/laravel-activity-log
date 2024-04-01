@@ -113,12 +113,12 @@
                 type="button"
                 @click="openModal(activity)"
               >
-                $t("activity-log.words.preview_email")
+                {{ $t("activity-log.buttons.preview_email") }}
                 <div class="btn-icon btn__icon--left">
                   <icon icon="EnvelopeIcon"></icon>
                 </div>
               </button>
-              <span v-html="activity.description"></span>
+              <span v-else v-html="activity.description"></span>
             </div>
           </div>
           <div class="content__status--time flex">
@@ -217,7 +217,7 @@ export default {
     };
   },
   created() {
-    this.bus.$on("activityLogTableFilterChange", ({ params }) => {
+    this.bus.$on(this.filterEvent, ({ params }) => {
       this.filters = Object.assign({}, params, {
         "filter[term]": this.filters["filter[term]"],
       });
@@ -299,7 +299,7 @@ export default {
         this.filters[`filter[created_by]`] = "";
       }
       this.isFilterUser = $event;
-      this.bus.$emit("tableFilterChange", {
+      this.bus.$emit(this.filterEvent, {
         params: this.filters,
         field: "created_by",
       });

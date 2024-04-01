@@ -79,8 +79,8 @@ trait ActivityLoggable
         } else {
             return [
                 'key' => $attribute,
-                'from' => $from,
-                'to' => $to,
+                'from' => sprintf('<span class="activity__db-content">%s</span>', $from ?? '+'),
+                'to' => sprintf('<span class="activity__db-content">%s</span>', $to ?? '+'),
             ];
         }
     }
@@ -90,7 +90,7 @@ trait ActivityLoggable
         return $this->activityLogs()->create($description);
     }
 
-    public function createCommunicationLog(array $data, string $to, string $content): CommunicationLog
+    public function createCommunicationLog(array $data, string $to, string $content, string $type = CommunicationLog::TYPE_EMAIL): CommunicationLog
     {
         return CommunicationLog::query()->create([
             'to' => $to,
@@ -98,6 +98,7 @@ trait ActivityLoggable
             'bcc' => implode(', ', $data['bcc']),
             'subject' => $data['subject'],
             'content' => $content,
+            'type' => $type,
         ]);
     }
 }

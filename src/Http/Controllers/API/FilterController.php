@@ -21,7 +21,13 @@ class FilterController extends Controller
                 ->make()
                 ->refineItems('type', 'Type', collect(resolve(config('activity-log.activity_log_model'))->getAvailableTypes()), valueField: 'name', apiMode: false)
                 ->dateRange('date', 'Date')
-                ->refineItems('created_by', 'User', $this->filterQuery(config('activity-log.user_model')::query(), $request, searchTermField: ['email']), searchField: 'full_name')
+                ->refineItems(
+                    'created_by',
+                    'User',
+                    $this->filterQuery(config('activity-log.user_model')::query(), $request, searchTermField: [config('activity-log.user_search_term')]),
+                    searchField: 'full_name',
+                    itemSelected: $request->filled('filter.created_by')
+                )
         );
     }
 
@@ -29,7 +35,7 @@ class FilterController extends Controller
     {
         return match ($facet) {
             'created_by' => response()->json(resolve(config('activity-log.filter_builder_path'))->make()
-                ->buildRefineItems($this->filterQuery(config('activity-log.user_model')::query(), $request, searchTermField: ['email']), searchField: 'full_name')
+                ->buildRefineItems($this->filterQuery(config('activity-log.user_model')::query(), $request, searchTermField: [config('activity-log.user_search_term')]), searchField: 'full_name')
                 ->toArray()),
             default => response()->json(),
         };
@@ -48,11 +54,7 @@ class FilterController extends Controller
 
         if ($searchField && $request->filled($searchField)) {
             $idsFilters = explode(',', $request->input($searchField));
-            $query->where(function ($q) use ($idsFilters) {
-                foreach ($idsFilters as $v) {
-                    $q->orWhere('id', $v);
-                }
-            });
+            $query->whereIn('id', $idsFilters);
         }
         if ($request->filled('all')) {
             return $query->orderBy($searchTermField[0])->get();

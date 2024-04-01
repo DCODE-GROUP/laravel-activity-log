@@ -24,6 +24,11 @@ class CommentController extends Controller
             ]);
         }
 
-        return new ActivityLogCollection($model->activityLogs()->with(['user', 'communicationLog'])->orderByDesc('created_at')->get());
+        return new ActivityLogCollection($model->activityLogs()
+            ->with([
+                config('activity-log.user_relationship'),
+                config('activity-log.communication_log_relationship'),
+            ])
+            ->orderByDesc('created_at')->get());
     }
 }
