@@ -79,7 +79,7 @@ trait ActivityLoggable
         } else {
             return [
                 'key' => $attribute,
-                'from' =>  sprintf('<span class="activity__db-content">%s</span>', $from ?? '+'),
+                'from' => sprintf('<span class="activity__db-content">%s</span>', $from ?? '+'),
                 'to' => sprintf('<span class="activity__db-content">%s</span>', $to ?? '+'),
             ];
         }
@@ -98,7 +98,7 @@ trait ActivityLoggable
             'bcc' => implode(', ', $data['bcc']),
             'subject' => $data['subject'],
             'content' => $content,
-            'type' =>  $type,
+            'type' => $type,
         ]);
     }
 }
