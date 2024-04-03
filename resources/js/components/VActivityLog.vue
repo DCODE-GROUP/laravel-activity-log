@@ -84,7 +84,7 @@
     >
       <div class="absolute left-[31px] h-full w-[1px] bg-slate-200"></div>
       <div
-        class="flex justify-center items-center relative rounded-xl w-[48px] h-[48px] cursor-pointer"
+        class="flex justify-center items-center relative rounded-xl min-w-[48px] w-[48px] h-[48px] cursor-pointer"
         :class="'bg-' + activity.color + '-50'"
       >
         <icon
@@ -188,6 +188,10 @@ export default {
     modalEvent: {
       type: String,
       default: "openModal",
+    },
+    activityEmailComponentName: {
+      type: String,
+      default: "ActivityEmail",
     },
   },
   data() {
@@ -307,7 +311,7 @@ export default {
     },
     openModal(activity) {
       this.bus.$emit(this.modalEvent, {
-        componentName: "SummaryEmail",
+        componentName: this.activityEmailComponentName,
         componentData: {
           content: activity.communication.content,
           to: activity.communication.to,
