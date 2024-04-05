@@ -200,7 +200,7 @@ export default {
     enterToComment: {
       type: Boolean,
       default: true,
-    }
+    },
   },
   data() {
     return {
