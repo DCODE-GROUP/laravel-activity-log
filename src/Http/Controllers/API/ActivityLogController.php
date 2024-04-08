@@ -14,10 +14,13 @@ class ActivityLogController extends Controller
 {
     public function __invoke(ExistingRequest $request): ActivityLogCollection
     {
+        $communication = config('activity-log.communication_log_relationship');
         $query = QueryBuilder::for(config('activity-log.activity_log_model'))
             ->with([
                 config('activity-log.user_relationship'),
-                config('activity-log.communication_log_relationship'),
+                $communication,
+                "$communication.reads",
+                "$communication.views",
             ])
             ->allowedFilters([
                 'created_by',

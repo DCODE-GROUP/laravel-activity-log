@@ -111,17 +111,36 @@
             <span v-html="activity.title"></span>
             <br />
             <div v-if="!collapseStage[index]" class="pt-smSpace">
-              <button
-                v-if="activity.communication"
-                class="btn btn--secondary max-h-[32px] rounded-lg flex-row-reverse space-x-reverse"
-                type="button"
-                @click="openModal(activity)"
-              >
-                {{ $t("activity-log.buttons.preview_email") }}
-                <div class="btn-icon btn__icon--left">
-                  <icon icon="EnvelopeIcon"></icon>
+              <div v-if="activity.communication" class="flex items-center space-x-2">
+                <button
+                    class="btn btn--secondary max-h-[32px] rounded-lg"
+                    type="button"
+                    @click="openModal(activity)"
+                >
+                  <div class="flex items-center flex-row-reverse space-x-reverse" v-if="activity.communication.type === 'Email'">
+                    <span>{{ $t("activity-log.buttons.preview_email") }}</span>
+                    <div class="btn-icon btn__icon--left">
+                      <icon icon="EnvelopeIcon"></icon>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center flex-row-reverse space-x-reverse" v-if="activity.communication.type === 'Sms'">
+                    <span>{{ $t("activity-log.buttons.preview_sms") }}</span>
+                    <div class="btn-icon btn__icon--left">
+                      <icon icon="ChatBubbleLeftRightIcon"></icon>
+                    </div>
+                  </div>
+                </button>
+                <div v-if="activity.title.includes('send a notification email')">
+                  <span v-if="activity.communication.views_count">{{
+                      $t("activity-log.phases.opened_on")
+                    }} {{ activity.communication.read_at_date }} ({{
+                      activity.communication.views_count
+                    }} {{ $t("activity-log.words.views") }})</span>
+                  <span v-else>{{ $t("activity-log.phases.email_has_not_been_opened") }}</span>
                 </div>
-              </button>
+              </div>
+
               <span
                 v-else
                 class="content__status--description"
@@ -329,9 +348,7 @@ export default {
       }
 
       this.$nextTick(() => {
-        const allIsCollapsedView = Object.values(this.collapseStage).every(
-          (isCollapsed) => isCollapsed,
-        );
+        const allIsCollapsedView = Object.values(this.collapseStage).every((isCollapsed) => isCollapsed);
 
         if (!allIsCollapsedView) {
           return;

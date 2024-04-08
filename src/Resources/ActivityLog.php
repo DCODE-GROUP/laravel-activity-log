@@ -43,6 +43,8 @@ class ActivityLog extends JsonResource
             'subject' => $this->resource->communicationLog->subject,
             'content' => $this->resource->communicationLog->content ?? $this->resource->description,
             'icon' => CommunicationLog::ICON_TYPE_MAP[$this->resource->communicationLog->type],
+            'reads' => $this->resource->communicationLog->reads->count(),
+            'views' => $this->resource->communicationLog->views->count(),
         ];
     }
 }
