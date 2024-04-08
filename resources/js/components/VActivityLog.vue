@@ -82,7 +82,7 @@
       class="activity activity--min relative !mt-0 pt-3"
       v-for="(activity, index) in activities"
     >
-      <div class="absolute left-[31px] h-full w-[1px] bg-slate-200"></div>
+      <div class="absolute left-[24px] h-full w-[1px] bg-slate-200"></div>
       <div
         class="flex justify-center items-center relative rounded-xl min-w-[48px] w-[48px] h-[48px] cursor-pointer"
         :class="'bg-' + activity.color + '-50'"
