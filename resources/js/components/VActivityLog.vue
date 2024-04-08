@@ -9,7 +9,7 @@
       <div class="content">
         <div class="content__text">
           <textarea
-            @keyup.enter="addComment"
+            @keyup.enter="addCommentByEnter"
             class="content__text--textarea focus:ring-0"
             v-model="comment"
             rows="3"
@@ -118,7 +118,11 @@
                   <icon icon="EnvelopeIcon"></icon>
                 </div>
               </button>
-              <span v-else v-html="activity.description"></span>
+              <span
+                v-else
+                class="content__status--description"
+                v-html="activity.description"
+              ></span>
             </div>
           </div>
           <div class="content__status--time flex">
@@ -192,6 +196,10 @@ export default {
     activityEmailComponentName: {
       type: String,
       default: "ActivityEmail",
+    },
+    enterToComment: {
+      type: Boolean,
+      default: true,
     },
   },
   data() {
@@ -286,6 +294,13 @@ export default {
         })
         .catch(console.error);
     },
+
+    addCommentByEnter() {
+      if (this.enterToComment) {
+        this.addComment();
+      }
+    },
+
     collapView($event) {
       if ($event) {
         this.collapseStage = this.activities.map((value, index) => {

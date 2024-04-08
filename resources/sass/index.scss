@@ -68,6 +68,10 @@
                 .content__status--time {
                     @apply whitespace-nowrap text-right flex items-baseline;
                 }
+
+                .content__status--description {
+                    @apply whitespace-pre-wrap;
+                }
             }
 
             .content__comment {
