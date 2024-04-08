@@ -83,7 +83,10 @@
       class="activity activity--min relative !mt-0 pt-8 pl-0"
       v-for="(activity, index) in activities"
     >
-      <div v-show="index < activities.length - 1" class="absolute left-[24px] h-full w-[1px] bg-slate-200"></div>
+      <div
+        v-show="index < activities.length - 1"
+        class="absolute left-[24px] h-full w-[1px] bg-slate-200"
+      ></div>
       <div
         class="flex justify-center items-center relative rounded-xl min-w-[48px] w-[48px] h-[48px] cursor-pointer"
         :class="'bg-' + activity.color + '-50'"
@@ -318,7 +321,7 @@ export default {
     },
     individualCollapse(index) {
       const newValue = !this.collapseStage[index];
-      this.collapseStage[index] = newValue
+      this.collapseStage[index] = newValue;
 
       if (!newValue) {
         this.isCollapsedView = false;
@@ -326,7 +329,9 @@ export default {
       }
 
       this.$nextTick(() => {
-        const allIsCollapsedView = Object.values(this.collapseStage).every((isCollapsed) => isCollapsed);
+        const allIsCollapsedView = Object.values(this.collapseStage).every(
+          (isCollapsed) => isCollapsed,
+        );
 
         if (!allIsCollapsedView) {
           return;
