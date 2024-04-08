@@ -29,8 +29,9 @@
         </div>
       </div>
     </div>
-    <div class="flex items-end justify-between space-x-2 py-smSpace pl-xlSpace">
-      <div class="flex justify-start">
+    <div class="flex items-end justify-between space-x-2 py-smSpace">
+      <div class="flex justify-start space-x-2">
+        <div class="w-[48px]"></div>
         <toggle
           :value="isCollapsedView"
           :title="$t('activity-log.fields.collapsed_view')"
@@ -79,10 +80,10 @@
       }}</span>
     </div>
     <div
-      class="activity activity--min relative !mt-0 pt-3"
+      class="activity activity--min relative !mt-0 pt-8 pl-0"
       v-for="(activity, index) in activities"
     >
-      <div class="absolute left-[24px] h-full w-[1px] bg-slate-200"></div>
+      <div v-show="index < activities.length - 1" class="absolute left-[24px] h-full w-[1px] bg-slate-200"></div>
       <div
         class="flex justify-center items-center relative rounded-xl min-w-[48px] w-[48px] h-[48px] cursor-pointer"
         :class="'bg-' + activity.color + '-50'"
@@ -109,7 +110,7 @@
             <div v-if="!collapseStage[index]" class="pt-smSpace">
               <button
                 v-if="activity.communication"
-                class="btn btn--secondary flex-row-reverse space-x-reverse"
+                class="btn btn--secondary max-h-[32px] rounded-lg flex-row-reverse space-x-reverse"
                 type="button"
                 @click="openModal(activity)"
               >
@@ -129,7 +130,7 @@
             {{ activity.created_at_date }}
             <a
               class="cursor-pointer px-smSpace items-center"
-              @click.prevent="collapseStage[index] = !collapseStage[index]"
+              @click.prevent="individualCollapse(index)"
             >
               <icon
                 v-if="collapseStage[index]"
@@ -207,7 +208,7 @@ export default {
       username:
         this.currentUser.full_name ?? this.$t("activity-log.fields.system"),
       collapseStage: {},
-      isCollapsedView: false,
+      isCollapsedView: true,
       isFilterUser: false,
       loading: false,
       filters: {
@@ -241,8 +242,9 @@ export default {
       this.$nextTick(() => this.getActivityLog());
     });
   },
-  mounted() {
-    this.getActivityLog();
+  async mounted() {
+    await this.getActivityLog();
+    this.collapView(true);
   },
 
   methods: {
@@ -259,7 +261,7 @@ export default {
         modelId: this.modelId,
         ...this.filters,
       };
-      axios
+      return axios
         .get(this.getUrl, { params })
         .then(({ data }) => {
           this.loading = false;
@@ -303,13 +305,35 @@ export default {
 
     collapView($event) {
       if ($event) {
-        this.collapseStage = this.activities.map((value, index) => {
-          return { index: true };
-        });
+        const newCollapseStage = {};
+        this.activities.reduce((current, next, index) => {
+          current[index] = true;
+          return current;
+        }, newCollapseStage);
+        this.collapseStage = newCollapseStage;
       } else {
         this.collapseStage = {};
       }
       this.isCollapsedView = $event;
+    },
+    individualCollapse(index) {
+      const newValue = !this.collapseStage[index];
+      this.collapseStage[index] = newValue
+
+      if (!newValue) {
+        this.isCollapsedView = false;
+        return;
+      }
+
+      this.$nextTick(() => {
+        const allIsCollapsedView = Object.values(this.collapseStage).every((isCollapsed) => isCollapsed);
+
+        if (!allIsCollapsedView) {
+          return;
+        }
+
+        this.collapView(true);
+      });
     },
     filterUser($event) {
       if ($event && this.currentUser && this.currentUser.id) {
