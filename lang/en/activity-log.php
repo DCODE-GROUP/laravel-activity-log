@@ -31,6 +31,7 @@ return [
     'buttons' => [
         'save_comment' => 'Comment',
         'preview_email' => '  Preview Email',
+        'preview_sms' => '  Preview SMS',
     ],
 
     'placeholders' => [
@@ -41,8 +42,15 @@ return [
     'words' => [
         'loading' => 'Loading ...',
         'created_at' => 'Created',
+        'views' => 'views',
+        'reads' => 'reads',
         'read_more' => 'Read more',
         'read_less' => 'Read less',
+    ],
+
+    'phases' => [
+        'opened_on' => 'Opened on',
+        'email_has_not_been_opened' => 'Email hasn\'t been opened.',
     ],
 
 ];

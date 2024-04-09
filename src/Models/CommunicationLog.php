@@ -3,6 +3,7 @@
 namespace Dcodegroup\ActivityLog\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 /**
  * @property int $id
@@ -12,6 +13,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $bcc
  * @property string|null $subject
  * @property string|null $content
+ * @property Collection $reads
+ * @property Collection $views
  */
 class CommunicationLog extends Model
 {
@@ -37,4 +40,16 @@ class CommunicationLog extends Model
         'subject',
         'content',
     ];
+
+    public function reads()
+    {
+        return $this->hasMany(ActivityLog::class, 'communication_log_id', 'id')
+            ->where('title', 'like', '% read an %');
+    }
+
+    public function views()
+    {
+        return $this->hasMany(ActivityLog::class, 'communication_log_id', 'id')
+            ->where('title', 'like', '% view a %');
+    }
 }

@@ -29,8 +29,9 @@
         </div>
       </div>
     </div>
-    <div class="flex items-end justify-between space-x-2 py-smSpace pl-xlSpace">
-      <div class="flex justify-start">
+    <div class="flex items-end justify-between space-x-2 py-smSpace">
+      <div class="flex justify-start space-x-2">
+        <div class="w-[48px]"></div>
         <toggle
           :value="isCollapsedView"
           :title="$t('activity-log.fields.collapsed_view')"
@@ -79,10 +80,13 @@
       }}</span>
     </div>
     <div
-      class="activity activity--min relative !mt-0 pt-3"
+      class="activity activity--min relative !mt-0 pt-8 pl-0"
       v-for="(activity, index) in activities"
     >
-      <div class="absolute left-[31px] h-full w-[1px] bg-slate-200"></div>
+      <div
+        v-show="index < activities.length - 1"
+        class="absolute left-[24px] h-full w-[1px] bg-slate-200"
+      ></div>
       <div
         class="flex justify-center items-center relative rounded-xl min-w-[48px] w-[48px] h-[48px] cursor-pointer"
         :class="'bg-' + activity.color + '-50'"
@@ -107,17 +111,50 @@
             <span v-html="activity.title"></span>
             <br />
             <div v-if="!collapseStage[index]" class="pt-smSpace">
-              <button
+              <div
                 v-if="activity.communication"
-                class="btn btn--secondary flex-row-reverse space-x-reverse"
-                type="button"
-                @click="openModal(activity)"
+                class="flex items-center space-x-2"
               >
-                {{ $t("activity-log.buttons.preview_email") }}
-                <div class="btn-icon btn__icon--left">
-                  <icon icon="EnvelopeIcon"></icon>
+                <button
+                  class="btn btn--secondary max-h-[32px] rounded-lg"
+                  type="button"
+                  @click="openModal(activity)"
+                >
+                  <div
+                    class="flex items-center flex-row-reverse space-x-reverse"
+                    v-if="activity.communication.type === 'Email'"
+                  >
+                    <span>{{ $t("activity-log.buttons.preview_email") }}</span>
+                    <div class="btn-icon btn__icon--left">
+                      <icon icon="EnvelopeIcon"></icon>
+                    </div>
+                  </div>
+
+                  <div
+                    class="flex items-center flex-row-reverse space-x-reverse"
+                    v-if="activity.communication.type === 'Sms'"
+                  >
+                    <span>{{ $t("activity-log.buttons.preview_sms") }}</span>
+                    <div class="btn-icon btn__icon--left">
+                      <icon icon="ChatBubbleLeftRightIcon"></icon>
+                    </div>
+                  </div>
+                </button>
+                <div
+                  v-if="activity.title.includes('send a notification email')"
+                >
+                  <span v-if="activity.communication.views_count"
+                    >{{ $t("activity-log.phases.opened_on") }}
+                    {{ activity.communication.read_at_date }} ({{
+                      activity.communication.views_count
+                    }}
+                    {{ $t("activity-log.words.views") }})</span
+                  >
+                  <span v-else>{{
+                    $t("activity-log.phases.email_has_not_been_opened")
+                  }}</span>
                 </div>
-              </button>
+              </div>
               <div v-else class="content__status--description">
                 <read-more-content
                   :content="activity.description"
@@ -130,7 +167,7 @@
             {{ activity.created_at_date }}
             <a
               class="cursor-pointer px-smSpace items-center"
-              @click.prevent="collapseStage[index] = !collapseStage[index]"
+              @click.prevent="individualCollapse(index)"
             >
               <icon
                 v-if="collapseStage[index]"
@@ -203,13 +240,17 @@ export default {
       type: Boolean,
       default: true,
     },
+    isMarkdownContent: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       username:
         this.currentUser.full_name ?? this.$t("activity-log.fields.system"),
       collapseStage: {},
-      isCollapsedView: false,
+      isCollapsedView: true,
       isFilterUser: false,
       loading: false,
       filters: {
@@ -243,8 +284,9 @@ export default {
       this.$nextTick(() => this.getActivityLog());
     });
   },
-  mounted() {
-    this.getActivityLog();
+  async mounted() {
+    await this.getActivityLog();
+    this.collapView(true);
   },
 
   methods: {
@@ -261,7 +303,7 @@ export default {
         modelId: this.modelId,
         ...this.filters,
       };
-      axios
+      return axios
         .get(this.getUrl, { params })
         .then(({ data }) => {
           this.loading = false;
@@ -305,13 +347,37 @@ export default {
 
     collapView($event) {
       if ($event) {
-        this.collapseStage = this.activities.map((value, index) => {
-          return { index: true };
-        });
+        const newCollapseStage = {};
+        this.activities.reduce((current, next, index) => {
+          current[index] = true;
+          return current;
+        }, newCollapseStage);
+        this.collapseStage = newCollapseStage;
       } else {
         this.collapseStage = {};
       }
       this.isCollapsedView = $event;
+    },
+    individualCollapse(index) {
+      const newValue = !this.collapseStage[index];
+      this.collapseStage[index] = newValue;
+
+      if (!newValue) {
+        this.isCollapsedView = false;
+        return;
+      }
+
+      this.$nextTick(() => {
+        const allIsCollapsedView = Object.values(this.collapseStage).every(
+          (isCollapsed) => isCollapsed,
+        );
+
+        if (!allIsCollapsedView) {
+          return;
+        }
+
+        this.collapView(true);
+      });
     },
     filterUser($event) {
       if ($event && this.currentUser && this.currentUser.id) {
@@ -333,6 +399,7 @@ export default {
           content: activity.communication.content,
           to: activity.communication.to,
           subject: activity.communication.subject,
+          isMarkdownContent: this.isMarkdownContent,
         },
       });
     },

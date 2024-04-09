@@ -37,6 +37,7 @@
     "vue-router": "^3.0.1"
   },
   "dependencies": {
-    "laravel-vue-i18n": "^2.7.6"
+    "laravel-vue-i18n": "^2.7.6",
+    "vue-markdown-render": "^2.1.1"
   }
 }

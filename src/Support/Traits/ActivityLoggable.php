@@ -87,6 +87,13 @@ trait ActivityLoggable
 
     public function createActivityLog(array $description): ActivityLog
     {
+        $diff = data_get($description, 'diff', []);
+
+        if (count($diff) === 1 && data_get($diff, '0.key') === 'Status') {
+            $description['title'] = Str::replace('updated', 'updated status for', $description['title']);
+            $description['type'] = ActivityLog::TYPE_STATUS;
+        }
+
         return $this->activityLogs()->create($description);
     }
 
