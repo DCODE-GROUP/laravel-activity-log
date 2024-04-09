@@ -44,6 +44,8 @@ return [
         'created_at' => 'Created',
         'views' => 'views',
         'reads' => 'reads',
+        'read_more' => 'Read more',
+        'read_less' => 'Read less',
     ],
 
     'phases' => [
