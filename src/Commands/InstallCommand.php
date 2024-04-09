@@ -34,6 +34,9 @@ class InstallCommand extends Command
         $this->comment('Publishing Activity Log Configuration...');
         $this->callSilent('vendor:publish', ['--tag' => 'activity-log-config']);
 
+        $this->comment('Publishing Activity Log Transations...');
+        $this->callSilent('vendor:publish', ['--tag' => 'activity-log-translations']);
+
         $this->comment('Publishing Activity Log Sass...');
         $this->callSilent('vendor:publish', ['--tag' => 'activity-log-sass']);
 
