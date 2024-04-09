@@ -118,11 +118,12 @@
                   <icon icon="EnvelopeIcon"></icon>
                 </div>
               </button>
-              <span
-                v-else
-                class="content__status--description"
-                v-html="activity.description"
-              ></span>
+              <div v-else class="content__status--description">
+                <read-more-content
+                  :content="activity.description"
+                  :lines="2"
+                ></read-more-content>
+              </div>
             </div>
           </div>
           <div class="content__status--time flex">
@@ -152,10 +153,11 @@
 import axios from "axios";
 import Icon from "./common/Icon.vue";
 import Toggle from "./common/Toggle.vue";
+import ReadMoreContent from "./common/ReadMoreContent.vue";
 
 export default {
   inject: ["bus"],
-  components: { Icon, Toggle },
+  components: { ReadMoreContent, Icon, Toggle },
   props: {
     getUrl: {
       type: String,

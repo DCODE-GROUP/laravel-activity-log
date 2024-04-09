@@ -1,0 +1,61 @@
+<template>
+  <div class="">
+    <div
+      class="readmore-container"
+      :style="enable && !isOpen ? { webkitLineClamp: lines } : {}"
+    >
+      <span v-html="content"></span>
+    </div>
+    <template v-if="this.enable">
+      <a @click.prevent="toggle" class="inline text-blue-600 cursor-pointer">{{
+        isOpen
+          ? $t("activity-log.words.read_less")
+          : $t("activity-log.words.read_more")
+      }}</a>
+    </template>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "ReadMoreContent",
+  props: {
+    content: {
+      type: String,
+      required: true,
+    },
+    lines: {
+      type: Number,
+      default: 1,
+    },
+    enable: {
+      type: Boolean,
+      default: true,
+    },
+    open: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  data() {
+    return {
+      isOpen: this.open,
+    };
+  },
+  methods: {
+    toggle() {
+      this.isOpen = !this.isOpen;
+    },
+  },
+};
+</script>
+
+<style scoped>
+.readmore-container {
+  overflow: hidden;
+  position: relative;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  white-space: pre-wrap;
+}
+</style>
