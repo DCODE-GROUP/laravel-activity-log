@@ -157,6 +157,7 @@
               </div>
               <div v-else class="content__status--description">
                 <read-more-content
+                  v-if="activity.description"
                   :content="activity.description"
                   :lines="2"
                 ></read-more-content>
