@@ -3,6 +3,15 @@
 The `dcodegroup/activity-log` package provides a simple and unified approach to track and record activity / interactions against your Laravel models (and relations). Capture changes, updates, and user interactions to enhance transparency and auditing in your application in a centralised and consistent approach.
 
 ## Installation
+#### Add the following to your package.json file to support markdown html:
+
+```bash
+"dependencies": {
+  // ...
+  "vue-markdown-render": "^2.1.1",
+}
+```
+
 #### PHP
 You can install the package via composer:
 
