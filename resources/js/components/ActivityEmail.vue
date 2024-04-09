@@ -23,7 +23,7 @@ import VueMarkdown from "vue-markdown-render";
 export default {
   name: "ActivityEmail",
   components: {
-    VueMarkdown
+    VueMarkdown,
   },
   props: {
     to: {
@@ -40,7 +40,7 @@ export default {
     },
     isMarkdownContent: {
       type: Boolean,
-      default: false
+      default: false,
     },
   },
 };
