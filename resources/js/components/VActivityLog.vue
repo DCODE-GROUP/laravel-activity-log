@@ -240,6 +240,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    isMarkdownContent: {
+      type: Boolean,
+      default: false
+    },
   },
   data() {
     return {
@@ -395,6 +399,7 @@ export default {
           content: activity.communication.content,
           to: activity.communication.to,
           subject: activity.communication.subject,
+          isMarkdownContent: this.isMarkdownContent,
         },
       });
     },

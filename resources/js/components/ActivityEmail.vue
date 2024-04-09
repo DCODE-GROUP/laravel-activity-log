@@ -10,12 +10,21 @@
         <span class="font-semibold">{{ subject }}</span>
       </div>
     </div>
-    <div class="pt-smSpace" v-html="content"></div>
+    <div class="pt-smSpace" v-if="isMarkdownContent">
+      <vue-markdown :source="content" />
+    </div>
+    <template v-else>
+      <div class="pt-smSpace" v-html="content"></div>
+    </template>
   </div>
 </template>
 <script>
+import VueMarkdown from "vue-markdown-render";
 export default {
   name: "ActivityEmail",
+  components: {
+    VueMarkdown
+  },
   props: {
     to: {
       type: String,
@@ -28,6 +37,10 @@ export default {
     content: {
       type: String,
       required: true,
+    },
+    isMarkdownContent: {
+      type: Boolean,
+      default: false
     },
   },
 };
