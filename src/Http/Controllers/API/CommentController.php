@@ -31,7 +31,6 @@ class CommentController extends Controller
                 config('activity-log.user_relationship'),
                 $communication,
                 "$communication.reads",
-                "$communication.views",
             ])
             ->orderByDesc('created_at')->get());
     }
