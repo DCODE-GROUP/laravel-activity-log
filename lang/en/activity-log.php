@@ -46,11 +46,16 @@ return [
         'reads' => 'reads',
         'read_more' => 'Read more',
         'read_less' => 'Read less',
+        'send_email' => ' send a notification email to ',
+        'read_email' => ' read an email ',
+        'send_sms' => ' send a notification sms to ',
+        'read_read' => ' read an email ',
     ],
 
     'phases' => [
         'opened_on' => 'Opened on',
         'email_has_not_been_opened' => 'Email hasn\'t been opened.',
+        'sms_has_not_been_opened' => 'Sms hasn\'t been opened.',
     ],
 
 ];

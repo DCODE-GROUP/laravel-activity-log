@@ -391,7 +391,6 @@ export default {
         params: this.filters,
         field: "created_by",
       });
-      this.$nextTick(() => this.getActivityLog());
     },
     openModal(activity) {
       this.bus.$emit(this.modalEvent, {

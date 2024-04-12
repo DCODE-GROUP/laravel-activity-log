@@ -5,6 +5,7 @@ namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 use Dcodegroup\ActivityLog\Http\Requests\ExistingRequest;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Resources\ActivityLogCollection;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Routing\Controller;
 
 class CommentController extends Controller
@@ -31,7 +32,13 @@ class CommentController extends Controller
                 config('activity-log.user_relationship'),
                 $communication,
                 "$communication.reads",
-            ])
+            ])->where(fn (Builder $builder) => $builder
+            ->whereNull('communication_log_id')
+            ->orWhere(fn (Builder $builder) => $builder
+                ->whereNotNull('communication_log_id')
+                ->whereNot('title', 'like', '% read an %')
+                ->whereNot('title', 'like', '% view a %'))
+            )
             ->orderByDesc('created_at')->get());
     }
 }

@@ -12,7 +12,6 @@ class TermFilter implements Filter
         return $query->whereHas('user', function (Builder $q) use ($value) {
             return $q->where('username', 'like', "%$value%")
                 ->orWhere('first_name', 'like', "%$value%")
-                ->orWhere('middle_name', 'like', "%$value%")
                 ->orWhere('last_name', 'like', "%$value%");
         })
             ->orWhere('created_at', 'like', "%$value%")
