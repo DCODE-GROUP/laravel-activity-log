@@ -25,7 +25,7 @@ class FilterController extends Controller
                     'created_by',
                     'User',
                     $this->filterQuery(config('activity-log.user_model')::query(), $request, searchField: 'filter.created_by', searchTermField: [config('activity-log.user_search_term')]),
-                    searchField: 'full_name',
+                    searchField: config('activity-log.user_search'),
                     itemSelected: $request->filled('filter.created_by')
                 )
         );
@@ -35,7 +35,7 @@ class FilterController extends Controller
     {
         return match ($facet) {
             'created_by' => response()->json(resolve(config('activity-log.filter_builder_path'))->make()
-                ->buildRefineItems($this->filterQuery(config('activity-log.user_model')::query(), $request, searchTermField: [config('activity-log.user_search_term')]), searchField: 'full_name')
+                ->buildRefineItems($this->filterQuery(config('activity-log.user_model')::query(), $request, searchTermField: [config('activity-log.user_search_term')]), searchField: config('activity-log.user_search'))
                 ->toArray()),
             default => response()->json(),
         };
