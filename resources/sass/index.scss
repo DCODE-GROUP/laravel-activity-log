@@ -84,3 +84,20 @@
 .activity__db-content {
     @apply bg-gray-100 text-gray-700 inline-flex items-center rounded-full px-smSpace py-2xsSpace text-xs font-medium mb-2xsSpace mr-2xsSpace
 }
+
+.activity__toggle {
+    @apply flex items-center;
+
+    span {
+        @apply pl-2 text-xs;
+    }
+    .activity__toggle--button {
+        @apply relative inline-flex h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2;
+        &--active {
+            @apply bg-indigo-600 focus:ring-indigo-600;
+        }
+        span {
+            @apply pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out;
+        }
+    }
+}
