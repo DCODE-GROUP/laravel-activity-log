@@ -36,8 +36,6 @@ class ActivityLog extends JsonResource
             return null;
         }
 
-        $dateFormat = config('activity-log.datetime_format');
-
         return [
             'id' => $this->resource->communicationLog->id,
             'type' => $this->resource->communicationLog->type,
@@ -46,9 +44,7 @@ class ActivityLog extends JsonResource
             'content' => $this->resource->communicationLog->content ?? $this->resource->description,
             'icon' => CommunicationLog::ICON_TYPE_MAP[$this->resource->communicationLog->type],
             'reads_count' => $this->resource->communicationLog->reads->count(),
-            'read_at_date' => $this->resource->communicationLog->reads->last()?->created_at?->format($dateFormat),
-            'views_count' => $this->resource->communicationLog->views->count(),
-            'view_at_date' => $this->resource->communicationLog->views->last()?->created_at?->format($dateFormat),
+            'read_at_date' => $this->resource->communicationLog->reads->last()?->created_at?->format(config('activity-log.datetime_format')),
         ];
     }
 }

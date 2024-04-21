@@ -6,6 +6,7 @@ use Dcodegroup\ActivityLog\Http\Requests\ExistingRequest;
 use Dcodegroup\ActivityLog\Resources\ActivityLogCollection;
 use Dcodegroup\ActivityLog\Support\QueryBuilder\Filters\DateRangeFilter;
 use Dcodegroup\ActivityLog\Support\QueryBuilder\Filters\TermFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Routing\Controller;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -20,7 +21,6 @@ class ActivityLogController extends Controller
                 config('activity-log.user_relationship'),
                 $communication,
                 "$communication.reads",
-                "$communication.views",
             ])
             ->allowedFilters([
                 'created_by',
@@ -39,6 +39,13 @@ class ActivityLogController extends Controller
 
         $query->when($request->has('modelClass'), fn () => $query->where('activitiable_type', $request->input('modelClass')));
         $query->when($request->has('modelId'), fn () => $query->where('activitiable_id', $request->input('modelId')));
+        $query->where(fn (Builder $builder) => $builder
+            ->whereNull('communication_log_id')
+            ->orWhere(fn (Builder $builder) => $builder
+                ->whereNotNull('communication_log_id')
+                ->whereNot('title', 'like', '% read an %')
+                ->whereNot('title', 'like', '% view a %'))
+        );
 
         return new ActivityLogCollection(
             $query->paginate(config('activity-log.default_filter_pagination'))

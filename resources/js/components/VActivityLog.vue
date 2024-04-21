@@ -143,10 +143,10 @@
                 <div
                   v-if="activity.title.includes('send a notification email')"
                 >
-                  <span v-if="activity.communication.views_count"
+                  <span v-if="activity.communication.reads_count"
                     >{{ $t("activity-log.phases.opened_on") }}
                     {{ activity.communication.read_at_date }} ({{
-                      activity.communication.views_count
+                      activity.communication.reads_count
                     }}
                     {{ $t("activity-log.words.views") }})</span
                   >
@@ -243,7 +243,7 @@ export default {
     },
     isMarkdownContent: {
       type: Boolean,
-      default: false
+      default: false,
     },
   },
   data() {
@@ -391,7 +391,6 @@ export default {
         params: this.filters,
         field: "created_by",
       });
-      this.$nextTick(() => this.getActivityLog());
     },
     openModal(activity) {
       this.bus.$emit(this.modalEvent, {
