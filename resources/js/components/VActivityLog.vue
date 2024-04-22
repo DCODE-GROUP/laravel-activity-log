@@ -113,7 +113,7 @@
             <div v-if="!collapseStage[index]" class="pt-smSpace">
               <div
                 v-if="activity.communication"
-                class="flex items-center space-x-2"
+                class="flex items-center space-x-2 sm:flex-col sm:space-x-0 sm:space-y-smSpace sm:items-start"
               >
                 <button
                   class="btn btn--secondary max-h-[32px] rounded-lg"
@@ -140,9 +140,7 @@
                     </div>
                   </div>
                 </button>
-                <div
-                  v-if="activity.title.includes('send a notification email')"
-                >
+                <div v-if="activity.communication.type === 'Email'">
                   <span v-if="activity.communication.reads_count"
                     >{{ $t("activity-log.phases.opened_on") }}
                     {{ activity.communication.read_at_date }} ({{
