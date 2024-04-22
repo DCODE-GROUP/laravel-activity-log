@@ -141,7 +141,7 @@
                   </div>
                 </button>
                 <div
-                  v-if="activity.title.includes('send a notification email')"
+                    v-if="activity.communication.type === 'Email'"
                 >
                   <span v-if="activity.communication.reads_count"
                     >{{ $t("activity-log.phases.opened_on") }}
