@@ -140,9 +140,7 @@
                     </div>
                   </div>
                 </button>
-                <div
-                    v-if="activity.communication.type === 'Email'"
-                >
+                <div v-if="activity.communication.type === 'Email'">
                   <span v-if="activity.communication.reads_count"
                     >{{ $t("activity-log.phases.opened_on") }}
                     {{ activity.communication.read_at_date }} ({{
