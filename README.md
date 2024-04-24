@@ -11,7 +11,7 @@ The `dcodegroup/activity-log` package provides a simple and unified approach to 
 
 ```bash
 "dependencies": {
-  // ...
+   ...
   "vue-markdown-render": "^2.1.1",
 }
 ```
