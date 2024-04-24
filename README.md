@@ -2,8 +2,8 @@
 
 The `dcodegroup/activity-log` package provides a simple and unified approach to track and record activity / interactions against your Laravel models (and relations). Capture changes, updates, and user interactions to enhance transparency and auditing in your application in a centralised and consistent approach.
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/dcodegroup/ctivity-log.svg?style=flat-square)](https://packagist.org/packages/dcodegroup/activity-log)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/DCODE-GROUP/activity-log/ci.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/DCODE-GROUP/laravel-activity-log/actions/worflows/ci.yml/badge.svg)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/dcodegroup/activity-log.svg?style=flat-square)](https://packagist.org/packages/dcodegroup/activity-log)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/DCODE-GROUP/laravel-activity-log/ci.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/DCODE-GROUP/laravel-activity-log/actions/worflows/ci.yml/badge.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/dcodegroup/activity-log.svg?style=flat-square)](https://packagist.org/packages/dcodegroup/activity-log)
 
 ## Installation
