@@ -59,7 +59,7 @@ trait ActivityLoggable
     {
         return collect(array_keys($this->getDirty()))->map(function ($attribute) {
             $from = is_array($this->getOriginal($attribute)) ? collect($this->getOriginal($attribute))->join('|') : $this->getOriginal($attribute);
-            $to = is_array($this->{$attribute}) ? collect($this->{$attribute})->join('|') : new StringConverter($this->{$attribute});
+            $to = is_array($this->{$attribute}) ? collect($this->{$attribute})->join('|') : (is_string($this->{$attribute}) ? $this->{$attribute} : new StringConverter($this->{$attribute}));
 
             return $this->prepareModelChange($attribute, $from, $to);
         })->toArray();
