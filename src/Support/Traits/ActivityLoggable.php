@@ -2,6 +2,7 @@
 
 namespace Dcodegroup\ActivityLog\Support\Traits;
 
+use Coduo\ToString\StringConverter;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Models\CommunicationLog;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -58,7 +59,7 @@ trait ActivityLoggable
     {
         return collect(array_keys($this->getDirty()))->map(function ($attribute) {
             $from = is_array($this->getOriginal($attribute)) ? collect($this->getOriginal($attribute))->join('|') : $this->getOriginal($attribute);
-            $to = is_array($this->{$attribute}) ? collect($this->{$attribute})->join('|') : $this->{$attribute};
+            $to = is_array($this->{$attribute}) ? collect($this->{$attribute})->join('|') : new StringConverter($this->{$attribute});
 
             return $this->prepareModelChange($attribute, $from, $to);
         })->toArray();
