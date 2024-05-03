@@ -8,16 +8,21 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 class FilterController extends Controller
 {
     protected $filterBuilderPath;
+
     protected $activityLogModel;
+
     protected $userModel;
+
     protected $userSearch;
+
     protected $userSearchRelationship;
+
     protected $userSearchTerm;
+
     protected $defaultFilterPagination;
 
     public function __construct()
@@ -69,6 +74,7 @@ class FilterController extends Controller
                     if (count($parts) > 1) {
                         [$relation, $relationField] = $parts;
                         $q->orWhereHas($relation, fn (Builder $builder) => $builder->where($relationField, 'LIKE', "%$term%"));
+
                         continue;
                     }
 
