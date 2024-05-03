@@ -80,8 +80,9 @@ return [
     'user_relationship' => env('LARAVEL_ACTIVITY_LOG_USER_RELATIONSHIP', 'user'),
     'user_model' => \App\Models\User::class,
     'user_table' => env('LARAVEL_ACTIVITY_LOG_USERS_TABLE', 'users'),
-    'user_search_term' => env('LARAVEL_ACTIVITY_LOG_USER_SEARCH_TERM', 'email'),
+    'user_search_term' => env('LARAVEL_ACTIVITY_LOG_USER_SEARCH_TERM', ['email']),
     'user_search' => env('LARAVEL_ACTIVITY_LOG_USER_SEARCH', 'full_name'),
+    'user_search_relationship' => env('LARAVEL_ACTIVITY_LOG_USER_SEARCH_RELATIONSHIP', []),
 
     /*
      |--------------------------------------------------------------------------
