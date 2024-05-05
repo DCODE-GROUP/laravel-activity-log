@@ -243,13 +243,17 @@ export default {
       type: Boolean,
       default: false,
     },
+    defaultCollapView: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       username:
         this.currentUser.full_name ?? this.$t("activity-log.fields.system"),
       collapseStage: {},
-      isCollapsedView: true,
+      isCollapsedView: this.defaultCollapView,
       isFilterUser: false,
       loading: false,
       filters: {
@@ -285,7 +289,7 @@ export default {
   },
   async mounted() {
     await this.getActivityLog();
-    this.collapView(true);
+    this.collapView(this.defaultCollapView);
   },
 
   methods: {
