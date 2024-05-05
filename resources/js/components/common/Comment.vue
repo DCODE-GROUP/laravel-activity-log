@@ -77,6 +77,10 @@ export default {
       type: String,
       required: true,
     },
+    user: {
+      type: String,
+      required: false,
+    },
   },
   data() {
     return {
@@ -115,7 +119,8 @@ export default {
             modelClass: this.modelClass,
             modelId: this.modelId,
             comment: this.comment,
-            currentUrl: window.location.href
+            currentUrl: window.location.href,
+            currentUser: this.user,
           })
           .then(({ data }) => {
 

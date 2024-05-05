@@ -10,6 +10,7 @@
                :model-class="modelClass"
                :model-id="modelId"
                :comment-url="commentUrl"
+               :user="username"
                @addComment="addComment($event)"
       ></comment>
     </div>

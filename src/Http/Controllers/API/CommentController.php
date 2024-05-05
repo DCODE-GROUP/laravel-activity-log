@@ -27,7 +27,7 @@ class CommentController extends Controller
                 'description' => $comment,
             ]);
             $url = $request->input('currentUrl') . '#activity_' . $activity->id;
-            $user =  auth()->user()?->getActivityLogUserName() ?: 'System';
+            $user = $request->filled('currentUser') ? $request->input('currentUser') : 'System';
             $emailSubject = class_basename($modelClass) . ' #' . $modelId . ' ' . $user;
             $mentionedUsers = collect(explode(' ', trim($request->input('comment'))))->filter(function ($key) {
                 return str_starts_with($key, '@');
