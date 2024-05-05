@@ -26,8 +26,6 @@ class CommentController extends Controller
                 'title' => 'left a comment.',
                 'description' => $comment,
             ]);
-
-
             $url = $request->input('currentUrl') . '#activity_' . $activity->id;
             $user =  auth()->user()?->getActivityLogUserName() ?: 'System';
             $emailSubject = class_basename($modelClass) . ' #' . $modelId . ' ' . $user;
@@ -41,7 +39,7 @@ class CommentController extends Controller
                 $userSearch = config('activity-log.user_search');
                 if ($userModel::query()->where($userSearch, $email)->exists()) {
                     Mail::to($email)->send(new CommentNotification($emailSubject, $url));
-                    $comment = str_replace($key, '<a href="mailto:' . $email . '">' . $email . '</a>', $comment);
+                    $comment = str_replace($key, '<a href="mailto:'.$email.'">'.$email.'</a>', $comment);
                 }
             }
             $activity->update(['description' => $comment]);
