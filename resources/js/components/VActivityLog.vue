@@ -6,28 +6,12 @@
           username.charAt(0).toUpperCase() + username.charAt(1).toUpperCase()
         }}</span>
       </div>
-      <div class="content">
-        <div class="content__text">
-          <textarea
-            @keyup.enter="addCommentByEnter"
-            class="content__text--textarea focus:ring-0"
-            v-model="comment"
-            rows="3"
-            :placeholder="$t('activity-log.placeholders.add_comment')"
-          ></textarea>
-        </div>
-
-        <div class="content__action">
-          <div class="content__action-attachment"></div>
-          <div
-            class="content__action-button cursor-pointer"
-            :class="{ 'content__action-button--disable': !comment }"
-            @click="addComment"
-          >
-            {{ $t("activity-log.buttons.save_comment") }}
-          </div>
-        </div>
-      </div>
+      <comment :enter-to-comment="enterToComment"
+               :model-class="modelClass"
+               :model-id="modelId"
+               :comment-url="commentUrl"
+               @addComment="addComment($event)"
+      ></comment>
     </div>
     <div class="flex items-end justify-between space-x-2 py-smSpace">
       <div class="flex justify-start space-x-2">
@@ -103,7 +87,7 @@
           }}</span
         >
       </div>
-      <div class="content">
+      <div class="content"  :id="'activity_' + activity.id">
         <div class="content__status">
           <div class="content__status--meta">
             <a href="#" class="font-medium text-gray-900">{{ activity.user }}</a
@@ -189,11 +173,12 @@
 import axios from "axios";
 import Icon from "./common/Icon.vue";
 import Toggle from "./common/Toggle.vue";
+import Comment from "./common/Comment.vue";
 import ReadMoreContent from "./common/ReadMoreContent.vue";
 
 export default {
   inject: ["bus"],
-  components: { ReadMoreContent, Icon, Toggle },
+  components: { ReadMoreContent, Icon, Toggle, Comment },
   props: {
     getUrl: {
       type: String,
@@ -237,7 +222,7 @@ export default {
     },
     enterToComment: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     isMarkdownContent: {
       type: Boolean,
@@ -260,7 +245,6 @@ export default {
         "filter[term]": null,
       },
       searchKey: null,
-      comment: null,
       activities: [],
       colors: [
         "bg-violet-50",
@@ -316,36 +300,6 @@ export default {
           }
         })
         .catch(console.error);
-    },
-
-    addComment() {
-      if (!this.comment) {
-        return;
-      }
-      axios
-        .post(this.commentUrl, {
-          modelClass: this.modelClass,
-          modelId: this.modelId,
-          comment: this.comment,
-        })
-        .then(({ data }) => {
-          this.activities = [];
-          this.comment = null;
-          if (data.data.length) {
-            this.activities = data.data;
-          }
-
-          if (this.refreshSelf) {
-            this.getActivityLog();
-          }
-        })
-        .catch(console.error);
-    },
-
-    addCommentByEnter() {
-      if (this.enterToComment) {
-        this.addComment();
-      }
     },
 
     collapView($event) {
@@ -405,6 +359,16 @@ export default {
         },
       });
     },
+    addComment($event) {
+      this.activities = [];
+      if ($event.length) {
+        this.activities = $event;
+      }
+
+      if (this.refreshSelf) {
+        this.getActivityLog();
+      }
+    }
   },
 };
 </script>
