@@ -71,6 +71,7 @@ In your `app.scss` file add the following
 
 ```scss
 @import "activity-log/index.scss";
+@import "floating-vue/dist/style.css";
 ```
 
 Seem to need this in `tailwind.config.js` under spacing: 
@@ -294,6 +295,11 @@ class Order extends Model
     use ActivityLoggable;
     ...
 }
+```
+
+Add content markdown email to support comment-notification.Located in
+```
+resources\views\mail\comment-notification.blade.php
 ```
 
 # Changelog
