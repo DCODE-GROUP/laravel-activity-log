@@ -26,9 +26,9 @@ class CommentController extends Controller
                 'title' => 'left a comment.',
                 'description' => $comment,
             ]);
-            $url = $request->input('currentUrl') . '#activity_' . $activity->id;
-            $user =  auth()->user()?->getActivityLogUserName() ?: 'System';
-            $emailSubject = class_basename($modelClass) . ' #' . $modelId . ' ' . $user;
+            $url = $request->input('currentUrl').'#activity_'.$activity->id;
+            $user = auth()->user()?->getActivityLogUserName() ?: 'System';
+            $emailSubject = class_basename($modelClass).' #'.$modelId.' '.$user;
             $mentionedUsers = collect(explode(' ', trim($request->input('comment'))))->filter(function ($key) {
                 return str_starts_with($key, '@');
             });
