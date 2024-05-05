@@ -27,9 +27,8 @@ class CommentController extends Controller
                 'description' => $comment,
             ]);
 
-
-            $url = $request->input('currentUrl') . '#activity_' . $activity->id;
-            $emailSubject = class_basename($modelClass) . ' #' . $modelId . ' ' . auth()->user()->getActivityLogUserName();
+            $url = $request->input('currentUrl').'#activity_'.$activity->id;
+            $emailSubject = class_basename($modelClass).' #'.$modelId.' '.auth()->user()->getActivityLogUserName();
             $mentionedUsers = collect(explode(' ', trim($request->input('comment'))))->filter(function ($key) {
                 return str_starts_with($key, '@');
             });
@@ -40,7 +39,7 @@ class CommentController extends Controller
                 $userSearch = config('activity-log.user_search');
                 if ($userModel::query()->where($userSearch, $email)->exists()) {
                     Mail::to($email)->send(new CommentNotification($emailSubject, $url));
-                    $comment = str_replace($key, '<a href="mailto:' . $email . '">' . $email . '</a>', $comment);
+                    $comment = str_replace($key, '<a href="mailto:'.$email.'">'.$email.'</a>', $comment);
                 }
             }
             $activity->update(['description' => $comment]);

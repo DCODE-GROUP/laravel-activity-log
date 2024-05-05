@@ -30,9 +30,9 @@ class CommentNotification extends Mailable
      */
     public function content(): Content
     {
-        return new Content(markdown: config('activity-log.comment_email_template'),with: [
+        return new Content(markdown: config('activity-log.comment_email_template'), with: [
             'content' => $this->subjectModel,
-            'action' => $this->url
+            'action' => $this->url,
         ]);
     }
 }

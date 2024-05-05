@@ -5,7 +5,7 @@ return [
     'headings' => [
         'title' => 'Activity Log',
         'page_title' => 'Activity Log - Page',
-        'subjects' => ':model mention you in a comment'
+        'subjects' => ':model mention you in a comment',
     ],
 
     'fields' => [
