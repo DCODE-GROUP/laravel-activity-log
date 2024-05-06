@@ -1,38 +1,45 @@
 <template>
   <div class="content">
-    <div class="content__text" >
+    <div class="content__text">
       <Mentionable
-          :keys="['@']"
-          :items="items"
-          offset="10"
-          filtering-disabled
-          insert-space
-          @open="loadUsers()"
-          @search="loadUsers($event)"
+        :keys="['@']"
+        :items="items"
+        offset="10"
+        filtering-disabled
+        insert-space
+        @open="loadUsers()"
+        @search="loadUsers($event)"
       >
-          <textarea
-              @keyup.enter="addCommentByEnter"
-              class="content__text--textarea focus:ring-0"
-              v-model="comment"
-              rows="3"
-              :placeholder="$t('activity-log.placeholders.add_comment')"
-          ></textarea>
+        <textarea
+          @keyup.enter="addCommentByEnter"
+          class="content__text--textarea focus:ring-0"
+          v-model="comment"
+          rows="3"
+          :placeholder="$t('activity-log.placeholders.add_comment')"
+        ></textarea>
         <template #no-result>
           <div class="dim">
-            {{ loading ? $t('activity-log.fields.loading'): $t('activity-log.fields.no_result') }}
+            {{
+              loading
+                ? $t("activity-log.fields.loading")
+                : $t("activity-log.fields.no_result")
+            }}
           </div>
         </template>
 
         <template #item-@="{ item }">
           <div class="mention-wrapper">
-            <div class="mention-wrapper--avatar activity__user--avatar !w-[12px] !h-[12px]">
+            <div
+              class="mention-wrapper--avatar activity__user--avatar !w-[12px] !h-[12px]"
+            >
               <span class="font-bold !text-lg">{{
-                  item.label.charAt(0).toUpperCase() + item.label.charAt(1).toUpperCase()
-                }}</span>
+                item.label.charAt(0).toUpperCase() +
+                item.label.charAt(1).toUpperCase()
+              }}</span>
             </div>
             <span class="dim">
-            {{ item.label }}
-          </span>
+              {{ item.label }}
+            </span>
           </div>
         </template>
       </Mentionable>
@@ -41,9 +48,9 @@
     <div class="content__action">
       <div class="content__action-attachment"></div>
       <div
-          class="content__action-button cursor-pointer"
-          :class="{ 'content__action-button--disable': !comment }"
-          @click="addComment"
+        class="content__action-button cursor-pointer"
+        :class="{ 'content__action-button--disable': !comment }"
+        @click="addComment"
       >
         {{ $t("activity-log.buttons.save_comment") }}
       </div>
@@ -53,7 +60,7 @@
 
 <script>
 import axios from "axios";
-import { Mentionable } from 'vue-mention'
+import { Mentionable } from "vue-mention";
 
 export default {
   name: "Comment",
@@ -86,24 +93,26 @@ export default {
     return {
       loading: false,
       comment: null,
-      items:[],
+      items: [],
     };
   },
   methods: {
     async loadUsers(searchText = null) {
       this.loading = true;
       axios
-          .get(`/generic/api/activity-logs/filters/facets/created_by?s=${searchText}`)
-          .then((res) => {
-            this.items = res.data.map((item) => {
-              return {
-                label: item.label,
-                value:  item.label,
-                id : item.value,
-              }
-            });
-            this.loading = false;
+        .get(
+          `/generic/api/activity-logs/filters/facets/created_by?s=${searchText}`,
+        )
+        .then((res) => {
+          this.items = res.data.map((item) => {
+            return {
+              label: item.label,
+              value: item.label,
+              id: item.value,
+            };
           });
+          this.loading = false;
+        });
     },
     addCommentByEnter() {
       if (this.enterToComment) {
@@ -115,19 +124,18 @@ export default {
         return;
       }
       axios
-          .post(this.commentUrl, {
-            modelClass: this.modelClass,
-            modelId: this.modelId,
-            comment: this.comment,
-            currentUrl: window.location.href,
-            currentUser: this.user,
-          })
-          .then(({ data }) => {
-
-            this.comment = null;
-            this.$emit('addComment', data.data)
-          })
-          .catch(console.error);
+        .post(this.commentUrl, {
+          modelClass: this.modelClass,
+          modelId: this.modelId,
+          comment: this.comment,
+          currentUrl: window.location.href,
+          currentUser: this.user,
+        })
+        .then(({ data }) => {
+          this.comment = null;
+          this.$emit("addComment", data.data);
+        })
+        .catch(console.error);
     },
   },
 };
@@ -141,7 +149,7 @@ export default {
   gap: 8px;
   cursor: pointer;
   line-height: 20px;
-  font-size: 14px
+  font-size: 14px;
 }
 .mention-wrapper--avatar {
   padding: 6px;
@@ -160,5 +168,4 @@ export default {
   padding: 10px;
   color: #666;
 }
-
 </style>

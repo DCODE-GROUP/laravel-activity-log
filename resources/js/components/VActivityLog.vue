@@ -6,12 +6,13 @@
           username.charAt(0).toUpperCase() + username.charAt(1).toUpperCase()
         }}</span>
       </div>
-      <comment :enter-to-comment="enterToComment"
-               :model-class="modelClass"
-               :model-id="modelId"
-               :comment-url="commentUrl"
-               :user="username"
-               @addComment="addComment($event)"
+      <comment
+        :enter-to-comment="enterToComment"
+        :model-class="modelClass"
+        :model-id="modelId"
+        :comment-url="commentUrl"
+        :user="username"
+        @addComment="addComment($event)"
       ></comment>
     </div>
     <div class="flex items-end justify-between space-x-2 py-smSpace">
@@ -88,7 +89,7 @@
           }}</span
         >
       </div>
-      <div class="content"  :id="'activity_' + activity.id">
+      <div class="content" :id="'activity_' + activity.id">
         <div class="content__status">
           <div class="content__status--meta">
             <a href="#" class="font-medium text-gray-900">{{ activity.user }}</a
@@ -369,7 +370,7 @@ export default {
       if (this.refreshSelf) {
         this.getActivityLog();
       }
-    }
+    },
   },
 };
 </script>
