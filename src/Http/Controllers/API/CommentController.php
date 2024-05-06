@@ -35,6 +35,7 @@ class CommentController extends Controller
         $this->userSearchTerm = is_array($this->userSearchTerm) ? $this->userSearchTerm : [$this->userSearchTerm];
         $this->communicationLogRelationship = config('activity-log.communication_log_relationship');
     }
+
     public function __invoke(ExistingRequest $request)
     {
         $modelClass = $request->input('modelClass');
@@ -57,24 +58,25 @@ class CommentController extends Controller
             $mentionedUsers = Str::matchAll($regexp, trim($request->input('comment')));
 
             foreach ($mentionedUsers as $key) {
-                $identiy = Str::replaceStart("@[", "", $key);
-                $identiy = Str::replaceEnd("]", "", $identiy);
+                $identiy = Str::replaceStart('@[', '', $key);
+                $identiy = Str::replaceEnd(']', '', $identiy);
 
                 $users = $this->userModel::query()
                     ->with($this->userSearchRelationship)
                     ->where(function (Builder $q) use ($identiy) {
-                    foreach ($this->userSearchTerm as $field) {
-                        $parts = explode('.', $field);
+                        foreach ($this->userSearchTerm as $field) {
+                            $parts = explode('.', $field);
 
-                        if (count($parts) > 1) {
-                            [$relation, $relationField] = $parts;
-                            $q->orWhereHas($relation, fn(Builder $builder) => $builder->where($relationField, $identiy));
-                            continue;
+                            if (count($parts) > 1) {
+                                [$relation, $relationField] = $parts;
+                                $q->orWhereHas($relation, fn (Builder $builder) => $builder->where($relationField, $identiy));
+
+                                continue;
+                            }
+
+                            $q->orWhere($field, $identiy);
                         }
-
-                        $q->orWhere($field, $identiy);
-                    }
-                })->get();
+                    })->get();
 
                 /** @var HasActivityUser $userModel */
                 foreach ($users as $userModel) {
@@ -90,7 +92,7 @@ class CommentController extends Controller
             ->with([
                 $this->userRelationship,
                 $this->communicationLogRelationship,
-                $this->communicationLogRelationship.".reads",
+                $this->communicationLogRelationship.'.reads',
             ])->where(fn (Builder $builder) => $builder
             ->whereNull('communication_log_id')
             ->orWhere(fn (Builder $builder) => $builder
