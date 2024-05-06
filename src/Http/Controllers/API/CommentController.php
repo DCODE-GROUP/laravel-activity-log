@@ -2,6 +2,7 @@
 
 namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
+use Dcodegroup\ActivityLog\Contracts\HasActivityUser;
 use Dcodegroup\ActivityLog\Http\Requests\ExistingRequest;
 use Dcodegroup\ActivityLog\Mail\CommentNotification;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
