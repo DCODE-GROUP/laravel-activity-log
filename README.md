@@ -7,12 +7,14 @@ The `dcodegroup/activity-log` package provides a simple and unified approach to 
 [![Total Downloads](https://img.shields.io/packagist/dt/dcodegroup/activity-log.svg?style=flat-square)](https://packagist.org/packages/dcodegroup/activity-log)
 
 ## Installation
-#### Add the following to your package.json file to support markdown html:
+#### Add the following to your package.json file:
 
 ```bash
 "dependencies": {
    ...
-  "vue-markdown-render": "^2.1.1",
+    "floating-vue": "^2.0.0-beta.1",
+    "vue-markdown-render": "^2.1.1",
+    "vue-mention": "^2.0.0-alpha.3"
 }
 ```
 
