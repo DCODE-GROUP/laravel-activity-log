@@ -107,7 +107,7 @@ export default {
           this.items = res.data.map((item) => {
             return {
               label: item.label,
-              value: item.label,
+              value: `[${item.label}]`,
               id: item.value,
             };
           });
