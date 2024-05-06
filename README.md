@@ -53,6 +53,11 @@ public function getActivityLogUserName(): string
 {
     return $this->name;
 }
+
+public function getActivityLogEmail(): string
+{
+    return $this->email;
+}
 ```
 
 #### JS
