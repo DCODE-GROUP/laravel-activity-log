@@ -5,6 +5,7 @@ return [
     'headings' => [
         'title' => 'Activity Log',
         'page_title' => 'Activity Log - Page',
+        'subjects' => ':model mention you in a comment',
     ],
 
     'fields' => [
@@ -21,6 +22,8 @@ return [
         'collapsed_view' => 'Collapsed view',
         'my_activities' => 'My activities',
         'system' => 'System',
+        'loading' => 'Loading...',
+        'no_result' => 'No result',
     ],
     'actions' => [
         'create' => ' create a ',

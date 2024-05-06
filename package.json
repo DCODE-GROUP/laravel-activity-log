@@ -9,8 +9,8 @@
   "name": "activity-log",
   "devDependencies": {
     "@babel/eslint-parser": "^7.23.0",
-    "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@heroicons/vue": "^2.1.1",
+    "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@vue/compiler-sfc": "^3.2.33",
     "autoprefixer": "10.4.5",
     "axios": "^0.21.1",
@@ -37,7 +37,9 @@
     "vue-router": "^3.0.1"
   },
   "dependencies": {
+    "floating-vue": "^2.0.0-beta.1",
     "laravel-vue-i18n": "^2.7.6",
-    "vue-markdown-render": "^2.1.1"
+    "vue-markdown-render": "^2.1.1",
+    "vue-mention": "^2.0.0-alpha.3"
   }
 }

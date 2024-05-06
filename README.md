@@ -7,12 +7,14 @@ The `dcodegroup/activity-log` package provides a simple and unified approach to 
 [![Total Downloads](https://img.shields.io/packagist/dt/dcodegroup/activity-log.svg?style=flat-square)](https://packagist.org/packages/dcodegroup/activity-log)
 
 ## Installation
-#### Add the following to your package.json file to support markdown html:
+#### Add the following to your package.json file:
 
 ```bash
 "dependencies": {
    ...
-  "vue-markdown-render": "^2.1.1",
+    "floating-vue": "^2.0.0-beta.1",
+    "vue-markdown-render": "^2.1.1",
+    "vue-mention": "^2.0.0-alpha.3"
 }
 ```
 
@@ -71,6 +73,7 @@ In your `app.scss` file add the following
 
 ```scss
 @import "activity-log/index.scss";
+@import "floating-vue/dist/style.css";
 ```
 
 Seem to need this in `tailwind.config.js` under spacing: 
@@ -294,6 +297,11 @@ class Order extends Model
     use ActivityLoggable;
     ...
 }
+```
+
+Add content markdown email to support comment-notification.Located in
+```
+resources\views\mail\comment-notification.blade.php
 ```
 
 # Changelog

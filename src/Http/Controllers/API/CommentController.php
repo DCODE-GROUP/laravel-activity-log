@@ -3,10 +3,12 @@
 namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
 use Dcodegroup\ActivityLog\Http\Requests\ExistingRequest;
+use Dcodegroup\ActivityLog\Mail\CommentNotification;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Resources\ActivityLogCollection;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Mail;
 
 class CommentController extends Controller
 {
@@ -15,14 +17,32 @@ class CommentController extends Controller
         $modelClass = $request->input('modelClass');
         $modelId = $request->input('modelId');
         $model = $modelClass::find($modelId);
-        if ($request->filled('comment')) {
-            resolve(config('activity-log.activity_log_model'))->query()->create([
+        $comment = $request->input('comment');
+        if ($request->filled('comment') && $request->filled('currentUrl')) {
+            $activity = resolve(config('activity-log.activity_log_model'))->query()->create([
                 'activitiable_type' => $modelClass,
                 'activitiable_id' => $modelId,
                 'type' => ActivityLog::TYPE_COMMENT,
                 'title' => 'left a comment.',
-                'description' => $request->input('comment'),
+                'description' => $comment,
             ]);
+            $url = $request->input('currentUrl').'#activity_'.$activity->id;
+            $user = $request->filled('currentUser') ? $request->input('currentUser') : 'System';
+            $emailSubject = class_basename($modelClass).' #'.$modelId.' '.$user;
+            $mentionedUsers = collect(explode(' ', trim($request->input('comment'))))->filter(function ($key) {
+                return str_starts_with($key, '@');
+            });
+
+            foreach ($mentionedUsers as $key) {
+                $email = substr($key, 1);
+                $userModel = config('activity-log.user_model');
+                $userSearch = config('activity-log.user_search');
+                if ($userModel::query()->where($userSearch, $email)->exists()) {
+                    Mail::to($email)->send(new CommentNotification($emailSubject, $url));
+                    $comment = str_replace($key, '<a href="mailto:'.$email.'">'.$email.'</a>', $comment);
+                }
+            }
+            $activity->update(['description' => $comment]);
         }
 
         $communication = config('activity-log.communication_log_relationship');
