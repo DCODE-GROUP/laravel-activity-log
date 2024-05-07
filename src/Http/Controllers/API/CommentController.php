@@ -14,7 +14,6 @@ use Illuminate\Support\Str;
 
 class CommentController extends Controller
 {
-
     public function __construct(protected ActivityLogService $service)
     {
     }
@@ -33,9 +32,9 @@ class CommentController extends Controller
                 'title' => 'left a comment.',
                 'description' => $comment,
             ]);
-            $url = $request->input('currentUrl') . '#activity_' . $activity->id;
+            $url = $request->input('currentUrl').'#activity_'.$activity->id;
             $user = $request->filled('currentUser') ? $request->input('currentUser') : 'System';
-            $emailSubject = class_basename($modelClass) . ' #' . $modelId . ' ' . $user;
+            $emailSubject = class_basename($modelClass).' #'.$modelId.' '.$user;
 
             $regexp = '/@\[[^\]]*\]/';
             $mentionedUsers = Str::matchAll($regexp, trim($request->input('comment')));
@@ -51,7 +50,8 @@ class CommentController extends Controller
                             $parts = explode('.', $field);
                             if (count($parts) > 1) {
                                 [$relation, $relationField] = $parts;
-                                $q->orWhereHas($relation, fn(Builder $builder) => $builder->where($relationField, $identiy));
+                                $q->orWhereHas($relation, fn (Builder $builder) => $builder->where($relationField, $identiy));
+
                                 continue;
                             }
                             $q->orWhere($field, $identiy);
@@ -62,7 +62,7 @@ class CommentController extends Controller
                 foreach ($users as $userModel) {
                     $email = $userModel->getActivityLogEmail();
                     Mail::to($email)->send(new CommentNotification($emailSubject, $url));
-                    $comment = str_replace($key, '<a href="mailto:' . $email . '">' . $userModel->getActivityLogUserName() . '</a>', $comment);
+                    $comment = str_replace($key, '<a href="mailto:'.$email.'">'.$userModel->getActivityLogUserName().'</a>', $comment);
                 }
             }
             $activity->update(['description' => $comment]);

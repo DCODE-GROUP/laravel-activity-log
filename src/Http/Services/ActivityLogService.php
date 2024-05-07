@@ -2,7 +2,6 @@
 
 namespace Dcodegroup\ActivityLog\Http\Services;
 
-use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Resources\ActivityLogCollection;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -20,7 +19,8 @@ class ActivityLogService
 
     public $communicationLogRelationship;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->activityLogModel = config('activity-log.activity_log_model');
         $this->userModel = config('activity-log.user_model');
         $this->userRelationship = config('activity-log.user_relationship');
@@ -29,7 +29,7 @@ class ActivityLogService
         $this->userSearchTerm = is_array($this->userSearchTerm) ? $this->userSearchTerm : [$this->userSearchTerm];
         $this->communicationLogRelationship = config('activity-log.communication_log_relationship');
     }
-    
+
     public function getActivityLogs($model): ActivityLogCollection
     {
         return new ActivityLogCollection($model->activityLogs()
@@ -38,11 +38,11 @@ class ActivityLogService
                 $this->communicationLogRelationship,
                 $this->communicationLogRelationship.'.reads',
             ])->where(fn (Builder $builder) => $builder
-                ->whereNull('communication_log_id')
-                ->orWhere(fn (Builder $builder) => $builder
-                    ->whereNotNull('communication_log_id')
-                    ->whereNot('title', 'like', '% read an %')
-                    ->whereNot('title', 'like', '% view a %'))
+            ->whereNull('communication_log_id')
+            ->orWhere(fn (Builder $builder) => $builder
+                ->whereNotNull('communication_log_id')
+                ->whereNot('title', 'like', '% read an %')
+                ->whereNot('title', 'like', '% view a %'))
             )
             ->orderByDesc('created_at')->get());
     }
