@@ -9,6 +9,10 @@
         {{ $t("activity-log.fields.subject") }}
         <span class="font-semibold">{{ subject }}</span>
       </div>
+      <div>
+        {{ $t("activity-log.fields.date") }}
+        <span class="font-semibold">{{ date }}</span>
+      </div>
     </div>
     <div class="pt-smSpace" v-if="isMarkdownContent">
       <vue-markdown :source="content" />
@@ -37,6 +41,10 @@ export default {
     content: {
       type: String,
       required: true,
+    },
+    date: {
+      type: String,
+      required: false,
     },
     isMarkdownContent: {
       type: Boolean,

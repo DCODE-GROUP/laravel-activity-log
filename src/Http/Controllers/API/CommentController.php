@@ -82,7 +82,8 @@ class CommentController extends Controller
                 /** @var HasActivityUser $userModel */
                 foreach ($users as $userModel) {
                     $email = $userModel->getActivityLogEmail();
-                    Mail::to($email)->send(new CommentNotification($emailSubject, $url));
+                    Mail::to($email)->send(new CommentNotification($emailSubject, $url, $model));
+
                     $comment = str_replace($key, '<a href="mailto:'.$email.'">'.$userModel->getActivityLogUserName().'</a>', $comment);
                 }
             }
@@ -95,11 +96,11 @@ class CommentController extends Controller
                 $this->communicationLogRelationship,
                 $this->communicationLogRelationship.'.reads',
             ])->where(fn (Builder $builder) => $builder
-            ->whereNull('communication_log_id')
-            ->orWhere(fn (Builder $builder) => $builder
-                ->whereNotNull('communication_log_id')
-                ->whereNot('title', 'like', '% read an %')
-                ->whereNot('title', 'like', '% view a %'))
+                ->whereNull('communication_log_id')
+                ->orWhere(fn (Builder $builder) => $builder
+                    ->whereNotNull('communication_log_id')
+                    ->whereNot('title', 'like', '% read an %')
+                    ->whereNot('title', 'like', '% view a %'))
             )
             ->orderByDesc('created_at')->get());
     }
