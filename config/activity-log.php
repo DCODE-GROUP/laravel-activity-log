@@ -44,6 +44,7 @@ return [
 
     'binding' => env('LARAVEL_ACTIVITY_LOG_MODEL_BINDING', 'activity-logs'),
     'activity_log_model' => ActivityLog::class,
+    'activity_log_model_service' => env('LARAVEL_ACTIVITY_LOG_MODEL_SERVICE', ''),
 
     /*
      |--------------------------------------------------------------------------
