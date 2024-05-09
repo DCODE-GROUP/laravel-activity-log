@@ -2,10 +2,8 @@
 
 namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
-
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Illuminate\Routing\Controller;
-
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ReadEmailController extends Controller

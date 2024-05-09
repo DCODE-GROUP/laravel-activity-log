@@ -35,6 +35,7 @@ class CommentController extends Controller
 
             $this->service->mentionUserInComment($comment, $activity, $email);
         }
+
         return $this->service->getActivityLogs($model);
     }
 }

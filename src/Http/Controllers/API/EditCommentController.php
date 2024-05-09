@@ -13,10 +13,11 @@ class EditCommentController extends Controller
     {
     }
 
-    public function __invoke(ActivityLog $comment , EditCommentRequest $request)
+    public function __invoke(ActivityLog $comment, EditCommentRequest $request)
     {
         $this->service->mentionUserInComment($request->input('comment'), $comment);
         $model = $comment->activitiable()->first();
+
         return $this->service->getActivityLogs($model);
     }
 }
