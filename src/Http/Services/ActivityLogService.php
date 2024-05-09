@@ -2,8 +2,14 @@
 
 namespace Dcodegroup\ActivityLog\Http\Services;
 
+use Dcodegroup\ActivityLog\Contracts\HasActivityUser;
+use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Resources\ActivityLogCollection;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Mail\Mailable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class ActivityLogService
 {
@@ -36,14 +42,55 @@ class ActivityLogService
             ->with([
                 $this->userRelationship,
                 $this->communicationLogRelationship,
-                $this->communicationLogRelationship.'.reads',
-            ])->where(fn (Builder $builder) => $builder
-            ->whereNull('communication_log_id')
-            ->orWhere(fn (Builder $builder) => $builder
-                ->whereNotNull('communication_log_id')
-                ->whereNot('title', 'like', '% read an %')
-                ->whereNot('title', 'like', '% view a %'))
+                $this->communicationLogRelationship . '.reads',
+            ])->where(fn(Builder $builder) => $builder
+                ->whereNull('communication_log_id')
+                ->orWhere(fn(Builder $builder) => $builder
+                    ->whereNotNull('communication_log_id')
+                    ->whereNot('title', 'like', '% read an %')
+                    ->whereNot('title', 'like', '% view a %'))
             )
             ->orderByDesc('created_at')->get());
+    }
+
+    public function mentionUserInComment(string $comment, ActivityLog $activityLog, Mailable|null $mailable): ActivityLog
+    {
+        $regexp = '/@\[[^\]]*\]/';
+        $mentionedUsers = Str::matchAll($regexp, trim($comment));
+        foreach ($mentionedUsers as $key) {
+            $identiy = Str::replaceStart('@[', '', $key);
+            $identiy = Str::replaceEnd(']', '', $identiy);
+
+            $users = $this->userModel::query()
+                ->with($this->userSearchRelationship)
+                ->where(function (Builder $q) use ($identiy) {
+                    foreach ($this->userSearchTerm as $field) {
+                        if (is_array($field)) {
+                            $firstName = $field[0];
+                            $lastName = $field[1];
+                            $q->orWhere(DB::raw("concat(" . $firstName . ", ' ', " . $lastName . ")"), $identiy);
+                            continue;
+                        }
+                        $parts = explode('.', $field);
+                        if (count($parts) > 1) {
+                            [$relation, $relationField] = $parts;
+                            $q->orWhereHas($relation, fn(Builder $builder) => $builder->where($relationField, $identiy));
+
+                            continue;
+                        }
+                        $q->orWhere($field, $identiy);
+                    }
+                })->get();
+            /** @var HasActivityUser $userModel */
+            foreach ($users as $userModel) {
+                $email = $userModel->getActivityLogEmail();
+                if ($mailable) {
+                    Mail::to($email)->send($mailable);
+                }
+                $comment = str_replace($key, '<a href="mailto:' . $email . '">' . $userModel->getActivityLogUserName() . '</a>', $comment);
+            }
+        }
+        $activityLog->update(['description' => $comment]);
+        return $activityLog;
     }
 }

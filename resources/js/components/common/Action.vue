@@ -1,9 +1,9 @@
 <template>
   <div v-click-outside="onClickOutside" class="activity__action">
     <button
-      :class="{ active: active }"
-      class="activity__action--button"
-      @click.prevent="active = !active"
+        :class="{ active: active }"
+        class="activity__action--button"
+        @click.prevent="active = !active"
     >
       <icon icon="EllipsisHorizontalIcon"></icon>
     </button>
@@ -12,7 +12,7 @@
         <div class="panel__content">
           <ul class="panel__content--list">
             <li>
-              <button @click="confirm">
+              <button @click="editItem">
                 <icon icon="PencilIcon"></icon>
                 <span>{{ $t("activity-log.buttons.edit") }}</span>
               </button>
@@ -36,7 +36,6 @@ import Icon from "./Icon.vue";
 
 export default {
   name: "Action",
-  inject: ["bus"],
   components: { Icon },
   props: {
     modalEvent: {
@@ -62,19 +61,22 @@ export default {
       this.active = false;
     },
     openDeleteModal(activity) {
-      this.bus.$emit(this.modalEvent, {
+      this.$emit(this.modalEvent, {
         componentData: `<h5>${this.$t("activity-log.words.delete_note")}</h5><br/><span>${this.$t("activity-log.words.delete_note_content")}</span>`,
         callback: this.deleteItem,
       });
     },
     deleteItem() {
       axios
-        .delete(this.getUrl + "/comment/" + this.activity.id)
-        .then(({ data }) => {
-          this.$emit("addComment", data.data);
-        })
-        .catch(console.error);
+          .delete(this.getUrl + "/comment/" + this.activity.id)
+          .then(({ data }) => {
+            this.$emit("addComment", data.data);
+          })
+          .catch(console.error);
     },
+    editItem() {
+      this.$emit("editComment", this.activity.id);
+    }
   },
 };
 </script>

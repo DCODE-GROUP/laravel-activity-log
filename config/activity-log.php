@@ -1,6 +1,7 @@
 <?php
 
 use Dcodegroup\ActivityLog\Models\ActivityLog;
+use Dcodegroup\ActivityLog\Models\CommunicationLog;
 
 return [
 
@@ -78,12 +79,13 @@ return [
     */
 
     'user_relationship' => env('LARAVEL_ACTIVITY_LOG_USER_RELATIONSHIP', 'user'),
-    'user_model' => \App\Models\User::class,
+    'user_model' => null,
     'user_table' => env('LARAVEL_ACTIVITY_LOG_USERS_TABLE', 'users'),
     'user_search_term' => env('LARAVEL_ACTIVITY_LOG_USER_SEARCH_TERM', ['email']),
     'user_search' => env('LARAVEL_ACTIVITY_LOG_USER_SEARCH', 'full_name'),
     'user_search_relationship' => env('LARAVEL_ACTIVITY_LOG_USER_SEARCH_RELATIONSHIP', []),
     'comment_email_template' => env('LARAVEL_ACTIVITY_LOG_COMMENT_EMAIL_TEMPLATE', 'mail.comment-notification'),
+    'filter_mention_user_role' => env('LARAVEL_ACTIVITY_LOG_FILTER_MENTION_USER_ROLE', ''),
 
     /*
      |--------------------------------------------------------------------------
@@ -93,7 +95,7 @@ return [
      |
     */
 
-    'communication_log_model' => \Dcodegroup\ActivityLog\Models\CommunicationLog::class,
+    'communication_log_model' => CommunicationLog::class,
     'communication_log_table' => env('LARAVEL_ACTIVITY_LOG_COMMUNICATION_LOG_TABLE', 'communication_logs'),
     'communication_log_relationship' => env('LARAVEL_ACTIVITY_LOG_COMMUNICATION_LOG_RELATIONSHIP', 'communicationLog'),
 

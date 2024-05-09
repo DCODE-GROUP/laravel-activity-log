@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class FilterController extends Controller
 {
@@ -25,6 +26,8 @@ class FilterController extends Controller
 
     protected $defaultFilterPagination;
 
+    protected $filterMentionUserRole;
+
     public function __construct()
     {
         $this->filterBuilderPath = config('activity-log.filter_builder_path', 'App\Support\Filters\FilterBuilder');
@@ -35,6 +38,7 @@ class FilterController extends Controller
         $this->userSearchTerm = config('activity-log.user_search_term', ['email']);
         $this->userSearchTerm = is_array($this->userSearchTerm) ? $this->userSearchTerm : [$this->userSearchTerm];
         $this->defaultFilterPagination = config('default_filter_pagination', 50);
+        $this->filterMentionUserRole = config('filter_mention_user_role');
     }
 
     public function __invoke(Request $request): JsonResponse
@@ -69,6 +73,12 @@ class FilterController extends Controller
         if ($request && $request->input('s') !== 'null' && $term = $request->input('s')) {
             $query->where(function (Builder $q) use ($searchTermField, $term) {
                 foreach ($searchTermField as $field) {
+                    if (is_array($field)) {
+                        $firstName = $field[0];
+                        $lastName = $field[1];
+                        $q->orWhere(DB::raw("concat(".$firstName.", ' ', ".$lastName.")"), 'LIKE', "%$term%");
+                        continue;
+                    }
                     $parts = explode('.', $field);
 
                     if (count($parts) > 1) {
@@ -78,13 +88,14 @@ class FilterController extends Controller
                         continue;
                     }
 
+
                     $q->orWhere($field, 'LIKE', "%$term%");
                 }
             });
         }
-        if ($request->filled('filter.admin')) {
-            // @phpstan-ignore-next-line
-            $query->role('admin');
+        if ($request->filled('filter.admin') && $this->filterMentionUserRole) {
+//            // @phpstan-ignore-next-line
+            $query->role($this->filterMentionUserRole);
         }
 
         if ($searchField && $request->filled($searchField)) {
