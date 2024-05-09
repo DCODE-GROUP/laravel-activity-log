@@ -11,8 +11,8 @@ use Illuminate\Queue\SerializesModels;
 
 class CommentNotification extends Mailable
 {
-    use Queueable;
     use OrderReadMailableTrait;
+    use Queueable;
     use SerializesModels;
 
     public function __construct(protected string $subjectModel, protected string $url)

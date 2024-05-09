@@ -50,6 +50,7 @@ trait OrderReadMailableTrait
                 'bcc' => $envelope->bcc,
             ], $this);
         }
+
         return parent::send($mailer);
     }
 }
