@@ -180,14 +180,14 @@
         </div>
         <div v-else>
           <comment
-              :model-class="modelClass"
-              :model-id="modelId"
-              :comment-url="commentUrl"
-              :load-users-url="loadUsersUrl"
-              :user="username"
-              :activity="activity"
-              @addComment="addComment($event)"
-              @cancelEditComment="editId = null"
+            :model-class="modelClass"
+            :model-id="modelId"
+            :comment-url="commentUrl"
+            :load-users-url="loadUsersUrl"
+            :user="username"
+            :activity="activity"
+            @addComment="addComment($event)"
+            @cancelEditComment="editId = null"
           ></comment>
         </div>
       </div>

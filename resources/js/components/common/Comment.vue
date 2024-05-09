@@ -44,20 +44,20 @@
     </div>
 
     <div class="content__action">
-      <div class="content__action-attachment" ></div>
+      <div class="content__action-attachment"></div>
       <div class="content__action-action flex">
         <div
-            v-if="activity"
-            class="content__action-button cursor-pointer mr-smSpace"
-            :class="{ 'content__action-button--disable': !comment }"
-            @click="cancel"
+          v-if="activity"
+          class="content__action-button cursor-pointer mr-smSpace"
+          :class="{ 'content__action-button--disable': !comment }"
+          @click="cancel"
         >
           {{ $t("activity-log.buttons.cancel") }}
         </div>
         <div
-            class="content__action-button cursor-pointer"
-            :class="{ 'content__action-button--disable': !comment }"
-            @click="addComment"
+          class="content__action-button cursor-pointer"
+          :class="{ 'content__action-button--disable': !comment }"
+          @click="addComment"
         >
           {{ $t("activity-log.buttons.save_comment") }}
         </div>
@@ -103,7 +103,7 @@ export default {
     activity: {
       type: Object,
       required: false,
-    }
+    },
   },
   data() {
     return {
@@ -142,34 +142,33 @@ export default {
       }
       if (this.activity) {
         axios
-            .patch(this.commentUrl + "/" + this.activity.id , {
-              modelClass: this.modelClass,
-              modelId: this.modelId,
-              comment: this.comment,
-              currentUrl: window.location.href,
-              currentUser: this.user,
-            })
-            .then(({ data }) => {
-              this.comment = null;
-              this.$emit("addComment", data.data);
-            })
-            .catch(console.error);
+          .patch(this.commentUrl + "/" + this.activity.id, {
+            modelClass: this.modelClass,
+            modelId: this.modelId,
+            comment: this.comment,
+            currentUrl: window.location.href,
+            currentUser: this.user,
+          })
+          .then(({ data }) => {
+            this.comment = null;
+            this.$emit("addComment", data.data);
+          })
+          .catch(console.error);
       } else {
         axios
-            .post(this.commentUrl, {
-              modelClass: this.modelClass,
-              modelId: this.modelId,
-              comment: this.comment,
-              currentUrl: window.location.href,
-              currentUser: this.user,
-            })
-            .then(({ data }) => {
-              this.comment = null;
-              this.$emit("addComment", data.data);
-            })
-            .catch(console.error);
+          .post(this.commentUrl, {
+            modelClass: this.modelClass,
+            modelId: this.modelId,
+            comment: this.comment,
+            currentUrl: window.location.href,
+            currentUser: this.user,
+          })
+          .then(({ data }) => {
+            this.comment = null;
+            this.$emit("addComment", data.data);
+          })
+          .catch(console.error);
       }
-
     },
   },
 };
