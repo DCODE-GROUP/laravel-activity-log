@@ -11,6 +11,7 @@
         :model-class="modelClass"
         :model-id="modelId"
         :comment-url="commentUrl"
+        :load-users-url="loadUsersUrl"
         :user="username"
         @addComment="addComment($event)"
       ></comment>
@@ -200,6 +201,10 @@ export default {
       type: String,
       default: "/api/generic/activity-logs/comments",
     },
+    loadUsersUrl: {
+      type: String,
+      default: "/api/generic/activity-logs/filters/facets/created_by",
+    },
     modelClass: {
       type: String,
       required: true,
@@ -367,6 +372,7 @@ export default {
           content: activity.communication.content,
           to: activity.communication.to,
           subject: activity.communication.subject,
+          date: activity.communication.date,
           isMarkdownContent: this.isMarkdownContent,
         },
       });

@@ -29,10 +29,8 @@
 
         <template #item-@="{ item }">
           <div class="mention-wrapper">
-            <div
-              class="mention-wrapper--avatar activity__user--avatar !w-[12px] !h-[12px]"
-            >
-              <span class="font-bold !text-lg">{{
+            <div class="mention-wrapper--avatar activity__user--avatar">
+              <span class="font-bold !text-sm">{{
                 item.label.charAt(0).toUpperCase() +
                 item.label.charAt(1).toUpperCase()
               }}</span>
@@ -76,6 +74,10 @@ export default {
       type: String,
       default: "/api/generic/activity-logs/comments",
     },
+    loadUsersUrl: {
+      type: String,
+      default: "/api/generic/activity-logs/filters/facets/created_by",
+    },
     modelClass: {
       type: String,
       required: true,
@@ -100,9 +102,7 @@ export default {
     async loadUsers(searchText = null) {
       this.loading = true;
       axios
-        .get(
-          `/generic/api/activity-logs/filters/facets/created_by?s=${searchText}`,
-        )
+        .get(`${this.loadUsersUrl}?s=${searchText}&filter[admin]=1`)
         .then((res) => {
           this.items = res.data.map((item) => {
             return {

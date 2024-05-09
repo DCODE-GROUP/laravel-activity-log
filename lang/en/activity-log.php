@@ -24,6 +24,7 @@ return [
         'system' => 'System',
         'loading' => 'Loading...',
         'no_result' => 'No result',
+        'date' => 'Date',
     ],
     'actions' => [
         'create' => ' create a ',

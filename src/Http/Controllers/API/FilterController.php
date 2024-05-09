@@ -82,11 +82,16 @@ class FilterController extends Controller
                 }
             });
         }
+        if ($request->filled('filter.admin')) {
+            // @phpstan-ignore-next-line
+            $query->role('admin');
+        }
 
         if ($searchField && $request->filled($searchField)) {
             $idsFilters = explode(',', $request->input($searchField));
             $query->whereIn('id', $idsFilters);
         }
+
         if ($request->filled('all')) {
             return $query->orderBy($searchTermField[0])->get();
         }

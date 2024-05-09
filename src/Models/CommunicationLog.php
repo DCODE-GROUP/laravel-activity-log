@@ -2,6 +2,7 @@
 
 namespace Dcodegroup\ActivityLog\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -15,6 +16,7 @@ use Illuminate\Support\Collection;
  * @property string|null $content
  * @property Collection $reads
  * @property Collection $views
+ * @property Carbon $created_at
  */
 class CommunicationLog extends Model
 {

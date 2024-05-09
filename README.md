@@ -283,6 +283,15 @@ src\Support\Traits\ActivityLoggable.php
 src\Support\Traits\LastModifiedBy.php
 ```
 
+
+## Traits for activity log mailable to support tracking read email
+
+Located in
+```
+src\Support\Traits\ReadMailableTrait.php
+```
+
+
 Using `<activity-log-list>` or `<v-activity-log>` to display activity log list. Pass filter as a slot if filter functionality is needed
 ```html
       <ActivityLogList :model-id="tender.id" :model-class="tenderModel">
