@@ -43,6 +43,7 @@ class ActivityLog extends JsonResource
             'subject' => $this->resource->communicationLog->subject,
             'content' => $this->resource->communicationLog->content ?? $this->resource->description,
             'icon' => CommunicationLog::ICON_TYPE_MAP[$this->resource->communicationLog->type],
+            'date' => $this->resource->communicationLog->created_at->format(config('activity-log.datetime_format')),
             'reads_count' => $this->resource->communicationLog->reads->count(),
             'read_at_date' => $this->resource->communicationLog->reads->last()?->created_at?->format(config('activity-log.datetime_format')),
         ];
