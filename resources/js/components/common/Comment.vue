@@ -76,7 +76,7 @@ export default {
     },
     loadUsersUrl: {
       type: String,
-      default: "/api/generic/activity-logs/filters/facets",
+      default: "/api/generic/activity-logs/filters/facets/created_by",
     },
     modelClass: {
       type: String,
@@ -102,7 +102,7 @@ export default {
     async loadUsers(searchText = null) {
       this.loading = true;
       axios
-          .get(`${this.loadUsersUrl}/created_by?s=${searchText}&filter[admin]=1`)
+          .get(`${this.loadUsersUrl}?s=${searchText}&filter[admin]=1`)
           .then((res) => {
             this.items = res.data.map((item) => {
               return {

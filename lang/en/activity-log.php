@@ -24,6 +24,7 @@ return [
         'system' => 'System',
         'loading' => 'Loading...',
         'no_result' => 'No result',
+        'date' => 'Date',
     ],
     'actions' => [
         'create' => ' create a ',
@@ -35,6 +36,8 @@ return [
         'save_comment' => 'Comment',
         'preview_email' => '  Preview Email',
         'preview_sms' => '  Preview SMS',
+        'delete' => 'Delete',
+        'edit' => 'Edit',
     ],
 
     'placeholders' => [
@@ -53,6 +56,8 @@ return [
         'read_email' => ' read an email ',
         'send_sms' => ' send a notification sms to ',
         'read_read' => ' read an email ',
+        'delete_note' => 'Delete note?',
+        'delete_note_content' => 'Are you sure you want to delete this note? This action cannot be undone.',
     ],
 
     'phases' => [

@@ -193,7 +193,7 @@ export default {
     },
     loadUsersUrl: {
       type: String,
-      default: "/api/generic/activity-logs/filters/facets",
+      default: "/api/generic/activity-logs/filters/facets/created_by",
     },
     modelClass: {
       type: String,
