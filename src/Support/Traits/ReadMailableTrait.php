@@ -43,7 +43,7 @@ trait ReadMailableTrait
             return parent::send($mailer);
         }
 
-        if (method_exists($this->model, 'createCommunicationLog')) {
+        if (method_exists($this->model, 'createCommunicationLog') && method_exists($this->model, 'createActivityLog')) {
             $envelope = $this->envelope();
             $to = $this->to[0]['address'];
             $communicationLog = $this->model->createCommunicationLog([
