@@ -11,6 +11,7 @@ trait ReadMailableTrait
      * @var ActivityLog|null
      */
     protected $activityLog = null;
+
     protected $model = null;
 
     public function prepareContent(): Content
@@ -47,6 +48,7 @@ trait ReadMailableTrait
             $to = $mailer->to[0]['address'];
             $this->model->createCommunicationLog($envelope, $to, $mailer->render() ?: '');
         }
+
         return parent::send($mailer);
     }
 }
