@@ -53,7 +53,7 @@ trait ReadMailableTrait
             ], $to, $this->render() ?: '');
             $this->activityLog = $this->model->createActivityLog([
                 'type' => ActivityLog::TYPE_NOTIFICATION,
-                'title' => __('activity-log.words.send_email') . $to,
+                'title' => __('activity-log.words.send_email').$to,
                 'description' => '',
                 'communication_log_id' => $communicationLog->id,
             ]);
