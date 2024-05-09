@@ -11,6 +11,7 @@ trait ReadMailableTrait
      * @var ActivityLog|null
      */
     protected $activityLog = null;
+
     protected $model = null;
 
     public function prepareContent(): Content
@@ -27,7 +28,7 @@ trait ReadMailableTrait
 
         if ($this->activityLog) {
             $content->with['readUrl'] = route('read-email', [
-                'order' => $this->order,
+                'order' => $this->model,
                 'activity_log' => $this->activityLog,
             ]);
         }
@@ -44,9 +45,20 @@ trait ReadMailableTrait
 
         if (method_exists($this->model, 'createCommunicationLog')) {
             $envelope = $this->envelope();
-            $to = $mailer->to[0]['address'];
-            $this->model->createCommunicationLog($envelope, $to, $mailer->render() ?: '');
+            $to = $this->to[0]['address'];
+            $communicationLog = $this->model->createCommunicationLog([
+                'subject' => $envelope->subject,
+                'cc' => $envelope->cc,
+                'bcc' => $envelope->bcc,
+            ], $to, $this->render() ?: '');
+            $this->activityLog = $this->model->createActivityLog([
+                'type' => ActivityLog::TYPE_NOTIFICATION,
+                'title' => __('activity-log.words.send_email') . $to,
+                'description' => '',
+                'communication_log_id' => $communicationLog->id,
+            ]);
         }
+
         return parent::send($mailer);
     }
 }
