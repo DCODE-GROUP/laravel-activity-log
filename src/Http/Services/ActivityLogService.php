@@ -53,7 +53,7 @@ class ActivityLogService
             ->orderByDesc('created_at')->get());
     }
 
-    public function mentionUserInComment(string $comment, ActivityLog $activityLog, Mailable|null $mailable): ActivityLog
+    public function mentionUserInComment(string $comment, ActivityLog $activityLog, Mailable|null $mailable = null): ActivityLog
     {
         $regexp = '/@\[[^\]]*\]/';
         $mentionedUsers = Str::matchAll($regexp, trim($comment));
