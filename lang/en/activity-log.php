@@ -38,6 +38,7 @@ return [
         'preview_sms' => '  Preview SMS',
         'delete' => 'Delete',
         'edit' => 'Edit',
+        'cancel' => 'Cancel',
     ],
 
     'placeholders' => [

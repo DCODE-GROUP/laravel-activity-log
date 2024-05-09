@@ -74,16 +74,19 @@ class FilterController extends Controller
             $query->where(function (Builder $q) use ($searchTermField, $term) {
                 foreach ($searchTermField as $field) {
                     if (is_array($field)) {
-                        $firstName = $field[0];
-                        $lastName = $field[1];
-                        $q->orWhere(DB::raw("concat(".$firstName.", ' ', ".$lastName.")"), 'LIKE', "%$term%");
+                        $query = "concat(";
+                        foreach ($field as $item) {
+                            $query .= collect($field)->last() === $item ? $item : $item . ", ' ', ";
+                        }
+                        $query .= ")";
+                        $q->orWhere(DB::raw($query), 'LIKE', "%$term%");
                         continue;
                     }
                     $parts = explode('.', $field);
 
                     if (count($parts) > 1) {
                         [$relation, $relationField] = $parts;
-                        $q->orWhereHas($relation, fn (Builder $builder) => $builder->where($relationField, 'LIKE', "%$term%"));
+                        $q->orWhereHas($relation, fn(Builder $builder) => $builder->where($relationField, 'LIKE', "%$term%"));
 
                         continue;
                     }

@@ -185,7 +185,9 @@
               :comment-url="commentUrl"
               :load-users-url="loadUsersUrl"
               :user="username"
+              :activity="activity"
               @addComment="addComment($event)"
+              @cancelEditComment="editId = null"
           ></comment>
         </div>
       </div>
@@ -401,7 +403,7 @@ export default {
     },
     editComment($event) {
       this.editId = $event;
-    }
+    },
   },
 };
 </script>
