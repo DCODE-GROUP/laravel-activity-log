@@ -102,17 +102,17 @@ export default {
     async loadUsers(searchText = null) {
       this.loading = true;
       axios
-          .get(`${this.loadUsersUrl}?s=${searchText}&filter[admin]=1`)
-          .then((res) => {
-            this.items = res.data.map((item) => {
-              return {
-                label: item.label,
-                value: `[${item.label}]`,
-                id: item.value,
-              };
-            });
-            this.loading = false;
+        .get(`${this.loadUsersUrl}?s=${searchText}&filter[admin]=1`)
+        .then((res) => {
+          this.items = res.data.map((item) => {
+            return {
+              label: item.label,
+              value: `[${item.label}]`,
+              id: item.value,
+            };
           });
+          this.loading = false;
+        });
     },
     addCommentByEnter() {
       if (this.enterToComment) {
