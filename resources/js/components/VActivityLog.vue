@@ -149,23 +149,32 @@
               </div>
             </div>
           </div>
-          <div class="content__status--time flex">
-            {{ activity.created_at_date }}
-            <a
-              class="cursor-pointer px-smSpace items-center"
-              @click.prevent="individualCollapse(index)"
-            >
-              <icon
-                v-if="collapseStage[index]"
-                icon="ChevronUpIcon"
-                classes="text-primary-400 w-4 h-4"
-              ></icon>
-              <icon
-                v-else
-                icon="ChevronDownIcon"
-                classes="text-primary-400 w-4 h-4"
-              ></icon>
-            </a>
+          <div class="content__status--time block">
+            <div class="flex">
+              {{ activity.created_at_date }}
+              <a
+                class="cursor-pointer px-smSpace items-center"
+                @click.prevent="individualCollapse(index)"
+              >
+                <icon
+                  v-if="collapseStage[index]"
+                  icon="ChevronUpIcon"
+                  classes="text-primary-400 w-4 h-4"
+                ></icon>
+                <icon
+                  v-else
+                  icon="ChevronDownIcon"
+                  classes="text-primary-400 w-4 h-4"
+                ></icon>
+              </a>
+            </div>
+            <div v-if="activity.type === 'Comment'">
+              <action
+                :modal-event="modalEvent"
+                :activity="activity"
+                :get-url="getUrl"
+              ></action>
+            </div>
           </div>
         </div>
       </div>
@@ -177,11 +186,12 @@ import axios from "axios";
 import Icon from "./common/Icon.vue";
 import Toggle from "./common/Toggle.vue";
 import Comment from "./common/Comment.vue";
+import Action from "./common/Action.vue";
 import ReadMoreContent from "./common/ReadMoreContent.vue";
 
 export default {
   inject: ["bus"],
-  components: { ReadMoreContent, Icon, Toggle, Comment },
+  components: { ReadMoreContent, Icon, Toggle, Comment, Action },
   props: {
     getUrl: {
       type: String,

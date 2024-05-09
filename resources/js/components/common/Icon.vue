@@ -14,6 +14,8 @@ import {
   BellIcon,
   PencilIcon,
   ArrowPathIcon,
+  EllipsisHorizontalIcon,
+  TrashIcon,
 } from "@heroicons/vue/24/outline";
 
 export default {
@@ -29,6 +31,8 @@ export default {
     BellIcon,
     PencilIcon,
     ArrowPathIcon,
+    EllipsisHorizontalIcon,
+    TrashIcon,
   },
   props: {
     icon: {
