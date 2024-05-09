@@ -2,27 +2,27 @@
   <div class="content">
     <div class="content__text">
       <Mentionable
-          :keys="['@']"
-          :items="items"
-          offset="10"
-          filtering-disabled
-          insert-space
-          @open="loadUsers()"
-          @search="loadUsers($event)"
+        :keys="['@']"
+        :items="items"
+        offset="10"
+        filtering-disabled
+        insert-space
+        @open="loadUsers()"
+        @search="loadUsers($event)"
       >
         <textarea
-            @keyup.enter="addCommentByEnter"
-            class="content__text--textarea focus:ring-0"
-            v-model="comment"
-            rows="3"
-            :placeholder="$t('activity-log.placeholders.add_comment')"
+          @keyup.enter="addCommentByEnter"
+          class="content__text--textarea focus:ring-0"
+          v-model="comment"
+          rows="3"
+          :placeholder="$t('activity-log.placeholders.add_comment')"
         ></textarea>
         <template #no-result>
           <div class="dim">
             {{
               loading
-                  ? $t("activity-log.fields.loading")
-                  : $t("activity-log.fields.no_result")
+                ? $t("activity-log.fields.loading")
+                : $t("activity-log.fields.no_result")
             }}
           </div>
         </template>
@@ -31,9 +31,9 @@
           <div class="mention-wrapper">
             <div class="mention-wrapper--avatar activity__user--avatar">
               <span class="font-bold !text-sm">{{
-                  item.label.charAt(0).toUpperCase() +
-                  item.label.charAt(1).toUpperCase()
-                }}</span>
+                item.label.charAt(0).toUpperCase() +
+                item.label.charAt(1).toUpperCase()
+              }}</span>
             </div>
             <span class="dim">
               {{ item.label }}
@@ -116,17 +116,17 @@ export default {
     async loadUsers(searchText = null) {
       this.loading = true;
       axios
-          .get(`${this.loadUsersUrl}?s=${searchText}&filter[admin]=1`)
-          .then((res) => {
-            this.items = res.data.map((item) => {
-              return {
-                label: item.label,
-                value: `[${item.label}]`,
-                id: item.value,
-              };
-            });
-            this.loading = false;
+        .get(`${this.loadUsersUrl}?s=${searchText}&filter[admin]=1`)
+        .then((res) => {
+          this.items = res.data.map((item) => {
+            return {
+              label: item.label,
+              value: `[${item.label}]`,
+              id: item.value,
+            };
           });
+          this.loading = false;
+        });
     },
     addCommentByEnter() {
       if (this.enterToComment) {
