@@ -83,6 +83,7 @@ class FilterController extends Controller
             });
         }
         if ($request->filled('filter.admin')) {
+            // @phpstan-ignore-next-line
             $query->role('admin');
         }
 

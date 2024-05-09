@@ -2,6 +2,7 @@
 
 namespace Dcodegroup\ActivityLog\Mail;
 
+use Dcodegroup\ActivityLog\Support\Traits\ReadMailableTrait;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -11,10 +12,12 @@ use Illuminate\Queue\SerializesModels;
 class CommentNotification extends Mailable
 {
     use Queueable;
+    use ReadMailableTrait;
     use SerializesModels;
 
-    public function __construct(protected string $subjectModel, protected string $url)
+    public function __construct(protected string $subjectModel, protected string $url, protected $entityModel)
     {
+        $this->model = $this->entityModel;
     }
 
     /**
@@ -28,7 +31,7 @@ class CommentNotification extends Mailable
     /**
      * Get the message content definition.
      */
-    public function content(): Content
+    public function prepareContent(): Content
     {
         return new Content(markdown: config('activity-log.comment_email_template'), with: [
             'content' => $this->subjectModel,
