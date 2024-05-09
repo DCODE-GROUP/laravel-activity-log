@@ -96,11 +96,11 @@ class CommentController extends Controller
                 $this->communicationLogRelationship,
                 $this->communicationLogRelationship.'.reads',
             ])->where(fn (Builder $builder) => $builder
-                ->whereNull('communication_log_id')
-                ->orWhere(fn (Builder $builder) => $builder
-                    ->whereNotNull('communication_log_id')
-                    ->whereNot('title', 'like', '% read an %')
-                    ->whereNot('title', 'like', '% view a %'))
+            ->whereNull('communication_log_id')
+            ->orWhere(fn (Builder $builder) => $builder
+                ->whereNotNull('communication_log_id')
+                ->whereNot('title', 'like', '% read an %')
+                ->whereNot('title', 'like', '% view a %'))
             )
             ->orderByDesc('created_at')->get());
     }

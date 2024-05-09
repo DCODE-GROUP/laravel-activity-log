@@ -95,8 +95,6 @@ class FilterController extends Controller
             return $query->orderBy($searchTermField[0])->get();
         }
 
-
-
         return $query->orderBy($searchTermField[0])->limit($this->defaultFilterPagination)->get();
     }
 }
