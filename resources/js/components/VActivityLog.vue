@@ -3,52 +3,52 @@
     <div class="activity activity--comment" v-if="allowComment">
       <div class="activity__user--avatar !w-[48px] !h-[48px]">
         <span class="font-bold !text-lg">{{
-            username.charAt(0).toUpperCase() + username.charAt(1).toUpperCase()
-          }}</span>
+          username.charAt(0).toUpperCase() + username.charAt(1).toUpperCase()
+        }}</span>
       </div>
       <comment
-          :enter-to-comment="enterToComment"
-          :model-class="modelClass"
-          :model-id="modelId"
-          :comment-url="commentUrl"
-          :load-users-url="loadUsersUrl"
-          :user="username"
-          @addComment="addComment($event)"
+        :enter-to-comment="enterToComment"
+        :model-class="modelClass"
+        :model-id="modelId"
+        :comment-url="commentUrl"
+        :load-users-url="loadUsersUrl"
+        :user="username"
+        @addComment="addComment($event)"
       ></comment>
     </div>
     <div class="flex items-end justify-between space-x-2 py-smSpace">
       <div class="flex justify-start space-x-2">
         <div class="w-[48px]"></div>
         <toggle
-            :value="isCollapsedView"
-            :title="$t('activity-log.fields.collapsed_view')"
-            @input="collapView($event)"
-            class="pr-smSpace"
+          :value="isCollapsedView"
+          :title="$t('activity-log.fields.collapsed_view')"
+          @input="collapView($event)"
+          class="pr-smSpace"
         ></toggle>
         <toggle
-            :value="isFilterUser"
-            :title="$t('activity-log.fields.my_activities')"
-            @input="filterUser($event)"
+          :value="isFilterUser"
+          :title="$t('activity-log.fields.my_activities')"
+          @input="filterUser($event)"
         ></toggle>
       </div>
       <div class="flex justify-end w-[21.875rem] space-x-1">
         <label class="relative block w-9/12">
           <input
-              class="pl-8"
-              type="text"
-              name="name"
-              v-model="searchKey"
-              :placeholder="$t('activity-log.placeholders.search_description')"
-              v-on:keyup.enter="searchTerm"
+            class="pl-8"
+            type="text"
+            name="name"
+            v-model="searchKey"
+            :placeholder="$t('activity-log.placeholders.search_description')"
+            v-on:keyup.enter="searchTerm"
           />
           <button
-              class="absolute left-2.5 top-1/2 -translate-y-1/2"
-              type="button"
-              @click="searchTerm"
+            class="absolute left-2.5 top-1/2 -translate-y-1/2"
+            type="button"
+            @click="searchTerm"
           >
             <icon
-                icon="MagnifyingGlassIcon"
-                classes="text-primary-400 w-4 h-4"
+              icon="MagnifyingGlassIcon"
+              classes="text-primary-400 w-4 h-4"
             ></icon>
           </button>
         </label>
@@ -56,36 +56,36 @@
       </div>
     </div>
     <div
-        v-if="loading"
-        :aria-label="$t('activity-log.words.loading')"
-        role="status"
-        class="flex h-full items-center justify-center space-x-2 py-8"
+      v-if="loading"
+      :aria-label="$t('activity-log.words.loading')"
+      role="status"
+      class="flex h-full items-center justify-center space-x-2 py-8"
     >
       <icon icon="ArrowPathIcon" class="h-lgSpace w-lgSpace animate-spin" />
       <span class="text-lg font-medium text-tertiary-500">{{
-          $t("activity-log.words.loading")
-        }}</span>
+        $t("activity-log.words.loading")
+      }}</span>
     </div>
     <div
-        class="activity activity--min relative !mt-0 pt-8 pl-0"
-        v-for="(activity, index) in activities"
+      class="activity activity--min relative !mt-0 pt-8 pl-0"
+      v-for="(activity, index) in activities"
     >
       <div
-          v-show="index < activities.length - 1"
-          class="absolute left-[24px] h-full w-[1px] bg-slate-200"
+        v-show="index < activities.length - 1"
+        class="absolute left-[24px] h-full w-[1px] bg-slate-200"
       ></div>
       <div
-          class="flex justify-center items-center relative rounded-xl min-w-[48px] w-[48px] h-[48px] cursor-pointer"
-          :class="'bg-' + activity.color + '-50'"
+        class="flex justify-center items-center relative rounded-xl min-w-[48px] w-[48px] h-[48px] cursor-pointer"
+        :class="'bg-' + activity.color + '-50'"
       >
         <icon
-            v-if="activity.type"
-            :classes="'w-[24px] h-[24px] text-' + activity.color + '-500'"
-            :icon="activity.icon"
+          v-if="activity.type"
+          :classes="'w-[24px] h-[24px] text-' + activity.color + '-500'"
+          :icon="activity.icon"
         ></icon>
         <span
-            class="absolute -right-1 -bottom-1 justify-center text-[10px] font-bold tracking-widest w-[24px] h-[24px] flex justify-center items-center text-white rounded-full bg-gray-600 ring-0 ring-neutral-500"
-        >{{
+          class="absolute -right-1 -bottom-1 justify-center text-[10px] font-bold tracking-widest w-[24px] h-[24px] flex justify-center items-center text-white rounded-full bg-gray-600 ring-0 ring-neutral-500"
+          >{{
             username.charAt(0).toUpperCase() + username.charAt(1).toUpperCase()
           }}</span
         >
@@ -99,17 +99,17 @@
             <br />
             <div v-if="!collapseStage[index]" class="pt-smSpace">
               <div
-                  v-if="activity.communication"
-                  class="flex items-center space-x-2 sm:flex-col sm:space-x-0 sm:space-y-smSpace sm:items-start"
+                v-if="activity.communication"
+                class="flex items-center space-x-2 sm:flex-col sm:space-x-0 sm:space-y-smSpace sm:items-start"
               >
                 <button
-                    class="btn btn--secondary max-h-[32px] rounded-lg"
-                    type="button"
-                    @click="openModal(activity)"
+                  class="btn btn--secondary max-h-[32px] rounded-lg"
+                  type="button"
+                  @click="openModal(activity)"
                 >
                   <div
-                      class="flex items-center flex-row-reverse space-x-reverse"
-                      v-if="activity.communication.type === 'Email'"
+                    class="flex items-center flex-row-reverse space-x-reverse"
+                    v-if="activity.communication.type === 'Email'"
                   >
                     <span>{{ $t("activity-log.buttons.preview_email") }}</span>
                     <div class="btn-icon btn__icon--left">
@@ -118,8 +118,8 @@
                   </div>
 
                   <div
-                      class="flex items-center flex-row-reverse space-x-reverse"
-                      v-if="activity.communication.type === 'Sms'"
+                    class="flex items-center flex-row-reverse space-x-reverse"
+                    v-if="activity.communication.type === 'Sms'"
                   >
                     <span>{{ $t("activity-log.buttons.preview_sms") }}</span>
                     <div class="btn-icon btn__icon--left">
@@ -129,23 +129,23 @@
                 </button>
                 <div v-if="activity.communication.type === 'Email'">
                   <span v-if="activity.communication.reads_count"
-                  >{{ $t("activity-log.phases.opened_on") }}
+                    >{{ $t("activity-log.phases.opened_on") }}
                     {{ activity.communication.read_at_date }} ({{
                       activity.communication.reads_count
                     }}
                     {{ $t("activity-log.words.views") }})</span
                   >
                   <span v-else>{{
-                      $t("activity-log.phases.email_has_not_been_opened")
-                    }}</span>
+                    $t("activity-log.phases.email_has_not_been_opened")
+                  }}</span>
                 </div>
               </div>
               <div v-else class="content__status--description">
                 <read-more-content
-                    v-if="activity.description"
-                    :content="activity.description"
-                    :lines="2"
-                    :is-edited="activity.is_edited"
+                  v-if="activity.description"
+                  :content="activity.description"
+                  :lines="2"
+                  :is-edited="activity.is_edited"
                 ></read-more-content>
               </div>
             </div>
@@ -154,41 +154,41 @@
             <div class="flex">
               {{ activity.created_at_date }}
               <a
-                  class="cursor-pointer px-smSpace items-center"
-                  @click.prevent="individualCollapse(index)"
+                class="cursor-pointer px-smSpace items-center"
+                @click.prevent="individualCollapse(index)"
               >
                 <icon
-                    v-if="collapseStage[index]"
-                    icon="ChevronUpIcon"
-                    classes="text-primary-400 w-4 h-4"
+                  v-if="collapseStage[index]"
+                  icon="ChevronUpIcon"
+                  classes="text-primary-400 w-4 h-4"
                 ></icon>
                 <icon
-                    v-else
-                    icon="ChevronDownIcon"
-                    classes="text-primary-400 w-4 h-4"
+                  v-else
+                  icon="ChevronDownIcon"
+                  classes="text-primary-400 w-4 h-4"
                 ></icon>
               </a>
             </div>
             <div v-if="activity.type === 'Comment'">
               <action
-                  :modal-event="modalEvent"
-                  :activity="activity"
-                  :get-url="getUrl"
-                  @editComment="editComment($event)"
+                :modal-event="modalEvent"
+                :activity="activity"
+                :get-url="getUrl"
+                @editComment="editComment($event)"
               ></action>
             </div>
           </div>
         </div>
         <div v-else>
           <comment
-              :model-class="modelClass"
-              :model-id="modelId"
-              :comment-url="commentUrl"
-              :load-users-url="loadUsersUrl"
-              :user="username"
-              :activity="activity"
-              @addComment="addComment($event)"
-              @cancelEditComment="editId = null"
+            :model-class="modelClass"
+            :model-id="modelId"
+            :comment-url="commentUrl"
+            :load-users-url="loadUsersUrl"
+            :user="username"
+            :activity="activity"
+            @addComment="addComment($event)"
+            @cancelEditComment="editId = null"
           ></comment>
         </div>
       </div>
@@ -267,7 +267,7 @@ export default {
   data() {
     return {
       username:
-          this.currentUser.full_name ?? this.$t("activity-log.fields.system"),
+        this.currentUser.full_name ?? this.$t("activity-log.fields.system"),
       collapseStage: {},
       isCollapsedView: this.defaultCollapView,
       isFilterUser: false,
@@ -323,15 +323,15 @@ export default {
         ...this.filters,
       };
       return axios
-          .get(this.getUrl, { params })
-          .then(({ data }) => {
-            this.loading = false;
-            this.activities = [];
-            if (data.data.length) {
-              this.activities = data.data;
-            }
-          })
-          .catch(console.error);
+        .get(this.getUrl, { params })
+        .then(({ data }) => {
+          this.loading = false;
+          this.activities = [];
+          if (data.data.length) {
+            this.activities = data.data;
+          }
+        })
+        .catch(console.error);
     },
 
     collapView($event) {
@@ -358,7 +358,7 @@ export default {
 
       this.$nextTick(() => {
         const allIsCollapsedView = Object.values(this.collapseStage).every(
-            (isCollapsed) => isCollapsed,
+          (isCollapsed) => isCollapsed,
         );
 
         if (!allIsCollapsedView) {
