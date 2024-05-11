@@ -171,11 +171,11 @@
             </div>
             <div v-if="activity.type === 'Comment'">
               <action
-                  :modal-event="modalEvent"
-                  :activity="activity"
-                  :get-url="getUrl"
-                  @editComment="editComment($event)"
-                  @addComment="addComment($event)"
+                :modal-event="modalEvent"
+                :activity="activity"
+                :get-url="getUrl"
+                @editComment="editComment($event)"
+                @addComment="addComment($event)"
               ></action>
             </div>
           </div>
