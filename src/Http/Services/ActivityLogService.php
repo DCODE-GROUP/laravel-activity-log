@@ -42,18 +42,18 @@ class ActivityLogService
             ->with([
                 $this->userRelationship,
                 $this->communicationLogRelationship,
-                $this->communicationLogRelationship . '.reads',
-            ])->where(fn(Builder $builder) => $builder
-                ->whereNull('communication_log_id')
-                ->orWhere(fn(Builder $builder) => $builder
-                    ->whereNotNull('communication_log_id')
-                    ->whereNot('title', 'like', '% read an %')
-                    ->whereNot('title', 'like', '% view a %'))
+                $this->communicationLogRelationship.'.reads',
+            ])->where(fn (Builder $builder) => $builder
+            ->whereNull('communication_log_id')
+            ->orWhere(fn (Builder $builder) => $builder
+                ->whereNotNull('communication_log_id')
+                ->whereNot('title', 'like', '% read an %')
+                ->whereNot('title', 'like', '% view a %'))
             )
             ->orderByDesc('created_at')->get());
     }
 
-    public function mentionUserInComment(string $comment, ActivityLog $activityLog, Mailable|null $mailable = null): ActivityLog
+    public function mentionUserInComment(string $comment, ActivityLog $activityLog, ?Mailable $mailable = null): ActivityLog
     {
         $regexp = '/@\[[^\]]*\]/';
         $mentionedUsers = Str::matchAll($regexp, trim($comment));
@@ -70,14 +70,15 @@ class ActivityLogService
                             foreach ($field as $item) {
                                 $query .= collect($field)->first() !== $item ? $item : $item . ", ' ', ";
                             }
-                            $query .= ")";
+                            $query .= ')';
                             $q->orWhere(DB::raw($query), $identiy);
+
                             continue;
                         }
                         $parts = explode('.', $field);
                         if (count($parts) > 1) {
                             [$relation, $relationField] = $parts;
-                            $q->orWhereHas($relation, fn(Builder $builder) => $builder->where($relationField, $identiy));
+                            $q->orWhereHas($relation, fn (Builder $builder) => $builder->where($relationField, $identiy));
 
                             continue;
                         }
@@ -90,10 +91,11 @@ class ActivityLogService
                 if ($mailable) {
                     Mail::to($email)->send($mailable);
                 }
-                $comment = str_replace($key, '<a href="mailto:' . $email . '">' . $userModel->getActivityLogUserName() . '</a>', $comment);
+                $comment = str_replace($key, '<a href="mailto:'.$email.'">'.$userModel->getActivityLogUserName().'</a>', $comment);
             }
         }
         $activityLog->update(['description' => $comment]);
+
         return $activityLog;
     }
 }

@@ -78,26 +78,26 @@ class FilterController extends Controller
                         foreach ($field as $item) {
                             $query .= collect($field)->first() !== $item ? $item : $item . ", ' ', ";
                         }
-                        $query .= ")";
+                        $query .= ')';
                         $q->orWhere(DB::raw($query), 'LIKE', "%$term%");
+
                         continue;
                     }
                     $parts = explode('.', $field);
 
                     if (count($parts) > 1) {
                         [$relation, $relationField] = $parts;
-                        $q->orWhereHas($relation, fn(Builder $builder) => $builder->where($relationField, 'LIKE', "%$term%"));
+                        $q->orWhereHas($relation, fn (Builder $builder) => $builder->where($relationField, 'LIKE', "%$term%"));
 
                         continue;
                     }
-
 
                     $q->orWhere($field, 'LIKE', "%$term%");
                 }
             });
         }
         if ($request->filled('filter.admin') && $this->filterMentionUserRole) {
-//            // @phpstan-ignore-next-line
+            //            // @phpstan-ignore-next-line
             $query->role($this->filterMentionUserRole);
         }
 
