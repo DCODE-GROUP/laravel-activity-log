@@ -74,9 +74,9 @@ class FilterController extends Controller
             $query->where(function (Builder $q) use ($searchTermField, $term) {
                 foreach ($searchTermField as $field) {
                     if (is_array($field)) {
-                        $query = "concat(";
+                        $query = 'concat(';
                         foreach ($field as $item) {
-                            $query .= collect($field)->last() === $item ? $item : $item . ", ' ', ";
+                            $query .= collect($field)->first() !== $item ? $item : $item . ", ' ', ";
                         }
                         $query .= ")";
                         $q->orWhere(DB::raw($query), 'LIKE', "%$term%");

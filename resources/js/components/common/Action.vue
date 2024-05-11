@@ -1,9 +1,9 @@
 <template>
   <div v-click-outside="onClickOutside" class="activity__action">
     <button
-      :class="{ active: active }"
-      class="activity__action--button"
-      @click.prevent="active = !active"
+        :class="{ active: active }"
+        class="activity__action--button"
+        @click.prevent="active = !active"
     >
       <icon icon="EllipsisHorizontalIcon"></icon>
     </button>
@@ -36,7 +36,7 @@ import Icon from "./Icon.vue";
 
 export default {
   name: "Action",
-  components: { Icon },
+  components: {Icon},
   props: {
     modalEvent: {
       type: String,
@@ -68,11 +68,11 @@ export default {
     },
     deleteItem() {
       axios
-        .delete(this.getUrl + "/comment/" + this.activity.id)
-        .then(({ data }) => {
-          this.$emit("addComment", data.data);
-        })
-        .catch(console.error);
+          .delete(this.getUrl + "/comment/" + this.activity.id)
+          .then(({data}) => {
+            this.$emit("addComment", data.data);
+          })
+          .catch(console.error);
     },
     editItem() {
       this.$emit("editComment", this.activity.id);

@@ -6,15 +6,13 @@ namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Illuminate\Routing\Controller;
 
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-
 class ReadEmailController extends Controller
 {
     public function __construct()
     {
     }
 
-    public function __invoke(ActivityLog $activityLog): BinaryFileResponse
+    public function __invoke(ActivityLog $activityLog)
     {
         if (! auth()->check()) {
             if ($activityLog->communication_log_id) {
@@ -26,7 +24,5 @@ class ReadEmailController extends Controller
                 ])->save();
             }
         }
-
-        return response()->file('images/stealth-pixel.png');
     }
 }

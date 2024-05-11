@@ -66,9 +66,9 @@ class ActivityLogService
                 ->where(function (Builder $q) use ($identiy) {
                     foreach ($this->userSearchTerm as $field) {
                         if (is_array($field)) {
-                            $query = "concat(";
+                            $query = 'concat(';
                             foreach ($field as $item) {
-                                $query .= collect($field)->last() === $item ? $item : $item . ", ' ', ";
+                                $query .= collect($field)->first() !== $item ? $item : $item . ", ' ', ";
                             }
                             $query .= ")";
                             $q->orWhere(DB::raw($query), $identiy);
