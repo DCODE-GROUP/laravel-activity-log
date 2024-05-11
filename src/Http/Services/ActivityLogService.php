@@ -55,6 +55,7 @@ class ActivityLogService
 
     public function mentionUserInComment(string $comment, ActivityLog $activityLog, ?Mailable $mailable = null): ActivityLog
     {
+        $activityLog->update(['meta' => $comment]);
         $regexp = '/@\[[^\]]*\]/';
         $mentionedUsers = Str::matchAll($regexp, trim($comment));
         foreach ($mentionedUsers as $key) {

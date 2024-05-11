@@ -36,6 +36,7 @@ import Icon from "./Icon.vue";
 
 export default {
   name: "Action",
+  inject: ["bus"],
   components: {Icon},
   props: {
     modalEvent: {
@@ -61,7 +62,7 @@ export default {
       this.active = false;
     },
     openDeleteModal(activity) {
-      this.$emit(this.modalEvent, {
+      this.bus.$emit(this.modalEvent, {
         componentData: `<h5>${this.$t("activity-log.words.delete_note")}</h5><br/><span>${this.$t("activity-log.words.delete_note_content")}</span>`,
         callback: this.deleteItem,
       });

@@ -175,6 +175,7 @@
                   :activity="activity"
                   :get-url="getUrl"
                   @editComment="editComment($event)"
+                  @addComment="addComment($event)"
               ></action>
             </div>
           </div>
