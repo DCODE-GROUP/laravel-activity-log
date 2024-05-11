@@ -25,10 +25,8 @@ trait ReadMailableTrait
     public function content(): Content
     {
         $content = $this->prepareContent();
-
         if ($this->activityLog) {
-            $content->with['readUrl'] = route('read-email', [
-                'order' => $this->model,
+            $content->with['readUrl'] = route(config('activity-log.route_name').'.read-email', [
                 'activity_log' => $this->activityLog,
             ]);
         }

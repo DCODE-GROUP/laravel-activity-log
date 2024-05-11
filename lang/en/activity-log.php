@@ -33,11 +33,13 @@ return [
     ],
 
     'buttons' => [
-        'save_comment' => 'Comment',
+        'comment' => 'Comment',
+        'save' => 'Save',
         'preview_email' => '  Preview Email',
         'preview_sms' => '  Preview SMS',
         'delete' => 'Delete',
         'edit' => 'Edit',
+        'cancel' => 'Cancel',
     ],
 
     'placeholders' => [
@@ -46,6 +48,7 @@ return [
     ],
 
     'words' => [
+        'edited' => 'Edited',
         'loading' => 'Loading ...',
         'created_at' => 'Created',
         'views' => 'views',

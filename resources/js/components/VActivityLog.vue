@@ -91,7 +91,7 @@
         >
       </div>
       <div class="content" :id="'activity_' + activity.id">
-        <div class="content__status">
+        <div class="content__status" v-if="activity.id !== editId">
           <div class="content__status--meta">
             <a href="#" class="font-medium text-gray-900">{{ activity.user }}</a
             >&nbsp
@@ -145,6 +145,7 @@
                   v-if="activity.description"
                   :content="activity.description"
                   :lines="2"
+                  :is-edited="activity.is_edited"
                 ></read-more-content>
               </div>
             </div>
@@ -173,9 +174,23 @@
                 :modal-event="modalEvent"
                 :activity="activity"
                 :get-url="getUrl"
+                @editComment="editComment($event)"
+                @addComment="addComment($event)"
               ></action>
             </div>
           </div>
+        </div>
+        <div v-else>
+          <comment
+            :model-class="modelClass"
+            :model-id="modelId"
+            :comment-url="commentUrl"
+            :load-users-url="loadUsersUrl"
+            :user="username"
+            :activity="activity"
+            @addComment="addComment($event)"
+            @cancelEditComment="editId = null"
+          ></comment>
         </div>
       </div>
     </div>
@@ -263,6 +278,7 @@ export default {
       },
       searchKey: null,
       activities: [],
+      editId: null,
       colors: [
         "bg-violet-50",
         "text-violet-500",
@@ -386,6 +402,9 @@ export default {
       if (this.refreshSelf) {
         this.getActivityLog();
       }
+    },
+    editComment($event) {
+      this.editId = $event;
     },
   },
 };

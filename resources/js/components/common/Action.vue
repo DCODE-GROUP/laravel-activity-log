@@ -12,7 +12,7 @@
         <div class="panel__content">
           <ul class="panel__content--list">
             <li>
-              <button @click="confirm">
+              <button @click="editItem">
                 <icon icon="PencilIcon"></icon>
                 <span>{{ $t("activity-log.buttons.edit") }}</span>
               </button>
@@ -74,6 +74,9 @@ export default {
           this.$emit("addComment", data.data);
         })
         .catch(console.error);
+    },
+    editItem() {
+      this.$emit("editComment", this.activity.id);
     },
   },
 };

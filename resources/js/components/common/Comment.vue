@@ -45,12 +45,29 @@
 
     <div class="content__action">
       <div class="content__action-attachment"></div>
-      <div
-        class="content__action-button cursor-pointer"
-        :class="{ 'content__action-button--disable': !comment }"
-        @click="addComment"
-      >
-        {{ $t("activity-log.buttons.save_comment") }}
+      <div class="content__action-action flex">
+        <div
+          v-if="activity"
+          class="content__action-button content__action-button--cancel cursor-pointer mr-smSpace"
+          @click="cancel"
+        >
+          {{ $t("activity-log.buttons.cancel") }}
+        </div>
+        <div
+          class="content__action-button cursor-pointer"
+          :class="{
+            'content__action-button--disable': activity
+              ? activity.meta === comment || !comment
+              : !comment,
+          }"
+          @click="addComment"
+        >
+          {{
+            activity
+              ? $t("activity-log.buttons.save")
+              : $t("activity-log.buttons.comment")
+          }}
+        </div>
       </div>
     </div>
   </div>
@@ -90,11 +107,15 @@ export default {
       type: String,
       required: false,
     },
+    activity: {
+      type: Object,
+      required: false,
+    },
   },
   data() {
     return {
       loading: false,
-      comment: null,
+      comment: this.activity ? this.activity.meta : null,
       items: [],
     };
   },
@@ -119,23 +140,42 @@ export default {
         this.addComment();
       }
     },
+    cancel() {
+      this.$emit("cancelEditComment");
+    },
     addComment() {
       if (!this.comment) {
         return;
       }
-      axios
-        .post(this.commentUrl, {
-          modelClass: this.modelClass,
-          modelId: this.modelId,
-          comment: this.comment,
-          currentUrl: window.location.href,
-          currentUser: this.user,
-        })
-        .then(({ data }) => {
-          this.comment = null;
-          this.$emit("addComment", data.data);
-        })
-        .catch(console.error);
+      if (this.activity) {
+        axios
+          .patch(this.commentUrl + "/" + this.activity.id, {
+            modelClass: this.modelClass,
+            modelId: this.modelId,
+            comment: this.comment,
+            currentUrl: window.location.href,
+            currentUser: this.user,
+          })
+          .then(({ data }) => {
+            this.$emit("cancelEditComment");
+            this.$emit("addComment", data.data);
+          })
+          .catch(console.error);
+      } else {
+        axios
+          .post(this.commentUrl, {
+            modelClass: this.modelClass,
+            modelId: this.modelId,
+            comment: this.comment,
+            currentUrl: window.location.href,
+            currentUser: this.user,
+          })
+          .then(({ data }) => {
+            this.comment = null;
+            this.$emit("addComment", data.data);
+          })
+          .catch(console.error);
+      }
     },
   },
 };
@@ -151,6 +191,7 @@ export default {
   line-height: 20px;
   font-size: 14px;
 }
+
 .mention-wrapper--avatar {
   padding: 6px;
   margin-left: 10px;

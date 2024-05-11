@@ -19,6 +19,8 @@ class ActivityLog extends JsonResource
             'user' => $this->resource->loadMissing('user')->user?->getActivityLogUserName() ?: 'System',
             'title' => $this->resource->title,
             'description' => $this->resource->description,
+            'is_edited' => $this->resource->created_at !== $this->resource->updated_at,
+            'meta' => $this->resource->meta,
             'activitiable_id' => $this->resource->activitiable_id,
             'activitiable_type' => $this->resource->activitiable_type,
             'type' => $this->resource->type,

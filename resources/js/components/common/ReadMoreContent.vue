@@ -5,6 +5,7 @@
       :style="enable && !isOpen ? { webkitLineClamp: lines } : {}"
     >
       <span v-html="content"></span>
+      <span v-if="isEdited">( {{ $t("activity-log.words.edited") }} )</span>
     </div>
     <template v-if="this.enable">
       <a @click.prevent="toggle" class="inline text-blue-600 cursor-pointer">{{
@@ -33,6 +34,10 @@ export default {
       default: true,
     },
     open: {
+      type: Boolean,
+      default: false,
+    },
+    isEdited: {
       type: Boolean,
       default: false,
     },
