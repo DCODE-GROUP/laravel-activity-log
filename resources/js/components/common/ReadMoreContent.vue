@@ -1,18 +1,20 @@
 <template>
   <div class="">
     <div
-        class="readmore-container"
-        :style="enable && !isOpen ? { webkitLineClamp: lines } : {}"
+      class="readmore-container"
+      :style="enable && !isOpen ? { webkitLineClamp: lines } : {}"
     >
       <span v-html="content"></span>
-      <span v-if="isEdited" class="readmore-container--edited"> ({{ $t("activity-log.words.edited") }})</span>
+      <span v-if="isEdited" class="readmore-container--edited">
+        ({{ $t("activity-log.words.edited") }})</span
+      >
     </div>
     <template v-if="this.enable">
       <a @click.prevent="toggle" class="inline text-blue-600 cursor-pointer">{{
-          isOpen
-              ? $t("activity-log.words.read_less")
-              : $t("activity-log.words.read_more")
-        }}</a>
+        isOpen
+          ? $t("activity-log.words.read_less")
+          : $t("activity-log.words.read_more")
+      }}</a>
     </template>
   </div>
 </template>

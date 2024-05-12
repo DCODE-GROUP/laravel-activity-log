@@ -18,7 +18,7 @@
               </button>
             </li>
             <li @click="openDeleteModal">
-              <button  class="button-delete">
+              <button class="button-delete">
                 <icon icon="TrashIcon"></icon>
                 <span>{{ $t("activity-log.buttons.delete") }}</span>
               </button>
