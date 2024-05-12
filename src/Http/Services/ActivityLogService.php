@@ -69,7 +69,7 @@ class ActivityLogService
                         if (is_array($field)) {
                             $query = 'concat(';
                             foreach ($field as $item) {
-                                $query .= collect($field)->first() !== $item ? $item : $item . ", ' ', ";
+                                $query .= collect($field)->first() !== $item ? $item : $item.", ' ', ";
                             }
                             $query .= ')';
                             $q->orWhere(DB::raw($query), $identiy);
