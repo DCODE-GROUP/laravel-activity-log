@@ -108,7 +108,9 @@
         }
     }
 }
-
+.activity__comment--tag {
+    @apply text-sky-700 bg-sky-100;
+}
 .activity__action {
     @apply flex items-center justify-end pr-2.5;
 
