@@ -5,7 +5,9 @@
       :style="enable && !isOpen ? { webkitLineClamp: lines } : {}"
     >
       <span v-html="content"></span>
-      <span v-if="isEdited">( {{ $t("activity-log.words.edited") }} )</span>
+      <span v-if="isEdited" class="readmore-container--edited">
+        ({{ $t("activity-log.words.edited") }})</span
+      >
     </div>
     <template v-if="this.enable">
       <a @click.prevent="toggle" class="inline text-blue-600 cursor-pointer">{{
@@ -62,5 +64,10 @@ export default {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   white-space: pre-wrap;
+}
+.readmore-container--edited {
+  font-size: 0.75rem; /* 12px */
+  line-height: 1rem; /* 16px */
+  color: rgb(148 163 184);
 }
 </style>

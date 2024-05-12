@@ -92,7 +92,7 @@ class ActivityLogService
                 if ($mailable) {
                     Mail::to($email)->send($mailable);
                 }
-                $comment = str_replace($key, '<a href="mailto:'.$email.'">'.$userModel->getActivityLogUserName().'</a>', $comment);
+                $comment = str_replace($key, '<a class="activity__comment--tag" href="mailto:'.$email.'">@'.$userModel->getActivityLogUserName().'</a>', $comment);
             }
         }
         $activityLog->update(['description' => $comment]);

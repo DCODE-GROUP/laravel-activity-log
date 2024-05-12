@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @property int $id
  * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @property CommunicationLog|null $communicationLog
  * @property int|null $communication_log_id
  * @property string $activitiable_type

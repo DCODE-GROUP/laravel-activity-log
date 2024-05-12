@@ -196,6 +196,9 @@ export default {
   padding: 6px;
   margin-left: 10px;
 }
+.activity__user--avatar {
+  @apply flex flex-shrink-0 h-xlSpace w-xlSpace cursor-pointer items-center justify-center rounded-full bg-gray-600 ring-0 ring-neutral-500 text-white;
+}
 
 .mention-selected .mention-wrapper {
   background: rgba(226, 232, 240, 1);
@@ -206,7 +209,7 @@ export default {
 }
 
 .dim {
-  padding: 10px;
+  padding: 8px;
   color: #666;
 }
 </style>

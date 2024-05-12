@@ -11,14 +11,14 @@
       <div v-if="active" class="activity__action--panel">
         <div class="panel__content">
           <ul class="panel__content--list">
-            <li>
-              <button @click="editItem">
+            <li @click="editItem">
+              <button>
                 <icon icon="PencilIcon"></icon>
                 <span>{{ $t("activity-log.buttons.edit") }}</span>
               </button>
             </li>
-            <li>
-              <button @click="openDeleteModal" class="button-delete">
+            <li @click="openDeleteModal">
+              <button class="button-delete">
                 <icon icon="TrashIcon"></icon>
                 <span>{{ $t("activity-log.buttons.delete") }}</span>
               </button>
