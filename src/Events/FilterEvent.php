@@ -11,7 +11,7 @@ class FilterEvent
     use Dispatchable;
     use SerializesModels;
 
-    public function __construct(public Builder $query,public $model)
+    public function __construct(public Builder $query, public $model)
     {
 
     }

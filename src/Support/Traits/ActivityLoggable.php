@@ -28,16 +28,16 @@ trait ActivityLoggable
     {
         $model = collect([$this->loadMissing($this->activityRelations()->toArray())]);
 
-        $rewrittenRelations = $this->activityRelations()->map(fn($relations) => collect(explode('.', $relations))
+        $rewrittenRelations = $this->activityRelations()->map(fn ($relations) => collect(explode('.', $relations))
             ->map(function ($relation) {
                 if ($relation[strlen($relation) - 1] === 's' && $relation[strlen($relation) - 2] !== 's') {
-                    return $relation . '.*';
+                    return $relation.'.*';
                 }
 
                 return $relation;
             })->join('.'));
 
-        return $rewrittenRelations->map(fn($relation) => $model->pluck($relation)->flatten())->flatten(1);
+        return $rewrittenRelations->map(fn ($relation) => $model->pluck($relation)->flatten())->flatten(1);
     }
 
     public function activityLogs(): MorphMany
@@ -52,19 +52,21 @@ trait ActivityLoggable
             $from = $row['from'];
             $to = $row['to'];
 
-            return sprintf('%s: %s -> %s', '<b>' . Str::ucfirst(Str::replace('_', ' ', $attribute)) . '</b>', '<b style="text-decoration: line-through;">' . $from . '</b>', '<b>' . $to . '</b>');
+            return sprintf('%s: %s -> %s', '<b>'.Str::ucfirst(Str::replace('_', ' ', $attribute)).'</b>', '<b style="text-decoration: line-through;">'.$from.'</b>', '<b>'.$to.'</b>');
         })->join('<br>');
     }
 
     public function getModelChangesJson(bool $allowCustomAttribute = false): array
     {
-        $attributes =  collect(array_keys($this->getDirty()));
+        $attributes = collect(array_keys($this->getDirty()));
         if ($allowCustomAttribute) {
-            $attributes = $attributes->filter(fn($item) => $this->modelRelation()->has($item));
+            $attributes = $attributes->filter(fn ($item) => $this->modelRelation()->has($item));
         }
+
         return $attributes->map(function ($attribute) {
             $from = is_array($this->getOriginal($attribute)) ? collect($this->getOriginal($attribute))->join('|') : $this->getOriginal($attribute);
             $to = is_array($this->{$attribute}) ? collect($this->{$attribute})->join('|') : (is_string($this->{$attribute}) ? $this->{$attribute} : new StringConverter($this->{$attribute}));
+
             return $this->prepareModelChange($attribute, $from, $to);
         })->toArray();
     }
@@ -104,8 +106,9 @@ trait ActivityLoggable
 
     public function createCommunicationLog(array $data, string $to, string $content, string $type = CommunicationLog::TYPE_EMAIL): CommunicationLog
     {
-        $cc = collect($data['cc'])->map(fn($item) =>  $item instanceof Address ? $item->address : $item )->join(', ');
-        $bcc = collect($data['bcc'])->map(fn($item) =>  $item instanceof Address ? $item->address : $item )->join(', ');
+        $cc = collect($data['cc'])->map(fn ($item) => $item instanceof Address ? $item->address : $item)->join(', ');
+        $bcc = collect($data['bcc'])->map(fn ($item) => $item instanceof Address ? $item->address : $item)->join(', ');
+
         return CommunicationLog::query()->create([
             'to' => $to,
             'cc' => $cc,
