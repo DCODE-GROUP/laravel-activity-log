@@ -6,6 +6,7 @@ use Coduo\ToString\StringConverter;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Models\CommunicationLog;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -100,10 +101,13 @@ trait ActivityLoggable
 
     public function createCommunicationLog(array $data, string $to, string $content, string $type = CommunicationLog::TYPE_EMAIL): CommunicationLog
     {
+        $cc = collect($data['cc'])->map(fn ($item) => $item instanceof Address ? $item->address : $item)->join(', ');
+        $bcc = collect($data['bcc'])->map(fn ($item) => $item instanceof Address ? $item->address : $item)->join(', ');
+
         return CommunicationLog::query()->create([
             'to' => $to,
-            'cc' => implode(', ', $data['cc']),
-            'bcc' => implode(', ', $data['bcc']),
+            'cc' => $cc,
+            'bcc' => $bcc,
             'subject' => $data['subject'],
             'content' => $content,
             'type' => $type,

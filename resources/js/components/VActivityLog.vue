@@ -180,7 +180,7 @@
             </div>
           </div>
         </div>
-        <div v-else>
+        <template v-else>
           <comment
             :model-class="modelClass"
             :model-id="modelId"
@@ -191,7 +191,7 @@
             @addComment="addComment($event)"
             @cancelEditComment="editId = null"
           ></comment>
-        </div>
+        </template>
       </div>
     </div>
   </div>
