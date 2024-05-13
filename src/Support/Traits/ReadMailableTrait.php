@@ -3,7 +3,6 @@
 namespace Dcodegroup\ActivityLog\Support\Traits;
 
 use Dcodegroup\ActivityLog\Models\ActivityLog;
-use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 
 trait ReadMailableTrait

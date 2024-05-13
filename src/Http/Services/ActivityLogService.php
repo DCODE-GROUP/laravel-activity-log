@@ -91,8 +91,8 @@ class ActivityLogService
                 $email = $userModel->getActivityLogEmail();
                 if ($mailable) {
                     $model = $mailable['model'];
-                    if (method_exists($model, 'getActivityLogEmails') && !in_array($email, $model->getActivityLogEmails())) {
-                      unset($mailable['action']);
+                    if (method_exists($model, 'getActivityLogEmails') && ! in_array($email, $model->getActivityLogEmails())) {
+                        unset($mailable['action']);
                     }
                     Mail::to($email)->send(new CommentNotification($mailable, $model));
                 }
