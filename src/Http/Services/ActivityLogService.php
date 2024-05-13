@@ -94,7 +94,7 @@ class ActivityLogService
                     if (method_exists($model, 'getActivityLogEmails') && !in_array($email, $model->getActivityLogEmails())) {
                       unset($mailable['action']);
                     }
-                    Mail::to($email)->send(new CommentNotification($mailable));
+                    Mail::to($email)->send(new CommentNotification($mailable, $model));
                 }
                 $comment = str_replace($key, '<a class="activity__comment--tag" href="mailto:'.$email.'">@'.$userModel->getActivityLogUserName().'</a>', $comment);
             }
