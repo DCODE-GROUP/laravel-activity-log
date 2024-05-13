@@ -15,7 +15,7 @@ class CommentNotification extends Mailable
     use ReadMailableTrait;
     use SerializesModels;
 
-    public function __construct(protected string $subjectModel, protected string $url, protected $entityModel)
+    public function __construct(protected array $emailContent, protected $entityModel)
     {
         $this->model = $this->entityModel;
     }
@@ -25,7 +25,7 @@ class CommentNotification extends Mailable
      */
     public function envelope(): Envelope
     {
-        return new Envelope(subject: $this->subjectModel);
+        return new Envelope(subject: $this->emailContent['title']);
     }
 
     /**
@@ -33,9 +33,6 @@ class CommentNotification extends Mailable
      */
     public function prepareContent(): Content
     {
-        return new Content(markdown: config('activity-log.comment_email_template'), with: [
-            'content' => $this->subjectModel,
-            'action' => $this->url,
-        ]);
+        return new Content(markdown: config('activity-log.comment_email_template'), with: $this->emailContent);
     }
 }

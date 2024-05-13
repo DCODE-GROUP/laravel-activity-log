@@ -4,7 +4,6 @@ namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
 use Dcodegroup\ActivityLog\Http\Requests\ExistingRequest;
 use Dcodegroup\ActivityLog\Http\Services\ActivityLogService;
-use Dcodegroup\ActivityLog\Mail\CommentNotification;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Illuminate\Routing\Controller;
 
@@ -31,8 +30,12 @@ class CommentController extends Controller
             $url = $request->input('currentUrl').'#activity_'.$activity->id;
             $user = $request->filled('currentUser') ? $request->input('currentUser') : 'System';
             $emailSubject = __('activity-log.headings.subjects', ['model' => $user, 'entity' => class_basename($modelClass).' #'.$modelId]);
-            $email = new CommentNotification($emailSubject, $url, $model);
-
+            $email = [
+                'content' => $comment,
+                'title' => $emailSubject,
+                'action' => $url,
+                'model' => $model
+            ];
             $this->service->mentionUserInComment($comment, $activity, $email);
         }
 

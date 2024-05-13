@@ -24,6 +24,11 @@ trait ActivityLoggable
         ]);
     }
 
+    protected function getActivityLogEmails(): array
+    {
+        return [];
+    }
+
     public function activities(): Collection
     {
         $model = collect([$this->loadMissing($this->activityRelations()->toArray())]);
