@@ -123,7 +123,9 @@ export default {
     async loadUsers(searchText = null) {
       this.loading = true;
       axios
-        .get(`${this.loadUsersUrl}?s=${searchText}&filter[admin]=1`)
+        .get(
+          `${this.loadUsersUrl}?s=${searchText}&filter[admin]=1&modelClass=${this.modelClass}&modelId=${this.modelId}`,
+        )
         .then((res) => {
           this.items = res.data.map((item) => {
             return {
@@ -196,6 +198,7 @@ export default {
   padding: 6px;
   margin-left: 10px;
 }
+
 .activity__user--avatar {
   @apply flex flex-shrink-0 h-xlSpace w-xlSpace cursor-pointer items-center justify-center rounded-full bg-gray-600 ring-0 ring-neutral-500 text-white;
 }

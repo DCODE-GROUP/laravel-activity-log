@@ -1,9 +1,12 @@
 @component('mail::message')
-    {{ $content }} mention you in a comment:
-@component('mail::button', ['url' => $action, 'color' => 'primary']) 
-    Click here!!
-@endcomponent 
-Regards,
+    {{ $title }}
+    {{ $content }}
+    @isset($action)
+        @component('mail::button', ['url' => $action, 'color' => 'primary'])
+            Click here!!
+        @endcomponent
+    @endisset
+    Regards,
 @endcomponent
 @isset($readUrl)
     <img style="width:1px;height:1px;opacity:0" src="{{$readUrl}}" />

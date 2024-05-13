@@ -3,7 +3,6 @@
 namespace Dcodegroup\ActivityLog\Support\Traits;
 
 use Dcodegroup\ActivityLog\Models\ActivityLog;
-use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 
 trait ReadMailableTrait
@@ -44,7 +43,7 @@ trait ReadMailableTrait
 
         if (method_exists($this->model, 'createCommunicationLog') && method_exists($this->model, 'createActivityLog')) {
             $envelope = $this->envelope();
-            $to = $this->to[0] instanceof Address ? $this->to[0]->address : $this->to[0];
+            $to = $this->to[0]['address'];
             $communicationLog = $this->model->createCommunicationLog([
                 'subject' => $envelope->subject,
                 'cc' => $envelope->cc,

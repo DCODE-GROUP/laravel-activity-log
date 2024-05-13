@@ -24,6 +24,11 @@ trait ActivityLoggable
         ]);
     }
 
+    protected function getActivityLogEmails(): array
+    {
+        return [];
+    }
+
     public function activities(): Collection
     {
         $model = collect([$this->loadMissing($this->activityRelations()->toArray())]);
@@ -56,9 +61,14 @@ trait ActivityLoggable
         })->join('<br>');
     }
 
-    public function getModelChangesJson(): array
+    public function getModelChangesJson(bool $allowCustomAttribute = false): array
     {
-        return collect(array_keys($this->getDirty()))->map(function ($attribute) {
+        $attributes = collect(array_keys($this->getDirty()));
+        if ($allowCustomAttribute) {
+            $attributes = $attributes->filter(fn ($item) => $this->modelRelation()->has($item));
+        }
+
+        return $attributes->map(function ($attribute) {
             $from = is_array($this->getOriginal($attribute)) ? collect($this->getOriginal($attribute))->join('|') : $this->getOriginal($attribute);
             $to = is_array($this->{$attribute}) ? collect($this->{$attribute})->join('|') : (is_string($this->{$attribute}) ? $this->{$attribute} : new StringConverter($this->{$attribute}));
 

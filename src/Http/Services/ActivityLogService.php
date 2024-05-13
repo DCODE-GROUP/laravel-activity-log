@@ -3,10 +3,10 @@
 namespace Dcodegroup\ActivityLog\Http\Services;
 
 use Dcodegroup\ActivityLog\Contracts\HasActivityUser;
+use Dcodegroup\ActivityLog\Mail\CommentNotification;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Resources\ActivityLogCollection;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -53,7 +53,7 @@ class ActivityLogService
             ->orderByDesc('created_at')->get());
     }
 
-    public function mentionUserInComment(string $comment, ActivityLog $activityLog, ?Mailable $mailable = null): ActivityLog
+    public function mentionUserInComment(string $comment, ActivityLog $activityLog, ?array $mailable = null): ActivityLog
     {
         $activityLog->update(['meta' => $comment]);
         $regexp = '/@\[[^\]]*\]/';
@@ -89,8 +89,17 @@ class ActivityLogService
             /** @var HasActivityUser $userModel */
             foreach ($users as $userModel) {
                 $email = $userModel->getActivityLogEmail();
+
                 if ($mailable) {
-                    Mail::to($email)->send($mailable);
+                    $model = $mailable['model'];
+                    $data = [
+                        'content' => $mailable['content'],
+                        'title' => $mailable['title'],
+                    ];
+                    if (method_exists($model, 'getActivityLogEmails') && ! in_array($email, $model->getActivityLogEmails())) {
+                        $data['action'] = $mailable['action'];
+                    }
+                    Mail::to($email)->send(new CommentNotification($data, $model));
                 }
                 $comment = str_replace($key, '<a class="activity__comment--tag" href="mailto:'.$email.'">@'.$userModel->getActivityLogUserName().'</a>', $comment);
             }
