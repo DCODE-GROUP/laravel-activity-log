@@ -101,8 +101,9 @@ trait ActivityLoggable
 
     public function createCommunicationLog(array $data, string $to, string $content, string $type = CommunicationLog::TYPE_EMAIL): CommunicationLog
     {
-        $cc = collect($data['cc'])->map(fn($item) =>  $item instanceof Address ? $item->address : $item )->join(', ');
-        $bcc = collect($data['bcc'])->map(fn($item) =>  $item instanceof Address ? $item->address : $item )->join(', ');
+        $cc = collect($data['cc'])->map(fn ($item) => $item instanceof Address ? $item->address : $item)->join(', ');
+        $bcc = collect($data['bcc'])->map(fn ($item) => $item instanceof Address ? $item->address : $item)->join(', ');
+
         return CommunicationLog::query()->create([
             'to' => $to,
             'cc' => $cc,
