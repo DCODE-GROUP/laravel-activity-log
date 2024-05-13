@@ -1,5 +1,5 @@
 @component('mail::message')
-    {{ $content }} mention you in a comment:
+    {{ $content }}
 @component('mail::button', ['url' => $action, 'color' => 'primary']) 
     Click here!!
 @endcomponent 

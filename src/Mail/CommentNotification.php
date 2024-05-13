@@ -25,7 +25,7 @@ class CommentNotification extends Mailable
      */
     public function envelope(): Envelope
     {
-        return new Envelope(subject: __('activity-log.headings.subjects', ['model' => $this->subjectModel]));
+        return new Envelope(subject: $this->subjectModel);
     }
 
     /**

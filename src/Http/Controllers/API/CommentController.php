@@ -30,7 +30,7 @@ class CommentController extends Controller
             ]);
             $url = $request->input('currentUrl').'#activity_'.$activity->id;
             $user = $request->filled('currentUser') ? $request->input('currentUser') : 'System';
-            $emailSubject = class_basename($modelClass).' #'.$modelId.' '.$user;
+            $emailSubject = __('activity-log.headings.subjects', ['model' => $user, 'entity' => class_basename($modelClass) . ' #' . $modelId]);
             $email = new CommentNotification($emailSubject, $url, $model);
 
             $this->service->mentionUserInComment($comment, $activity, $email);

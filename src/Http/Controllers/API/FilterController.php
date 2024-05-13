@@ -2,6 +2,7 @@
 
 namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
+use Dcodegroup\ActivityLog\Events\FilterEvent;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -38,7 +39,7 @@ class FilterController extends Controller
         $this->userSearchTerm = config('activity-log.user_search_term', ['email']);
         $this->userSearchTerm = is_array($this->userSearchTerm) ? $this->userSearchTerm : [$this->userSearchTerm];
         $this->defaultFilterPagination = config('default_filter_pagination', 50);
-        $this->filterMentionUserRole = config('filter_mention_user_role');
+        $this->filterMentionUserRole = config('activity-log.filter_mention_user_role');
     }
 
     public function __invoke(Request $request): JsonResponse
@@ -99,6 +100,14 @@ class FilterController extends Controller
         if ($request->filled('filter.admin') && $this->filterMentionUserRole) {
             //            // @phpstan-ignore-next-line
             $query->role($this->filterMentionUserRole);
+        }
+
+        if ($request->filled('modelClass') && $request->filled('modelId')) {
+            $modelClass = $request->input('modelClass');
+            $modelId = $request->input('modelId');
+            $model = $modelClass::find($modelId);
+            FilterEvent::dispatch($query, $model);
+
         }
 
         if ($searchField && $request->filled($searchField)) {
