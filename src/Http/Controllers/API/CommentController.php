@@ -34,7 +34,7 @@ class CommentController extends Controller
                 'content' => $comment,
                 'title' => $emailSubject,
                 'action' => $url,
-                'model' => $model
+                'model' => $model,
             ];
             $this->service->mentionUserInComment($comment, $activity, $email);
         }
