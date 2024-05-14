@@ -42,13 +42,13 @@ class ActivityLogService
             ->with([
                 $this->userRelationship,
                 $this->communicationLogRelationship,
-                $this->communicationLogRelationship . '.reads',
-            ])->where(fn(Builder $builder) => $builder
-                ->whereNull('communication_log_id')
-                ->orWhere(fn(Builder $builder) => $builder
-                    ->whereNotNull('communication_log_id')
-                    ->whereNot('title', 'like', '% read an %')
-                    ->whereNot('title', 'like', '% view a %'))
+                $this->communicationLogRelationship.'.reads',
+            ])->where(fn (Builder $builder) => $builder
+            ->whereNull('communication_log_id')
+            ->orWhere(fn (Builder $builder) => $builder
+                ->whereNotNull('communication_log_id')
+                ->whereNot('title', 'like', '% read an %')
+                ->whereNot('title', 'like', '% view a %'))
             )
             ->orderByDesc('created_at')->get());
     }
@@ -69,7 +69,7 @@ class ActivityLogService
                         if (is_array($field)) {
                             $query = 'concat(';
                             foreach ($field as $item) {
-                                $query .= collect($field)->first() !== $item ? $item : $item . ", ' ', ";
+                                $query .= collect($field)->first() !== $item ? $item : $item.", ' ', ";
                             }
                             $query .= ')';
                             $q->orWhere(DB::raw($query), $identiy);
@@ -79,7 +79,7 @@ class ActivityLogService
                         $parts = explode('.', $field);
                         if (count($parts) > 1) {
                             [$relation, $relationField] = $parts;
-                            $q->orWhereHas($relation, fn(Builder $builder) => $builder->where($relationField, $identiy));
+                            $q->orWhereHas($relation, fn (Builder $builder) => $builder->where($relationField, $identiy));
 
                             continue;
                         }
@@ -94,15 +94,15 @@ class ActivityLogService
                     $model = $mailable['model'];
                     $data = [
                         'content' => $mailable['content'],
-                        'title' => $mailable['title']
+                        'title' => $mailable['title'],
                     ];
-                    if (method_exists($model, 'getActivityLogEmails') && !in_array($email, $model->getActivityLogEmails())) {
+                    if (method_exists($model, 'getActivityLogEmails') && ! in_array($email, $model->getActivityLogEmails())) {
                         $data['action'] = $mailable['action'];
                     }
                     Mail::to($email)->send(new CommentNotification($data, $model));
                 }
                 $to = is_array($email) ? implode(', ', $email) : $email;
-                $comment = str_replace($key, '<a class="activity__comment--tag" href="mailto:' . $to . '">@' . $userModel->getActivityLogUserName() . '</a>', $comment);
+                $comment = str_replace($key, '<a class="activity__comment--tag" href="mailto:'.$to.'">@'.$userModel->getActivityLogUserName().'</a>', $comment);
             }
         }
         $activityLog->update(['description' => $comment]);
