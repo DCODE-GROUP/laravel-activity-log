@@ -24,7 +24,7 @@ trait ActivityLoggable
         ]);
     }
 
-    protected function getActivityLogEmails(): array
+    public function getActivityLogEmails(): array
     {
         return [];
     }
