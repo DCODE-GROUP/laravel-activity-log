@@ -101,7 +101,8 @@ class ActivityLogService
                     }
                     Mail::to($email)->send(new CommentNotification($data, $model));
                 }
-                $comment = str_replace($key, '<a class="activity__comment--tag" href="mailto:'.$email.'">@'.$userModel->getActivityLogUserName().'</a>', $comment);
+                $to = is_array($email) ? implode(', ', $email) : $email;
+                $comment = str_replace($key, '<a class="activity__comment--tag" href="mailto:'.$to.'">@'.$userModel->getActivityLogUserName().'</a>', $comment);
             }
         }
         $activityLog->update(['description' => $comment]);
