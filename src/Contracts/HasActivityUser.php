@@ -6,5 +6,5 @@ interface HasActivityUser
 {
     public function getActivityLogUserName(): string;
 
-    public function getActivityLogEmail(): string;
+    public function getActivityLogEmail(): string|array;
 }
