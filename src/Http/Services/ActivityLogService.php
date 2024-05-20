@@ -44,18 +44,18 @@ class ActivityLogService
                 $this->communicationLogRelationship,
                 $this->communicationLogRelationship.'.reads',
             ])->where(fn (Builder $builder) => $builder
-            ->whereNull('communication_log_id')
-            ->orWhere(fn (Builder $builder) => $builder
-                ->whereNotNull('communication_log_id')
-                ->whereNot('title', 'like', '% read an %')
-                ->whereNot('title', 'like', '% view a %'))
+                ->whereNull('communication_log_id')
+                ->orWhere(fn (Builder $builder) => $builder
+                    ->whereNotNull('communication_log_id')
+                    ->whereNot('title', 'like', '% read an %')
+                    ->whereNot('title', 'like', '% view a %'))
             )
             ->orderByDesc('created_at')->get());
     }
 
     public function mentionUserInComment(string $comment, ActivityLog $activityLog, ?array $mailable = null): ActivityLog
     {
-        $activityLog->update(['meta' => $comment]);
+        $activityLog->update(['meta' => $comment], ['timestamps' => false]);
         $regexp = '/@\[[^\]]*\]/';
         $mentionedUsers = Str::matchAll($regexp, trim($comment));
         foreach ($mentionedUsers as $key) {
@@ -105,7 +105,7 @@ class ActivityLogService
                 $comment = str_replace($key, '<a class="activity__comment--tag" href="mailto:'.$to.'">@'.$userModel->getActivityLogUserName().'</a>', $comment);
             }
         }
-        $activityLog->update(['description' => $comment]);
+        $activityLog->update(['description' => $comment], ['timestamps' => false]);
 
         return $activityLog;
     }
