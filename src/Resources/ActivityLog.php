@@ -17,6 +17,7 @@ class ActivityLog extends JsonResource
 
         $createdAt = $this->resource->created_at->setTimezone($request->input('timezone', 'UTC'))->diffForHumans();
         $createdDate = $this->resource->created_at->setTimezone($request->input('timezone', 'UTC'))->format(config('activity-log.datetime_format'));
+
         return [
             'id' => $this->resource->id,
             'user' => $this->resource->loadMissing('user')->user?->getActivityLogUserName() ?: 'System',
@@ -37,7 +38,7 @@ class ActivityLog extends JsonResource
 
     private function getCommunicationLog(): ?array
     {
-        if (!$this->resource->communicationLog instanceof CommunicationLog) {
+        if (! $this->resource->communicationLog instanceof CommunicationLog) {
             return null;
         }
 
