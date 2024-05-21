@@ -1,7 +1,10 @@
 <template>
   <div>
     <div class="readmore-container">
-      <span v-if="!isOpen && content.length > 100" v-html="content.slice(0, 100).concat('...')"></span>
+      <span
+        v-if="!isOpen && content.length > 100"
+        v-html="content.slice(0, 100).concat('...')"
+      ></span>
       <span v-else v-html="content"></span>
       <span v-if="isEdited" class="readmore-container--edited">
         ({{ $t("activity-log.words.edited") }})</span
@@ -9,10 +12,10 @@
     </div>
     <template v-if="this.enable && content.length > 100">
       <a @click.prevent="toggle" class="inline text-blue-600 cursor-pointer">{{
-          isOpen
-              ? $t("activity-log.words.read_less")
-              : $t("activity-log.words.read_more")
-        }}</a>
+        isOpen
+          ? $t("activity-log.words.read_less")
+          : $t("activity-log.words.read_more")
+      }}</a>
     </template>
   </div>
 </template>
