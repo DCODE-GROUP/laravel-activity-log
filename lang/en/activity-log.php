@@ -23,13 +23,13 @@ return [
         'my_activities' => 'My activities',
         'system' => 'System',
         'loading' => 'Loading...',
-        'no_result' => 'No result',
+        'no_result' => 'No results',
         'date' => 'Date',
     ],
     'actions' => [
-        'create' => ' create a ',
+        'create' => ' created a ',
         'add_comment' => ' add a comment',
-        'update_entity' => 'update an entity',
+        'update_entity' => 'updated an entity',
     ],
 
     'buttons' => [
@@ -55,9 +55,9 @@ return [
         'reads' => 'reads',
         'read_more' => 'Read more',
         'read_less' => 'Read less',
-        'send_email' => ' send a notification email to ',
+        'send_email' => ' sent a notification email to ',
         'read_email' => ' read an email ',
-        'send_sms' => ' send a notification sms to ',
+        'send_sms' => ' sent a notification SMS to ',
         'read_read' => ' read an email ',
         'delete_note' => 'Delete note?',
         'delete_note_content' => 'Are you sure you want to delete this note? This action cannot be undone.',
@@ -65,7 +65,7 @@ return [
 
     'phases' => [
         'opened_on' => 'Opened on',
-        'email_has_not_been_opened' => 'Email hasn\'t been opened.',
+        'email_has_not_been_opened' => 'Email is unopened.',
         'sms_has_not_been_opened' => 'Sms hasn\'t been opened.',
     ],
 
