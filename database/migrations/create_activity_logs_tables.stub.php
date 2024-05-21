@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('type')->default(ActivityLog::TYPE_DATA);
             $table->foreignIdFor(CommunicationLog::class)->nullable();
             $table->foreign('communication_log_id')->references('id')->on('communication_logs');
-            $table->string('title')->nullable()->default('make a change');
+            $table->string('title')->nullable()->default('updated this record');
             $table->text('description')->nullable();
             $table->text('meta')->nullable();
             $table->json('diff')->nullable();
