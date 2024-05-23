@@ -27,7 +27,7 @@ class ActivityLogServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ .'/config/activity-log.php', 'activity-log');
+        $this->mergeConfigFrom(__DIR__.'/config/activity-log.php', 'activity-log');
     }
 
     protected function registerCommands()
@@ -48,8 +48,8 @@ class ActivityLogServiceProvider extends ServiceProvider
     {
         $this->setupMigrations();
 
-        $this->publishes([__DIR__ .'/../config/activity-log.php' => config_path('activity-log.php')], 'activity-log-config');
-        $this->publishes([__DIR__ .'/../resources/sass' => resource_path('sass/activity-log')], 'activity-log-sass');
+        $this->publishes([__DIR__.'/../config/activity-log.php' => config_path('activity-log.php')], 'activity-log-config');
+        $this->publishes([__DIR__.'/../resources/sass' => resource_path('sass/activity-log')], 'activity-log-sass');
         // $this->publishes([__DIR__.'/../public' => public_path('vendor/activity-log')], ['activity-log-assets']);
         // $this->publishes([__DIR__.'/../lang' => $this->app->langPath('en/vendor/dcodegroup/activity-log')], 'activity-log-translations');
         $this->publishes([__DIR__.'/../lang' => $this->app->langPath()], 'activity-log-translations');
@@ -71,7 +71,7 @@ class ActivityLogServiceProvider extends ServiceProvider
         Route::group([
             'middleware' => config('activity-log.middleware', 'web'),
         ], function () {
-            $this->loadRoutesFrom(__DIR__ .'/../routes/activity-log.php');
+            $this->loadRoutesFrom(__DIR__.'/../routes/activity-log.php');
         });
     }
 }
