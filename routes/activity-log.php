@@ -14,4 +14,4 @@ Route::patch('/'.config('activity-log.route_path').'/comments/{comment}', EditCo
 Route::delete('/'.config('activity-log.route_path').'/comment/{comment}', DeleteCommentController::class)->name(config('activity-log.route_name').'.comment.delete');
 Route::get('/'.config('activity-log.route_path').'/filters', FilterController::class)->name(config('activity-log.route_name').'.filters');
 Route::get('/'.config('activity-log.route_path').'/filters/facets/{facet}', [FilterController::class, 'search'])->name(config('activity-log.route_name').'.facets.search');
-Route::get('/'.config('activity-log.route_path').'/{activity_log}/read-email', ReadEmailController::class)->name(config('activity-log.route_name').'.read-email');
+Route::get('/'.config('activity-log.route_path').'/{activity_log}/read-email', ReadEmailController::class)->withoutMiddleware('auth')->name(config('activity-log.route_name').'.read-email');
