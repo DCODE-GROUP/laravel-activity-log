@@ -288,7 +288,7 @@ src\Support\Traits\LastModifiedBy.php
 
 The `ActivityLoggable` trait provides functionality for logging activities and communication logs related to a model.
  
-Method
+Methods
 -------
 
 *   **`getActivityLogEmails(): array`**: Get the emails associated with activity logs.
