@@ -323,7 +323,7 @@ $communicationLog = $model->createCommunicationLog([
 ## Traits for activity log mailable to support tracking read email
 
 Located in
-```
+```bash
 src\Support\Traits\ReadMailableTrait.php
 ```
 
