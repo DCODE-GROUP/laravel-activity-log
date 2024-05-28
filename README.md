@@ -297,8 +297,6 @@ Methods
 *   **`getModelChangesJson(bool $allowCustomAttribute = false): array`**: Get the model changes as an array of JSON. If `$allowCustomAttribute` is date return of `getModelChanges` the activity will only track the of mention in `getModelChanges` 
 *   **`prepareModelChange($attribute, $from, $to): array`**: Prepare the model change data.
 *   **`createActivityLog(array $description): ActivityLog`**: Create a new activity log.
-*   **`createCommunicationLog(array $data, string $to, string $content, string $type = CommunicationLog::TYPE_EMAIL): CommunicationLog`**: Create a new communication log.
-
 Example of define activity log via model using `ActivityLoggable`
 ```php
 // Creating an activity log
@@ -310,6 +308,7 @@ $activityLog = $model->createActivityLog([
 'communication_log_id' => '' // required when type = TYPE_NOTIFICATION to link activity log with communication log
 ]);
 ```
+*   **`createCommunicationLog(array $data, string $to, string $content, string $type = CommunicationLog::TYPE_EMAIL): CommunicationLog`**: Create a new communication log.
 Example of define Communication log via model using `ActivityLoggable`
 ```php
 // Creating a communication log
