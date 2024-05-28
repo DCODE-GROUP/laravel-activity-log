@@ -320,7 +320,6 @@ $communicationLog = $model->createCommunicationLog([
 ], 'to@example.com', 'Content of the email');
 ```
 
-
 ## Traits for activity log mailable to support tracking read email
 
 Located in
