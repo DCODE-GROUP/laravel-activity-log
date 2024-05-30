@@ -5,6 +5,7 @@ namespace Dcodegroup\ActivityLog\Support\Traits;
 use Coduo\ToString\StringConverter;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Models\CommunicationLog;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Support\Collection;
@@ -12,6 +13,46 @@ use Illuminate\Support\Str;
 
 trait ActivityLoggable
 {
+    public static function bootActivityLoggable()
+    {
+        static::created(function () {
+            $this->logCreate();
+        });
+
+        static::updating(function () {
+            $this->logUpdate();
+        });
+
+        static::deleting(function () {
+            $this->logDelete();
+        });
+    }
+
+    public function logCreate(): void
+    {
+        $this->createActivityLog([
+            'type' => ActivityLog::TYPE_DATA,
+            'title' => __('activity-log.actions.create').' #'.$this->id,
+        ]);
+    }
+
+    public function logUpdate(): void
+    {
+        $diff = $this->getModelChangesJson(true); // true: If we want to limit the storage of fields defined in modelRelation; false : If we want to storage all model change
+        $this->createActivityLog([
+            'title' => __('activity-log.actions.update').' #'.$this->id,
+            'description' => $this->getModelChanges($diff),
+        ]);
+    }
+
+    public function logDelete(): void
+    {
+        $this->createActivityLog([
+            'title' => __('activity-log.actions.delete').' #'.$this->id,
+            'description' => '',
+        ]);
+    }
+
     protected function modelRelation(): Collection
     {
         return collect([]);
