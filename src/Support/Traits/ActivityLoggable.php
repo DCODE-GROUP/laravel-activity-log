@@ -22,7 +22,7 @@ trait ActivityLoggable
             ]);
         });
 
-        static::updating(function (Model $model) {
+        static::updating(function () {
             $diff = $this->getModelChangesJson(true); // true: If we want to limit the storage of fields defined in modelRelation; false : If we want to storage all model change
             $this->createActivityLog([
                 'title' => __('activity-log.actions.update').' #'.$this->id,
@@ -30,7 +30,7 @@ trait ActivityLoggable
             ]);
         });
 
-        static::deleting(function (Model $model) {
+        static::deleting(function () {
             $this->createActivityLog([
                 'title' => __('activity-log.actions.delete').' #'.$this->id,
                 'description' => '',
