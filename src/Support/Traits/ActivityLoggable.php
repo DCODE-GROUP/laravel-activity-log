@@ -15,7 +15,7 @@ trait ActivityLoggable
 {
     public static function bootActivityLoggable()
     {
-        static::created(function() {
+        static::created(function () {
             $this->logCreate();
         });
 
@@ -52,7 +52,6 @@ trait ActivityLoggable
             'description' => '',
         ]);
     }
-
 
     protected function modelRelation(): Collection
     {
