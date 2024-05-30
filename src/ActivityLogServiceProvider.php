@@ -27,7 +27,7 @@ class ActivityLogServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/config/activity-log.php', 'activity-log');
+        $this->mergeConfigFrom(__DIR__.'/../config/activity-log.php', 'activity-log');
     }
 
     protected function registerCommands()
