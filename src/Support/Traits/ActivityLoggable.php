@@ -15,7 +15,7 @@ trait ActivityLoggable
 {
     public static function bootActivityLoggable()
     {
-        static::created(function() {
+        static::created(function () {
             $this->createActivityLog([
                 'type' => ActivityLog::TYPE_DATA,
                 'title' => __('activity-log.actions.create').' #'.$this->id,
@@ -37,7 +37,6 @@ trait ActivityLoggable
             ]);
         });
     }
-
 
     protected function modelRelation(): Collection
     {
