@@ -15,16 +15,16 @@ trait ActivityLoggable
 {
     public static function bootActivityLoggable()
     {
-        static::created(function () {
-            $this->logCreate();
+        static::created(function ($model) {
+            $model->logCreate();
         });
 
-        static::updating(function () {
-            $this->logUpdate();
+        static::updating(function ($model) {
+            $model->logUpdate();
         });
 
-        static::deleting(function () {
-            $this->logDelete();
+        static::deleting(function ($model) {
+            $model->logDelete();
         });
     }
 
