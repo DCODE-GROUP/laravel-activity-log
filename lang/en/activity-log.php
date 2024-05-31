@@ -28,7 +28,9 @@ return [
     ],
     'actions' => [
         'create' => ' created a ',
-        'add_comment' => ' add a comment',
+        'update' => ' updated a ',
+        'delete' => ' deleted a',
+        'add_comment' => ' added a comment',
         'update_entity' => 'updated an entity',
     ],
 

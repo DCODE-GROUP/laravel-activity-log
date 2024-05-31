@@ -6,6 +6,10 @@ The `dcodegroup/activity-log` package provides a simple and unified approach to 
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/DCODE-GROUP/laravel-activity-log/ci.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/DCODE-GROUP/laravel-activity-log/actions/worflows/ci.yml/badge.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/dcodegroup/activity-log.svg?style=flat-square)](https://packagist.org/packages/dcodegroup/activity-log)
 
+
+
+## Update note
+Since `version 1.1.1` we are no longer need to use observers to listen for changes from the model. `bootActivityLoggable` in `ActivityLoggable` trait solved that. Make sure to remove duplicate observers before updating
 ## Installation
 #### Add the following to your package.json file:
 
@@ -284,10 +288,67 @@ src\Support\Traits\LastModifiedBy.php
 ```
 
 
+# ActivityLoggable Trait
+
+The `ActivityLoggable` trait provides functionality for logging activities and communication logs related to a model.
+ 
+Methods
+-------
+*   **`logCreate(): void`**: Automatically create activity log every time a new model is created. (support from version 1.1.1)
+*   **`logUpdate(): void`**: Automatically create activity log every time when model is updated. (support from version 1.1.1)
+*   **`logDelete(): void`**: Automatically create activity log every time when model is deleted. (support from version 1.1.1)
+*   **`getActivityLogEmails(): array`**: Get the emails associated with activity logs.
+*   **`activities(): Collection`**: Get the collection of activities associated with the model.
+*   **`modelRelation(): Collection`**: Get the relationship between the model column with the related table. `modelRelation` also has the effect of limiting logging to defined columns instead of logging all changes from the model when you declare `getModelChangesJson(true)`
+
+Example of define modelRelation via model using `ActivityLoggable`
+```php
+ public function modelRelation(): Collection
+    {
+        return collect([
+            'account_id' => collect([               // column change in model
+                'label' => 'Account',               // attribute label display in activity log description
+                'modelClass' => Account::class,     // relationship model
+                'modelKey' => 'name',               // columns display instead 
+            ]),
+          ......
+          ])
+
+```
+when declared like this instead of activity log shows like this. `account_id: 1 -> 20` The result will return like this: `Account: Alison Cahill -> Annie Pollock`.
+
+*   **`getModelChanges(?array $modelChangesJson = null): string`**: Get the model changes as a formatted string.
+*   **`getModelChangesJson(bool $allowCustomAttribute = false): array`**: Get the model changes as an array of JSON. If `$allowCustomAttribute` =  `true` If we want to limit the storage of fields defined in modelRelation; `false` : If we want to storage all model change
+*   **`createActivityLog(array $description): ActivityLog`**: Create a new activity log.
+
+Example of define activity log via model using `ActivityLoggable`
+```php
+// Creating an activity log
+$activityLog = $model->createActivityLog([
+'type' => \Dcodegroup\ActivityLog\Models\ActivityLog::TYPE_DATA // if type is null default type will be TYPE_DATA, we support 3 other types: TYPE_STATUS, TYPE_COMMENT, TYPE_NOTIFICATION 
+'title' => 'Updated profile information',
+'description' => 'Updated user profile information',
+// Additional custom fields as needed
+'communication_log_id' => '' // required when type = TYPE_NOTIFICATION to link activity log with communication log
+]);
+```
+*   **`createCommunicationLog(array $data, string $to, string $content, string $type = CommunicationLog::TYPE_EMAIL): CommunicationLog`**: Create a new communication log.
+
+Example of define Communication log via model using `ActivityLoggable`
+```php
+// Creating a communication log
+$communicationLog = $model->createCommunicationLog([
+'type' => 
+'cc' => ['cc@example.com'],
+'bcc' => ['bcc@example.com'],
+'subject' => 'Subject of the email',
+], 'to@example.com', 'Content of the email');
+```
+
 ## Traits for activity log mailable to support tracking read email
 
 Located in
-```
+```bash
 src\Support\Traits\ReadMailableTrait.php
 ```
 
@@ -313,7 +374,14 @@ class Order extends Model
     ...
 }
 ```
-
+In addition, we can add activity log wherever we want the model
+```php
+    $model->createActivityLog([
+            'type' => \Dcodegroup\ActivityLog\Models\ActivityLog::TYPE_COMMENT // if type is null default type will be TYPE_DATA, we support 3 other types: TYPE_STATUS, TYPE_COMMENT, TYPE_NOTIFICATION
+            'title' => 'left a comment.',
+            'description' => 'left a comment',
+        ]);
+```
 Add content markdown email to support comment-notification.Located in
 ```
 resources\views\mail\comment-notification.blade.php
