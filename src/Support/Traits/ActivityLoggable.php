@@ -106,6 +106,7 @@ trait ActivityLoggable
         }
 
         if ($formatter = $this->activityLogFieldFormatters()->get($attribute)) {
+            ld('got into formatter. it is', $formatter);
             //            ld('formatter', $formatter);
             $from = $formatter($from);
             $to = $formatter($to);
