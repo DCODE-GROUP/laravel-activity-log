@@ -28,17 +28,34 @@ trait ActivityLoggable
         });
     }
 
-    public function targetModel(): self|Model
-    {
-        return $this;
-    }
-
     public function logCreate(): void
     {
         $this->createActivityLog([
             'type' => ActivityLog::TYPE_DATA,
             'title' => __('activity-log.actions.create').' #'.$this->id,
         ]);
+    }
+
+    public function createActivityLog(array $description): ActivityLog
+    {
+        $diff = data_get($description, 'diff', []);
+
+        if (count($diff) === 1 && data_get($diff, '0.key') === 'Status') {
+            $description['title'] = Str::replace('updated', 'updated status for', $description['title']);
+            $description['type'] = ActivityLog::TYPE_STATUS;
+        }
+
+        return $this->targetModel()->activityLogs()->create($description);
+    }
+
+    public function activityLogs(): MorphMany
+    {
+        return $this->morphMany(ActivityLog::class, 'activitiable');
+    }
+
+    public function targetModel(): self|Model
+    {
+        return $this;
     }
 
     public function logUpdate(): void
@@ -50,12 +67,31 @@ trait ActivityLoggable
         ]);
     }
 
-    public function logDelete(): void
+    public function getModelChangesJson(bool $allowCustomAttribute = false): array
     {
-        $this->createActivityLog([
-            'title' => __('activity-log.actions.delete').' #'.$this->id,
-            'description' => '',
-        ]);
+        $attributes = collect(array_keys($this->getDirty()));
+        if ($allowCustomAttribute) {
+            $attributes = $attributes->filter(fn ($item) => $this->modelRelation()->has($item));
+        }
+
+        return $attributes->map(function ($attribute) {
+
+            $original = $this->getOriginal($attribute);
+            $new = $this->{$attribute};
+
+            /**
+             * Format the data if a custom formatter exists
+             */
+            if ($formatter = $this->activityLogFieldFormatters()->get($attribute)) {
+                $original = $formatter($original);
+                $new = $formatter($new);
+            }
+
+            $from = is_array($original) ? collect($original)->join('|') : $original;
+            $to = is_array($new) ? collect($new)->join('|') : (is_string($new) ? $new : new StringConverter($this->{$attribute}));
+
+            return $this->prepareModelChange($attribute, $from, $to);
+        })->toArray();
     }
 
     protected function modelRelation(): Collection
@@ -63,10 +99,46 @@ trait ActivityLoggable
         return collect([]);
     }
 
-    protected function activityRelations(): Collection
+    protected function activityLogFieldFormatters(): Collection
     {
-        return collect([
-            'activityLogs',
+        return collect([]);
+    }
+
+    public function prepareModelChange($attribute, $from, $to): array
+    {
+        $key = $attribute;
+
+        if ($entity = $this->modelRelation()->get($attribute)) {
+            $modelClass = $entity['modelClass'];
+            $from = $modelClass && $modelClass::find($from) ? $modelClass::find($from)->{$entity['modelKey']} : '+';
+            $to = $modelClass && $modelClass::find($to) ? $modelClass::find($to)->{$entity['modelKey']} : '+';
+
+            $key = $entity['label'];
+        }
+
+        return [
+            'key' => $key,
+            'from' => sprintf('<span class="activity__db-content">%s</span>', $from ?? '+'),
+            'to' => sprintf('<span class="activity__db-content">%s</span>', $to ?? '+'),
+        ];
+    }
+
+    public function getModelChanges(?array $modelChangesJson = null): string
+    {
+        return collect($modelChangesJson ?: $this->getModelChangesJson())->map(function ($row) {
+            $attribute = $row['key'];
+            $from = $row['from'];
+            $to = $row['to'];
+
+            return sprintf('%s: %s -> %s', '<b>'.Str::ucfirst(Str::replace('_', ' ', $attribute)).'</b>', '<b style="text-decoration: line-through;">'.$from.'</b>', '<b>'.$to.'</b>');
+        })->join('<br>');
+    }
+
+    public function logDelete(): void
+    {
+        $this->createActivityLog([
+            'title' => __('activity-log.actions.delete').' #'.$this->id,
+            'description' => '',
         ]);
     }
 
@@ -91,68 +163,11 @@ trait ActivityLoggable
         return $rewrittenRelations->map(fn ($relation) => $model->pluck($relation)->flatten())->flatten(1);
     }
 
-    public function activityLogs(): MorphMany
+    protected function activityRelations(): Collection
     {
-        return $this->morphMany(ActivityLog::class, 'activitiable');
-    }
-
-    public function getModelChanges(?array $modelChangesJson = null): string
-    {
-        return collect($modelChangesJson ?: $this->getModelChangesJson())->map(function ($row) {
-            $attribute = $row['key'];
-            $from = $row['from'];
-            $to = $row['to'];
-
-            return sprintf('%s: %s -> %s', '<b>'.Str::ucfirst(Str::replace('_', ' ', $attribute)).'</b>', '<b style="text-decoration: line-through;">'.$from.'</b>', '<b>'.$to.'</b>');
-        })->join('<br>');
-    }
-
-    public function getModelChangesJson(bool $allowCustomAttribute = false): array
-    {
-        $attributes = collect(array_keys($this->getDirty()));
-        if ($allowCustomAttribute) {
-            $attributes = $attributes->filter(fn ($item) => $this->modelRelation()->has($item));
-        }
-
-        return $attributes->map(function ($attribute) {
-            $from = is_array($this->getOriginal($attribute)) ? collect($this->getOriginal($attribute))->join('|') : $this->getOriginal($attribute);
-            $to = is_array($this->{$attribute}) ? collect($this->{$attribute})->join('|') : (is_string($this->{$attribute}) ? $this->{$attribute} : new StringConverter($this->{$attribute}));
-
-            return $this->prepareModelChange($attribute, $from, $to);
-        })->toArray();
-    }
-
-    public function prepareModelChange($attribute, $from, $to): array
-    {
-        if ($entity = $this->modelRelation()->get($attribute)) {
-            $modelClass = $entity['modelClass'];
-            $formLabel = $modelClass && $modelClass::find($from) ? $modelClass::find($from)->{$entity['modelKey']} : '+';
-            $toLabel = $modelClass && $modelClass::find($to) ? $modelClass::find($to)->{$entity['modelKey']} : '+';
-
-            return [
-                'key' => $entity['label'],
-                'from' => sprintf('<span class="activity__db-content">%s</span>', $formLabel),
-                'to' => sprintf('<span class="activity__db-content">%s</span>', $toLabel),
-            ];
-        } else {
-            return [
-                'key' => $attribute,
-                'from' => sprintf('<span class="activity__db-content">%s</span>', $from ?? '+'),
-                'to' => sprintf('<span class="activity__db-content">%s</span>', $to ?? '+'),
-            ];
-        }
-    }
-
-    public function createActivityLog(array $description): ActivityLog
-    {
-        $diff = data_get($description, 'diff', []);
-
-        if (count($diff) === 1 && data_get($diff, '0.key') === 'Status') {
-            $description['title'] = Str::replace('updated', 'updated status for', $description['title']);
-            $description['type'] = ActivityLog::TYPE_STATUS;
-        }
-
-        return $this->targetModel()->activityLogs()->create($description);
+        return collect([
+            'activityLogs',
+        ]);
     }
 
     public function createCommunicationLog(array $data, string $to, string $content, string $type = CommunicationLog::TYPE_EMAIL): CommunicationLog
