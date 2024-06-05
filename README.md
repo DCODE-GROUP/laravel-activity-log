@@ -119,6 +119,7 @@ i18n({
     "vendor/dcodegroup/activity-log/lang", // Load translations from this path too!
   ],
 }),
+```
 
 Run the npm build (dev/prod)
 
