@@ -98,6 +98,8 @@ trait ActivityLoggable
             $to = $modelClass && $modelClass::find($to) ? $modelClass::find($to)->{$entity['modelKey']} : '+';
 
             $key = $entity['label'];
+
+            ld('inside model relation', 'from', $from, 'to', $to, 'key', $key);
             //            return [
             //                'key' => $entity['label'],
             //                'from' => sprintf('<span class="activity__db-content">%s</span>', $formLabel),
