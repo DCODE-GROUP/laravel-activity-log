@@ -75,14 +75,28 @@ trait ActivityLoggable
         }
 
         return $attributes->map(function ($attribute) {
-            $from = is_array($this->getOriginal($attribute)) ? collect($this->getOriginal($attribute))->join('|') : $this->getOriginal($attribute);
-            $to = is_array($this->{$attribute}) ? collect($this->{$attribute})->join('|') : (is_string($this->{$attribute}) ? $this->{$attribute} : new StringConverter($this->{$attribute}));
+
+            $original = $this->getOriginal($attribute);
+            $new = $this->{$attribute};
+
+            if ($formatter = $this->activityLogFieldFormatters()->get($attribute)) {
+                $original = $formatter($original);
+                $new = $formatter($new);
+            }
+
+            $from = is_array($original) ? collect($original)->join('|') : $original;
+            $to = is_array($new) ? collect($new)->join('|') : (is_string($new) ? $new : new StringConverter($this->{$attribute}));
 
             return $this->prepareModelChange($attribute, $from, $to);
         })->toArray();
     }
 
     protected function modelRelation(): Collection
+    {
+        return collect([]);
+    }
+
+    protected function activityLogFieldFormatters(): Collection
     {
         return collect([]);
     }
@@ -100,18 +114,6 @@ trait ActivityLoggable
             $key = $entity['label'];
 
             ld('inside model relation', 'from', $from, 'to', $to, 'key', $key);
-            //            return [
-            //                'key' => $entity['label'],
-            //                'from' => sprintf('<span class="activity__db-content">%s</span>', $formLabel),
-            //                'to' => sprintf('<span class="activity__db-content">%s</span>', $toLabel),
-            //            ];
-        }
-
-        if ($formatter = $this->activityLogFieldFormatters()->get($attribute)) {
-            ld('got into formatter. it is', $formatter, 'from', $from, 'to', $to);
-            //            ld('formatter', $formatter);
-            $from = $formatter($from);
-            $to = $formatter($to);
         }
 
         return [
@@ -119,11 +121,6 @@ trait ActivityLoggable
             'from' => sprintf('<span class="activity__db-content">%s</span>', $from ?? '+'),
             'to' => sprintf('<span class="activity__db-content">%s</span>', $to ?? '+'),
         ];
-    }
-
-    protected function activityLogFieldFormatters(): Collection
-    {
-        return collect([]);
     }
 
     public function getModelChanges(?array $modelChangesJson = null): string
