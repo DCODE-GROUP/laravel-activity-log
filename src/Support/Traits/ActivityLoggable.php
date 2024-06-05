@@ -87,11 +87,6 @@ trait ActivityLoggable
         return collect([]);
     }
 
-    protected function activityLogFieldFormatters(): Collection
-    {
-        return collect([]);
-    }
-
     public function prepareModelChange($attribute, $from, $to): array
     {
         ld('attribute', $attribute, 'from', $from, 'to', $to);
@@ -110,13 +105,20 @@ trait ActivityLoggable
             //            ];
         }
 
-        if
+        if ($formatter = $this->activityLogFieldFormatters()->get($attribute)) {
+            ld('formatter', $formatter);
+        }
 
         return [
             'key' => $key,
             'from' => sprintf('<span class="activity__db-content">%s</span>', $from ?? '+'),
             'to' => sprintf('<span class="activity__db-content">%s</span>', $to ?? '+'),
         ];
+    }
+
+    protected function activityLogFieldFormatters(): Collection
+    {
+        return collect([]);
     }
 
     public function getModelChanges(?array $modelChangesJson = null): string
