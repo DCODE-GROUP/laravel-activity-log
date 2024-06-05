@@ -106,7 +106,9 @@ trait ActivityLoggable
         }
 
         if ($formatter = $this->activityLogFieldFormatters()->get($attribute)) {
-            ld('formatter', $formatter);
+            //            ld('formatter', $formatter);
+            $from = $formatter($from);
+            $to = $formatter($to);
         }
 
         return [
