@@ -333,6 +333,26 @@ $activityLog = $model->createActivityLog([
 'communication_log_id' => '' // required when type = TYPE_NOTIFICATION to link activity log with communication log
 ]);
 ```
+
+If you have a user case where you want the log messages to be logged against another model, Example. You have an `Order` model and you want the `OrderItem` models to be recorded against the `Order`. Then do as below.
+
+with the `OrderItem` model add the method `targetModel`
+
+```php
+
+class OrderItem extends Model
+{
+    ...
+    public function targetModel(): self|Model
+    {
+        return $this->order;
+    }
+    
+}
+
+```
+
+
 *   **`createCommunicationLog(array $data, string $to, string $content, string $type = CommunicationLog::TYPE_EMAIL): CommunicationLog`**: Create a new communication log.
 
 Example of define Communication log via model using `ActivityLoggable`

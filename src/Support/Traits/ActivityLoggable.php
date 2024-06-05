@@ -28,6 +28,11 @@ trait ActivityLoggable
         });
     }
 
+    public function targetModel(): self|Model
+    {
+        return $this;
+    }
+
     public function logCreate(): void
     {
         $this->createActivityLog([
@@ -147,7 +152,7 @@ trait ActivityLoggable
             $description['type'] = ActivityLog::TYPE_STATUS;
         }
 
-        return $this->activityLogs()->create($description);
+        return $this->targetModel()->activityLogs()->create($description);
     }
 
     public function createCommunicationLog(array $data, string $to, string $content, string $type = CommunicationLog::TYPE_EMAIL): CommunicationLog
