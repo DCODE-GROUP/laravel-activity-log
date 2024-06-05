@@ -79,6 +79,9 @@ trait ActivityLoggable
             $original = $this->getOriginal($attribute);
             $new = $this->{$attribute};
 
+            /**
+             * Format the data if a custom formatter exists
+             */
             if ($formatter = $this->activityLogFieldFormatters()->get($attribute)) {
                 $original = $formatter($original);
                 $new = $formatter($new);
@@ -103,7 +106,6 @@ trait ActivityLoggable
 
     public function prepareModelChange($attribute, $from, $to): array
     {
-        ld('attribute', $attribute, 'from', $from, 'to', $to);
         $key = $attribute;
 
         if ($entity = $this->modelRelation()->get($attribute)) {
@@ -112,8 +114,6 @@ trait ActivityLoggable
             $to = $modelClass && $modelClass::find($to) ? $modelClass::find($to)->{$entity['modelKey']} : '+';
 
             $key = $entity['label'];
-
-            ld('inside model relation', 'from', $from, 'to', $to, 'key', $key);
         }
 
         return [
