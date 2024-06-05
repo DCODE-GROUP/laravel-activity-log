@@ -87,6 +87,11 @@ trait ActivityLoggable
         return collect([]);
     }
 
+    protected function activityLogFieldFormatters(): Collection
+    {
+        return collect([]);
+    }
+
     public function prepareModelChange($attribute, $from, $to): array
     {
         ld('attribute', $attribute, 'from', $from, 'to', $to);
@@ -104,6 +109,8 @@ trait ActivityLoggable
             //                'to' => sprintf('<span class="activity__db-content">%s</span>', $toLabel),
             //            ];
         }
+
+        if
 
         return [
             'key' => $key,
