@@ -420,7 +420,7 @@ the default.
 ```php
  public function activityLogEntityName(): string
   {
-      return \Illuminate\Support\Str::title(class_basename($this));
+     return Arr::join(Str::ucsplit(class_basename($this)), ' ').' (id:'.$this->id.')';
   }
 ```
 

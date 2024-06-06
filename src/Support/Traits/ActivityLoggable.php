@@ -8,6 +8,7 @@ use Dcodegroup\ActivityLog\Models\CommunicationLog;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Mail\Mailables\Address;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -32,7 +33,7 @@ trait ActivityLoggable
     {
         $this->createActivityLog([
             'type' => ActivityLog::TYPE_DATA,
-            'title' => __('activity-log.actions.create').' #'.$this->activityLogEntityName(),
+            'title' => __('activity-log.actions.create').$this->activityLogEntityName(),
         ]);
     }
 
@@ -60,14 +61,14 @@ trait ActivityLoggable
 
     public function activityLogEntityName(): string
     {
-        return Str::title(class_basename($this)).' (id:'.$this->id.')';
+        return Arr::join(Str::ucsplit(class_basename($this)), ' ').' (id:'.$this->id.')';
     }
 
     public function logUpdate(): void
     {
         $diff = $this->getModelChangesJson(true); // true: If we want to limit the storage of fields defined in modelRelation; false : If we want to storage all model change
         $this->createActivityLog([
-            'title' => __('activity-log.actions.update').' #'.$this->activityLogEntityName(),
+            'title' => __('activity-log.actions.update').$this->activityLogEntityName(),
             'description' => $this->getModelChanges($diff),
         ]);
     }
@@ -142,7 +143,7 @@ trait ActivityLoggable
     public function logDelete(): void
     {
         $this->createActivityLog([
-            'title' => __('activity-log.actions.delete').' #'.$this->activityLogEntityName(),
+            'title' => __('activity-log.actions.delete').$this->activityLogEntityName(),
             'description' => '',
         ]);
     }
