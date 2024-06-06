@@ -26,6 +26,7 @@ return [
         'no_result' => 'No results',
         'date' => 'Date',
     ],
+
     'actions' => [
         'create' => ' created a ',
         'update' => ' updated a ',
