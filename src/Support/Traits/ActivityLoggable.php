@@ -32,7 +32,7 @@ trait ActivityLoggable
     {
         $this->createActivityLog([
             'type' => ActivityLog::TYPE_DATA,
-            'title' => __('activity-log.actions.create').' #'.$this->id,
+            'title' => __('activity-log.actions.create').' #'.$this->activityLogEntityName(),
         ]);
     }
 
@@ -58,11 +58,16 @@ trait ActivityLoggable
         return $this;
     }
 
+    public function activityLogEntityName(): string
+    {
+        return Str::title(class_basename($this)).' (id:'.$this->id.')';
+    }
+
     public function logUpdate(): void
     {
         $diff = $this->getModelChangesJson(true); // true: If we want to limit the storage of fields defined in modelRelation; false : If we want to storage all model change
         $this->createActivityLog([
-            'title' => __('activity-log.actions.update').' #'.$this->id,
+            'title' => __('activity-log.actions.update').' #'.$this->activityLogEntityName(),
             'description' => $this->getModelChanges($diff),
         ]);
     }
@@ -137,7 +142,7 @@ trait ActivityLoggable
     public function logDelete(): void
     {
         $this->createActivityLog([
-            'title' => __('activity-log.actions.delete').' #'.$this->id,
+            'title' => __('activity-log.actions.delete').' #'.$this->activityLogEntityName(),
             'description' => '',
         ]);
     }

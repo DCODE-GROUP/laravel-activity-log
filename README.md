@@ -414,6 +414,16 @@ example. Add the following to the model
 `price` is the key for the field.
 Right hand side should be a closure than can then be used for format the value that will be present.
 
+You can override the default name / label for an entity. Simply create a method named `` that returns a string. Below is
+the default.
+
+```php
+ public function activityLogEntityName(): string
+  {
+      return \Illuminate\Support\Str::title(class_basename($this));
+  }
+```
+
 *`createCommunicationLog(array $data, string $to, string $content, string $type = CommunicationLog::TYPE_EMAIL): CommunicationLog`
 **: Create a new communication log.
 
