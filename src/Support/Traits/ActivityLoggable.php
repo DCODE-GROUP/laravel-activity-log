@@ -60,7 +60,7 @@ trait ActivityLoggable
 
     public function activityLogEntityName(): string
     {
-        return Str::title(class_basename($this));
+        return Str::title(class_basename($this)).' (id:'.$this->id.')';
     }
 
     public function logUpdate(): void
