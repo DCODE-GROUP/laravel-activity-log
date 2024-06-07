@@ -29,7 +29,7 @@ class ExistingRequest extends FormRequest
             ],
             'modelId' => [
                 'required',
-                'integer',
+                'string',
                 Rule::exists($this->input('modelClass'), 'id'),
             ],
         ];
