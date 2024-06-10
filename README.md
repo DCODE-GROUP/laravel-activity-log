@@ -52,6 +52,9 @@ php artisan migrate
 Add the following contract to the `User` model.
 
 ```php  
+<?php
+namespace App\Models;
+
 use Dcodegroup\ActivityLog\Contracts\HasActivityUser;
 
 class User extends Authenticatable implements HasActivityUser
@@ -66,8 +69,7 @@ class User extends Authenticatable implements HasActivityUser
     {
         return $this->email;
     }
-    
-    ...
+   
 ```
 
 #### JS
@@ -78,7 +80,6 @@ Add the following alias to `vite.config.js`
 resolve: {
   alias: {
     "@dcodegroup": path.resolve(__dirname, "./vendor/dcodegroup/"),
-  ...
 ```
 
 Add the following js to your `index.js` file.
