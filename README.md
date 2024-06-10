@@ -86,9 +86,9 @@ resolve: {
 Add the following js to your `index.js` file.
 
 ```javascript
-import VActivityLog from "@dcode/activity-log/resources/js/components/VActivityLog.vue";
-import ActivityLogList from "@dcode/activity-log/resources/js/components/ActivityLogList.vue";
-import ActivityEmail from "@dcode/activity-log/resources/js/components/ActivityEmail.vue";
+import VActivityLog from "@dcodegroup/activity-log/resources/js/components/VActivityLog.vue";
+import ActivityLogList from "@dcodegroup/activity-log/resources/js/components/ActivityLogList.vue";
+import ActivityEmail from "@dcodegroup/activity-log/resources/js/components/ActivityEmail.vue";
 
 app.component("VActivityLog", VActivityLog);
 app.component("ActivityLogList", ActivityLogList);
