@@ -98,7 +98,7 @@ app.component("ActivityEmail", ActivityEmail);
 In your `app.scss` file add the following
 
 ```scss
-@import "activity-log/index.scss";
+@import "@dcodegroup/activity-log/resources/sass/index.scss";
 @import "floating-vue/dist/style.css";
 ```
 
