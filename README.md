@@ -52,22 +52,22 @@ php artisan migrate
 Add the following contract to the `User` model.
 
 ```php  
-
 use Dcodegroup\ActivityLog\Contracts\HasActivityUser;
 
 class User extends Authenticatable implements HasActivityUser
 {
-...
 
-public function getActivityLogUserName(): string
-{
-    return $this->name;
-}
-
-public function getActivityLogEmail(): string
-{
-    return $this->email;
-}
+    public function getActivityLogUserName(): string
+    {
+        return $this->name;
+    }
+    
+    public function getActivityLogEmail(): string
+    {
+        return $this->email;
+    }
+    
+    ...
 ```
 
 #### JS
@@ -77,9 +77,7 @@ Add the following alias to `vite.config.js`
 ```javascript
 resolve: {
   alias: {
-    "@dcodegroup"
-  :
-    path.resolve(__dirname, "./vendor/dcodegroup/"),
+    "@dcodegroup": path.resolve(__dirname, "./vendor/dcodegroup/"),
   ...
 ```
 
@@ -106,35 +104,16 @@ Seem to need this in `tailwind.config.js` under spacing:
 
 ```js
 spacing: {
-  "3xlSpace"
-:
-  "96px",
-    "2xlSpace"
-:
-  "64px",
-    xlSpace
-:
-  "32px",
-    lgSpace
-:
-  "24px",
-    mdSpace
-:
-  "16px",
-    smSpace
-:
-  "12px",
-    xsSpace
-:
-  "8px",
-    "2xsSpace"
-:
-  "4px",
-    "3xsSpace"
-:
-  "2px",
+  "3xlSpace": "96px",
+  "2xlSpace": "64px",
+  xlSpace: "32px",
+  lgSpace: "24px",
+  mdSpace: "16px",
+  smSpace: "12px",
+  xsSpace: "8px",
+  "2xsSpace": "4px",
+  "3xsSpace": "2px",
 }
-,
 ```
 
 Update the module exports under content:
