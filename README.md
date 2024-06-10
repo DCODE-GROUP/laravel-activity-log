@@ -401,7 +401,10 @@ You can use a custom formatter for fields in your model by using the `activityLo
 example. Add the following to the model
 
 ```php
-    public function activityLogFieldFormatters(): collection
+use Illuminate\Support\Collection;
+
+...
+    public function activityLogFieldFormatters(): Collection
     {
         return collect([
             'price' => fn ($value) => Number::currency(($value / 100), 'AUD'),
