@@ -15,8 +15,8 @@ class ActivityLog extends JsonResource
     public function toArray(Request $request): array
     {
 
-        $createdAt = $this->resource->created_at->setTimezone($request->input('timezone', 'UTC'))->diffForHumans();
-        $createdDate = $this->resource->created_at->setTimezone($request->input('timezone', 'UTC'))->format(config('activity-log.datetime_format'));
+        $createdAt = $this->resource->created_at->setTimezone($request->input('timezone', config('app.timezone', 'UTC')))->diffForHumans();
+        $createdDate = $this->resource->created_at->setTimezone($request->input('timezone', config('app.timezone', 'UTC')))->format(config('activity-log.datetime_format'));
 
         return [
             'id' => $this->resource->id,
