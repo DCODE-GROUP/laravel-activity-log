@@ -69,6 +69,15 @@ class User extends Authenticatable implements HasActivityUser
     {
         return $this->email;
     }
+    
+    public function getActivityLogUser(): array
+    {
+        return [
+            'id' => $this->id,
+            'full_name' => $this->getActivityLogUserName(),
+            'email' => $this->getActivityLogEmail(),
+        ];
+    }
    
 ```
 
