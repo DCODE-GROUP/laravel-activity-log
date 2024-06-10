@@ -72,6 +72,17 @@ public function getActivityLogEmail(): string
 
 #### JS
 
+Add the following alias to `vite.config.js`
+
+```javascript
+resolve: {
+  alias: {
+    "@dcodegroup"
+  :
+    path.resolve(__dirname, "./vendor/dcodegroup/"),
+  ...
+```
+
 Add the following js to your `index.js` file.
 
 ```javascript
