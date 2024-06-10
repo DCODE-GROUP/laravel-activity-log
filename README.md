@@ -82,7 +82,6 @@ import ActivityEmail from "@dcode/activity-log/resources/js/components/ActivityE
 app.component("VActivityLog", VActivityLog);
 app.component("ActivityLogList", ActivityLogList);
 app.component("ActivityEmail", ActivityEmail);
-app.directive("click-outside", clickOutside);
 ```
 
 In your `app.scss` file add the following
