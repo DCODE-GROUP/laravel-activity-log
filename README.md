@@ -401,7 +401,6 @@ You can use a custom formatter for fields in your model by using the `activityLo
 example. Add the following to the model
 
 ```php
-...
     public function activityLogFieldFormatters(): collection
     {
         return collect([
