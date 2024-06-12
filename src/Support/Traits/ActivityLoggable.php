@@ -94,7 +94,7 @@ trait ActivityLoggable
             }
 
             $from = is_array($original) ? collect($original)->join('|') : $original;
-            $to = is_array($new) ? collect($new)->join('|') : (is_string($new) ? $new : new StringConverter($this->{$attribute}));
+            $to = is_array($new) ? collect($new)->map(fn ($item) => is_string($item) ? $item : new StringConverter($item))->join('|') : (is_string($new) ? $new : new StringConverter($this->{$attribute}));
 
             return $this->prepareModelChange($attribute, $from, $to);
         })->toArray();
