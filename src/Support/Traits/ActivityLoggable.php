@@ -93,7 +93,7 @@ trait ActivityLoggable
                 $new = $formatter($new);
             }
 
-            $from = is_array($original) ? collect($original)->join('|') : $original;
+            $from = is_array($original) ? collect($original)->map(fn ($item) => is_string($item) ? $item : new StringConverter($item))->join('|') : $original;
             $to = is_array($new) ? collect($new)->map(fn ($item) => is_string($item) ? $item : new StringConverter($item))->join('|') : (is_string($new) ? $new : new StringConverter($this->{$attribute}));
 
             return $this->prepareModelChange($attribute, $from, $to);
