@@ -28,6 +28,7 @@ class ExistingRequest extends FormRequest
                 'string',
             ],
             'modelId' => [
+                $this->request->has('filter[id]') ? 'nullable' : 'required', // field is required when filter[id] is not present
                 'string',
                 Rule::exists($this->input('modelClass'), 'id'),
             ],
