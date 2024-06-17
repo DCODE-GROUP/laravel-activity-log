@@ -223,6 +223,7 @@ trait ActivityLoggable
         // 1 do we have the method to give us the name of the label THE OVER RIDE METHODS
         // check for method name
         // return the method
+        // if it returns null continue to next step
 
         // 2 check if its one of the normal eg name, title, label
         //        if (collect($this->getAttributes())->has('')) {
