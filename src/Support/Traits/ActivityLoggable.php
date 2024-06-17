@@ -67,43 +67,51 @@ trait ActivityLoggable
 
     public function logUpdate(): void
     {
-        $diff = $this->getModelChangesJson(true); // true: If we want to limit the storage of fields defined in modelRelation; false : If we want to storage all model change
-        $this->createActivityLog([
-            'title' => __('activity-log.actions.update').$this->activityLogEntityName(),
-            'description' => $this->getModelChanges($diff),
-        ]);
-    }
+        $diff = $this->getModelChangesJson(); // true: If we want to limit the storage of fields defined in modelRelation; false : If we want to storage all model change
 
-    public function getModelChangesJson(bool $allowCustomAttribute = false): array
-    {
-        $attributes = collect(array_keys($this->getDirty()));
-        if ($allowCustomAttribute) {
-            $attributes = $attributes->filter(fn ($item) => $this->modelRelation()->has($item));
+        if (collect($diff)->isNotEmpty()) {
+            $this->createActivityLog([
+                'title' => __('activity-log.actions.update').$this->activityLogEntityName(),
+                'description' => $this->getModelChanges($diff),
+            ]);
         }
-
-        return $attributes->map(function ($attribute) {
-
-            $original = $this->getOriginal($attribute);
-            $new = $this->{$attribute};
-
-            /**
-             * Format the data if a custom formatter exists
-             */
-            if ($formatter = $this->activityLogFieldFormatters()->get($attribute)) {
-                $original = $formatter($original);
-                $new = $formatter($new);
-            }
-
-            $from = is_array($original) ? collect($original)->map(fn ($item) => is_string($item) ? $item : new StringConverter($item))->join('|') : $original;
-            $to = is_array($new) ? collect($new)->map(fn ($item) => is_string($item) ? $item : new StringConverter($item))->join('|') : (is_string($new) ? $new : new StringConverter($this->{$attribute}));
-
-            return $this->prepareModelChange($attribute, $from, $to);
-        })->toArray();
     }
 
-    protected function modelRelation(): Collection
+    public function getModelChangesJson(): array
     {
-        return collect([]);
+        return collect(array_keys($this->getDirty()))
+            ->filter(fn ($item) => $this->getActivityLogModelAttributes()->has($item))
+            ->map(function ($attribute) {
+
+                $original = $this->getOriginal($attribute);
+                $new = $this->{$attribute};
+
+                /**
+                 * Format the data if a custom formatter exists
+                 */
+                if ($formatter = $this->activityLogFieldFormatters()->get($attribute)) {
+                    $original = $formatter($original);
+                    $new = $formatter($new);
+                }
+
+                $from = is_array($original) ? collect($original)->map(fn ($item) => is_string($item) ? $item : new StringConverter($item))->join('|') : $original;
+                $to = is_array($new) ? collect($new)->map(fn ($item) => is_string($item) ? $item : new StringConverter($item))->join('|') : (is_string($new) ? $new : new StringConverter($this->{$attribute}));
+
+                return $this->prepareModelChange($attribute, $from, $to);
+            })->toArray();
+    }
+
+    public function getActivityLogModelAttributes(): Collection
+    {
+        return collect(array_merge($this->getAttributes(), ['created_at', 'updated_at', 'deleted_at'], $this->getActivityLogModelExcludeFields()));
+    }
+
+    /**
+     * This is where you will specify what fields to ignore on a per model basis. Eg extra fields to ignore
+     */
+    public function getActivityLogModelExcludeFields(): array
+    {
+        return [];
     }
 
     protected function activityLogFieldFormatters(): Collection
@@ -128,6 +136,11 @@ trait ActivityLoggable
             'from' => sprintf('<span class="activity__db-content">%s</span>', $from ?? '+'),
             'to' => sprintf('<span class="activity__db-content">%s</span>', $to ?? '+'),
         ];
+    }
+
+    protected function modelRelation(): Collection
+    {
+        return collect([]);
     }
 
     public function getModelChanges(?array $modelChangesJson = null): string
