@@ -123,7 +123,11 @@ trait ActivityLoggable
     {
         $key = $attribute;
 
-        if ($entity = $this->modelRelation()->get($attribute)) {
+        //     getActivityLogModelRelationFields()
+
+        if (in_array($attribute, $this->getActivityLogModelRelationFields())) {
+
+        } else {
             $modelClass = $entity['modelClass'];
             $from = $modelClass && $modelClass::find($from) ? $modelClass::find($from)->{$entity['modelKey']} : '+';
             $to = $modelClass && $modelClass::find($to) ? $modelClass::find($to)->{$entity['modelKey']} : '+';
@@ -131,11 +135,20 @@ trait ActivityLoggable
             $key = $entity['label'];
         }
 
+        if ($entity = $this->modelRelation()->get($attribute)) {
+
+        }
+
         return [
             'key' => $key,
             'from' => sprintf('<span class="activity__db-content">%s</span>', $from ?? '+'),
             'to' => sprintf('<span class="activity__db-content">%s</span>', $to ?? '+'),
         ];
+    }
+
+    public function getActivityLogModelRelationFields(): array
+    {
+        return collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray();
     }
 
     protected function modelRelation(): Collection
@@ -205,8 +218,18 @@ trait ActivityLoggable
         ]);
     }
 
-    public function getActivityLogModelRelationFields(): array
+    public function getActivityLogModelLabel(): string
     {
-        return collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray();
+        // 1 do we have the method to give us the name of the label THE OVER RIDE METHODS
+        // check for method name
+        // return the method
+
+        // 2 check if its one of the normal eg name, title, label
+        //        if (collect($this->getAttributes())->has('')) {
+        //
+        // find which one it is  use that and cache by model_name eg type eg purchase_order_label
+
+        //        }
+
     }
 }
