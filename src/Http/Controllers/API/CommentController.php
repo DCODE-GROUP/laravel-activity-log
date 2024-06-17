@@ -29,7 +29,8 @@ class CommentController extends Controller
             ]);
             $url = $request->input('currentUrl').'#activity_'.$activity->id;
             $user = $request->filled('currentUser') ? $request->input('currentUser') : 'System';
-            $emailSubject = __('activity-log.headings.subjects', ['model' => $user, 'entity' => class_basename($modelClass).' #'.$modelId]);
+            $modelName = $model->activityLogEntityName();
+            $emailSubject = __('activity-log.headings.subjects', ['model' => $user, 'entity' => $modelName]);
             $email = [
                 'content' => $comment,
                 'title' => $emailSubject,
