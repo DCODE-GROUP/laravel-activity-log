@@ -6,6 +6,7 @@ use Coduo\ToString\StringConverter;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Models\CommunicationLog;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Support\Arr;
@@ -189,5 +190,10 @@ trait ActivityLoggable
             'content' => $content,
             'type' => $type,
         ]);
+    }
+
+    public function getActivityLogModelRelationFields(): array
+    {
+        return collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray();
     }
 }
