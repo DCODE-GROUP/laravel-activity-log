@@ -9,14 +9,24 @@ use Dcodegroup\ActivityLog\Models\CommunicationLog;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use ReflectionClass;
+use ReflectionMethod;
 
 trait ActivityLoggable
 {
+    /**
+     * Available relationships for the model.
+     *
+     * @var array
+     */
+    protected static $availableRelations = [];
+
     public static function bootActivityLoggable()
     {
         static::created(function ($model) {
@@ -152,15 +162,58 @@ trait ActivityLoggable
 
     public function getActivityLogModelRelationFields(): array
     {
-        $baseClass = get_class($this);
-        ld('base class: '.$baseClass);
-        //        ld('relations', (new $baseClass())->getRelations());
-        ld('relations', $this->getRelations());
-        ld('this', $this);
+        ld('relations: ', self::$availableRelations);
+
+        ld('available relations', $this->getAvailableRelations());
+
+        //        $baseClass = get_class($this);
+        //        ld('base class: '.$baseClass);
+        //        //        ld('relations', (new $baseClass())->getRelations());
+        //        ld('relations', $this->getRelations());
+        //        ld('this', $this);
 
         return collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray();
         // when ready cache this
         //        return Cache::rememberForever('model_relations_'.self::class, fn () => collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray());
+    }
+
+    /**
+     * Gets list of available relations for this model
+     * And stores it in the variable for future use
+     *
+     * @return array
+     */
+    public static function getAvailableRelations()
+    {
+        return static::$availableRelations[static::class] ?? static::setAvailableRelations(
+            array_reduce(
+                (new ReflectionClass(static::class))->getMethods(ReflectionMethod::IS_PUBLIC),
+                function ($result, ReflectionMethod $method) {
+                    // If this function has a return type
+                    ($returnType = (string) $method->getReturnType()) &&
+
+                    // And this function returns a relation
+                    is_subclass_of($returnType, Relation::class) &&
+
+                    // Add name of this method to the relations array
+                    ($result = array_merge($result, [$method->getName() => $returnType]));
+
+                    return $result;
+                }, []
+            )
+        );
+    }
+
+    /**
+     * Stores relationships for future use
+     *
+     * @return array
+     */
+    public static function setAvailableRelations(array $relations)
+    {
+        static::$availableRelations[static::class] = $relations;
+
+        return $relations;
     }
 
     public function getModelChanges(?array $modelChangesJson = null): string
