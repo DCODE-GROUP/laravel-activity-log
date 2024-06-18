@@ -144,7 +144,8 @@ trait ActivityLoggable
                 $from = $modelClass && $modelClass::find($from) ? $modelClass::find($from)->determineModelLabel() : '+';
                 $to = $modelClass && $modelClass::find($to) ? $modelClass::find($to)->determineModelLabel() : '+';
 
-                $key = $modelClass::find($from)->determineModelLabel();
+                //                $key = $modelClass::find($from)->determineModelLabel();
+                $key = (new $modelClass)->determineModelLabel();
             }
         }
 
