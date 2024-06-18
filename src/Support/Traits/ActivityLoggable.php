@@ -149,7 +149,7 @@ trait ActivityLoggable
                 $from = $modelClass && $modelClass::find($from) ? $modelClass::find($from)->determineModelLabel() : '+';
                 $to = $modelClass && $modelClass::find($to) ? $modelClass::find($to)->determineModelLabel() : '+';
 
-                $key = $entity['label'];
+                $key = $modelClass::find($from)->determineModelLabel();
             }
             ////            $modelClass = array_flip($this->getActivityLogModelRelationFields())[$attribute];
             //            $from = $modelClass && $modelClass::find($from) ? $modelClass::find($from)->{$entity['modelKey']} : '+';
@@ -200,7 +200,6 @@ trait ActivityLoggable
 
     public function determineModelLabel(): string
     {
-
         /**
          * check if we have the model label in cache
          */

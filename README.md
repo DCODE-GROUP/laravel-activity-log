@@ -409,6 +409,22 @@ public function getActivityLogModelLabel(): string
 }
 ```` 
 
+You can give any model a custom label by adding the following method to the model.
+ If this is not set then [Str::headline](https://laravel.com/docs/11.x/strings#method-str-headline) will be used on the model.
+
+
+```php
+public function getActivityLogModelLabel(): string
+{
+    /**
+      * This can be any field or method to return the label but the return must be a string 
+      */
+    return __('order.title');
+}
+```` 
+
+```php
+
 You can define the relationships for automatic labeling of associated models
 
 ** depreciated **
