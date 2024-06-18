@@ -157,11 +157,25 @@ trait ActivityLoggable
                 is_subclass_of((string) $method->getReturnType(), Relation::class)
             ) {
 
+                if (method_exists($model->{$method->getName()}(), 'getForeignKeyName')) {
+                    $foreignKey = $model->{$method->getName()}()->getForeignKeyName();
+                } else {
+                    $foreignKey = $model->{$method->getName()}()->getForeignPivotKeyName();
+                }
+
+                if (method_exists($model->{$method->getName()}(), 'getOwnerKeyName')) {
+                    $localKey = $model->{$method->getName()}()->getOwnerKeyName();
+                } elseif (method_exists($model->{$method->getName()}(), 'getLocalKeyName')) {
+                    $localKey = $model->{$method->getName()}()->getLocalKeyName();
+                } else {
+                    $localKey = $model->{$method->getName()}()->getRelatedPivotKeyName();
+                }
+
                 $relationships[] = [
                     'method' => $method->getName(),
                     'relation' => $method->getReturnType()->getName(),
-                    'foreignKey' => method_exists($model->{$method->getName()}(), 'getForeignKeyName') ? $model->{$method->getName()}()->getForeignKeyName() : $model->{$method->getName()}()->getForeignPivotKeyName(),
-                    'localKey' => method_exists($model->{$method->getName()}(), 'getOwnerKeyName') ? $model->{$method->getName()}()->getOwnerKeyName() : ($model->{$method->getName()}()->getLocalKeyName() ?: $model->{$method->getName()}()->getRelatedPivotKeyName()),
+                    'foreignKey' => $foreignKey,
+                    'localKey' => $localKey,
                     'modelClass' => $model->{$method->getName()}()->getRelated(),
                 ];
             }
