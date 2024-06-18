@@ -191,7 +191,7 @@ trait ActivityLoggable
             ld('method name: '.$method->getName());
             ld('params: ', $method->getParameters());
             if ($method->class != get_class($model) ||
-                ! empty($method->getParameters()) ||
+//                ! empty($method->getParameters()) ||
                 $method->getName() == __FUNCTION__) {
                 continue;
             }
