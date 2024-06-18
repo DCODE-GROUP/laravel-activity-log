@@ -135,13 +135,14 @@ trait ActivityLoggable
         $key = $attribute;
 
         ld('$attribute: '.$attribute);
-        ld('model relation fields:', $this->getActivityLogModelRelationFields());
+        //        ld('model relation fields:', $this->getActivityLogModelRelationFields());
 
         //     getActivityLogModelRelationFields()
 
         if (in_array($attribute, collect($this->getActivityLogModelRelationFields())->pluck('foreignKey')->toArray())) {
 
-            //            $modelClass = array_flip($this->getActivityLogModelRelationFields())[$attribute];
+            //            $modelClass = collect($this->getActivityLogModelRelationFields())
+            ////            $modelClass = array_flip($this->getActivityLogModelRelationFields())[$attribute];
             //            $from = $modelClass && $modelClass::find($from) ? $modelClass::find($from)->{$entity['modelKey']} : '+';
             //            $to = $modelClass && $modelClass::find($to) ? $modelClass::find($to)->{$entity['modelKey']} : '+';
             //
