@@ -165,7 +165,7 @@ trait ActivityLoggable
     {
         ld('relations: ', self::$availableRelations);
 
-        ld('available relations', $this->getAvailableRelations());
+        //        ld('available relations', $this->getAvailableRelations());
 
         ld('model relationship', $this->getModelRelationships());
 
@@ -175,7 +175,8 @@ trait ActivityLoggable
         //        ld('relations', $this->getRelations());
         //        ld('this', $this);
 
-        return collect($this->getAvailableRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray();
+        //        return collect($this->getAvailableRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray();
+        return collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray();
         // when ready cache this
         //        return Cache::rememberForever('model_relations_'.self::class, fn () => collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray());
     }
