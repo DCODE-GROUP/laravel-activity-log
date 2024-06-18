@@ -129,18 +129,18 @@ trait ActivityLoggable
         ld('model relation fileds:', $this->getActivityLogModelRelationFields());
         //     getActivityLogModelRelationFields()
 
-        if (in_array($attribute, $this->getActivityLogModelRelationFields())) {
-
-            $modelClass = array_flip($this->getActivityLogModelRelationFields())[$attribute];
-            $from = $modelClass && $modelClass::find($from) ? $modelClass::find($from)->{$entity['modelKey']} : '+';
-            $to = $modelClass && $modelClass::find($to) ? $modelClass::find($to)->{$entity['modelKey']} : '+';
-
-            $key = $entity['label'];
-        }
-
-        if ($entity = $this->modelRelation()->get($attribute)) {
-
-        }
+        //        if (in_array($attribute, $this->getActivityLogModelRelationFields())) {
+        //
+        //            $modelClass = array_flip($this->getActivityLogModelRelationFields())[$attribute];
+        //            $from = $modelClass && $modelClass::find($from) ? $modelClass::find($from)->{$entity['modelKey']} : '+';
+        //            $to = $modelClass && $modelClass::find($to) ? $modelClass::find($to)->{$entity['modelKey']} : '+';
+        //
+        //            $key = $entity['label'];
+        //        }
+        //
+        //        if ($entity = $this->modelRelation()->get($attribute)) {
+        //
+        //        }
 
         return [
             'key' => $key,
