@@ -185,26 +185,16 @@ trait ActivityLoggable
     public function determineModelKey(): string
     {
         /**
-         * check if we have the model label in cache
-         */
-        //        if (Cache::has('model_key_'.class_basename($this))) {
-        //            return Cache::get('model_key_'.class_basename($this));
-        //        }
-
-        /**
          * Check if the label has been set in the model
          */
         if (! empty($this->getActivityLogModelKey())) {
             return $this->getActivityLogModelKey();
-
-            //            return Cache::rememberForever('model_key_'.class_basename($this), fn () => $this->getActivityLogModelKey());
         }
 
         $standardKeys = ['name', 'title', 'label'];
 
         foreach ($standardKeys as $key) {
             if (collect($this->getAttributes())->has($key)) {
-                //                return Cache::rememberForever('model_key_'.class_basename($this), fn () => $this->{$key});
                 return $this->{$key};
             }
         }
