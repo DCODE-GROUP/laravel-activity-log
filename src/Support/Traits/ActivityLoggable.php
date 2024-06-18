@@ -152,7 +152,8 @@ trait ActivityLoggable
 
     public function getActivityLogModelRelationFields(): array
     {
-        $baseClass = class_basename($this);
+        $baseClass = get_class($this);
+        ld('base class: '.$baseClass);
         ld('relations', (new $baseClass())->getRelations());
 
         return collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray();
