@@ -157,25 +157,11 @@ trait ActivityLoggable
                 is_subclass_of((string) $method->getReturnType(), Relation::class)
             ) {
 
-                //                if (method_exists($model->{$method->getName()}(), 'getForeignKeyName')) {
-                //                    $foreignKey = $model->{$method->getName()}()->getForeignKeyName();
-                //                } else {
-                //                    $foreignKey = $model->{$method->getName()}()->getForeignPivotKeyName();
-                //                }
-
                 $relationMethod = $model->{$method->getName()}();
                 $foreignKey = match (true) {
                     method_exists($relationMethod, 'getForeignKeyName') => $relationMethod->getForeignKeyName(),
                     default => $relationMethod->getForeignPivotKeyName(),
                 };
-
-                //                if (method_exists($model->{$method->getName()}(), 'getOwnerKeyName')) {
-                //                    $localKey = $model->{$method->getName()}()->getOwnerKeyName();
-                //                } elseif (method_exists($model->{$method->getName()}(), 'getLocalKeyName')) {
-                //                    $localKey = $model->{$method->getName()}()->getLocalKeyName();
-                //                } else {
-                //                    $localKey = $model->{$method->getName()}()->getRelatedPivotKeyName();
-                //                }
 
                 $localKey = match (true) {
                     method_exists($relationMethod, 'getOwnerKeyName') => $relationMethod->getOwnerKeyName(),
@@ -201,22 +187,25 @@ trait ActivityLoggable
         /**
          * check if we have the model label in cache
          */
-        if (Cache::has('model_key_'.class_basename($this))) {
-            return Cache::get('model_key_'.class_basename($this));
-        }
+        //        if (Cache::has('model_key_'.class_basename($this))) {
+        //            return Cache::get('model_key_'.class_basename($this));
+        //        }
 
         /**
          * Check if the label has been set in the model
          */
         if (! empty($this->getActivityLogModelKey())) {
-            return Cache::rememberForever('model_key_'.class_basename($this), fn () => $this->getActivityLogModelKey());
+            return $this->getActivityLogModelKey();
+
+            //            return Cache::rememberForever('model_key_'.class_basename($this), fn () => $this->getActivityLogModelKey());
         }
 
         $standardKeys = ['name', 'title', 'label'];
 
         foreach ($standardKeys as $key) {
             if (collect($this->getAttributes())->has($key)) {
-                return Cache::rememberForever('model_key_'.class_basename($this), fn () => $this->{$key});
+                //                return Cache::rememberForever('model_key_'.class_basename($this), fn () => $this->{$key});
+                return $this->{$key};
             }
         }
 
