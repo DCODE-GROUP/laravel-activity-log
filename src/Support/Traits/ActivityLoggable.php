@@ -157,11 +157,17 @@ trait ActivityLoggable
                 is_subclass_of((string) $method->getReturnType(), Relation::class)
             ) {
 
-                if (method_exists($model->{$method->getName()}(), 'getForeignKeyName')) {
-                    $foreignKey = $model->{$method->getName()}()->getForeignKeyName();
-                } else {
-                    $foreignKey = $model->{$method->getName()}()->getForeignPivotKeyName();
-                }
+                //                if (method_exists($model->{$method->getName()}(), 'getForeignKeyName')) {
+                //                    $foreignKey = $model->{$method->getName()}()->getForeignKeyName();
+                //                } else {
+                //                    $foreignKey = $model->{$method->getName()}()->getForeignPivotKeyName();
+                //                }
+
+                $relationMethod = $model->{$method->getName()}();
+                $foreignKey = match (true) {
+                    method_exists($relationMethod, 'getForeignKeyName') => $relationMethod->getForeignKeyName(),
+                    default => $relationMethod->getForeignPivotKeyName(),
+                };
 
                 //                if (method_exists($model->{$method->getName()}(), 'getOwnerKeyName')) {
                 //                    $localKey = $model->{$method->getName()}()->getOwnerKeyName();
