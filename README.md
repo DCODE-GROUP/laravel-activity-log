@@ -396,6 +396,18 @@ class OrderItem extends Model
 
 ```
 
+Normally a model with have the field `name` `title` or `label`. This package can work this out in most cases. However if you have a none standard field used to name a model you can use the below method to customise the label for the model.
+
+```php
+public function getActivityLogModelLabel(): string
+{
+    /**
+      * This can be any field or method to return the label but the return must be a string 
+      */
+    return $this->reference;
+}
+```` 
+
 You can define the relationships for automatic labeling of assoicated models
 
 ```php
