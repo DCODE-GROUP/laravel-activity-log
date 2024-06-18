@@ -193,6 +193,8 @@ trait ActivityLoggable
          * check if we have the model label in cache
          */
         if (Cache::has('model_key_'.class_basename($this))) {
+            ld('got into model key: '.'model_key_'.class_basename($this), 'it is: ', Cache::get('model_key_'.class_basename($this)));
+
             return Cache::get('model_key_'.class_basename($this));
         }
 
@@ -210,6 +212,8 @@ trait ActivityLoggable
                 return Cache::rememberForever('model_key_'.class_basename($this), fn () => $this->{$key});
             }
         }
+
+        ld('got here should throw exception');
 
         throw new ModelKeyNotDefinedException(__('activity-log.exceptions.model_key_not_defined', ['model' => class_basename($this)]));
     }
