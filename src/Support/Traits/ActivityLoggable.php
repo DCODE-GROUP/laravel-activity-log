@@ -3,6 +3,7 @@
 namespace Dcodegroup\ActivityLog\Support\Traits;
 
 use Coduo\ToString\StringConverter;
+use Dcodegroup\ActivityLog\Exceptions\ModelLabelNotDefinedException;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Models\CommunicationLog;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 trait ActivityLoggable
@@ -149,6 +151,8 @@ trait ActivityLoggable
     public function getActivityLogModelRelationFields(): array
     {
         return collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray();
+        // when ready cache this
+        //        return Cache::rememberForever('model_relations_'.self::class, fn () => collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray());
     }
 
     protected function modelRelation(): Collection
@@ -218,19 +222,35 @@ trait ActivityLoggable
         ]);
     }
 
+    public function determineModelLabel(): string
+    {
+        /**
+         * check if we have the model label in cache
+         */
+        if (Cache::has('model_label_'.class_basename($this))) {
+            return Cache::get('model_label_'.class_basename($this));
+        }
+
+        /**
+         * Check if the label has been set in the model
+         */
+        if (! empty($this->getActivityLogModelLabel())) {
+            return Cache::rememberForever('model_label_'.class_basename($this), fn () => $this->getActivityLogModelLabel());
+        }
+
+        $standardLabels = ['name', 'title', 'label'];
+
+        foreach ($standardLabels as $label) {
+            if (collect($this->getAttributes())->has($label)) {
+                return Cache::rememberForever('model_label_'.class_basename($this), fn () => $this->{$label});
+            }
+        }
+
+        throw new ModelLabelNotDefinedException(__('activity-log.model_label_not_defined', ['model' => class_basename($this)]));
+    }
+
     public function getActivityLogModelLabel(): string
     {
-        // 1 do we have the method to give us the name of the label THE OVER RIDE METHODS
-        // check for method name
-        // return the method
-        // if it returns null continue to next step
-
-        // 2 check if its one of the normal eg name, title, label
-        //        if (collect($this->getAttributes())->has('')) {
-        //
-        // find which one it is  use that and cache by model_name eg type eg purchase_order_label
-
-        //        }
-
+        return '';
     }
 }

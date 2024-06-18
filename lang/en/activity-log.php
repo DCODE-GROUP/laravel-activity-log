@@ -72,4 +72,8 @@ return [
         'sms_has_not_been_opened' => 'Sms hasn\'t been opened.',
     ],
 
+    'exceptions' => [
+        'model_label' => 'No label has been found for :model',
+    ],
+
 ];
