@@ -137,6 +137,7 @@ trait ActivityLoggable
         $key = $attribute;
 
         ld('$attribute: '.$attribute);
+        ld('model relationship', $this->getModelRelationships());
         ld('model relation fields:', $this->getActivityLogModelRelationFields());
 
         //     getActivityLogModelRelationFields()
@@ -161,6 +162,34 @@ trait ActivityLoggable
         ];
     }
 
+    public function getModelRelationships()
+    {
+        $model = new static();
+        $relationships = [];
+
+        foreach ((new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            if ($method->class != get_class($model) ||
+                ! empty($method->getParameters()) ||
+                $method->getName() == __FUNCTION__) {
+                continue;
+            }
+
+            try {
+                $return = $method->invoke($model);
+
+                if ($return instanceof Relation) {
+                    $relationships[$method->getName()] = [
+                        'type' => (new ReflectionClass($return))->getShortName(),
+                        'model' => (new ReflectionClass($return->getRelated()))->getName(),
+                    ];
+                }
+            } catch (Exception $e) {
+            }
+        }
+
+        return $relationships;
+    }
+
     public function getActivityLogModelRelationFields(): array
     {
         //        ld('relations: ', self::$availableRelations);
@@ -179,6 +208,25 @@ trait ActivityLoggable
         return collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray();
         // when ready cache this
         //        return Cache::rememberForever('model_relations_'.self::class, fn () => collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray());
+    }
+
+    public function getModelChanges(?array $modelChangesJson = null): string
+    {
+        return collect($modelChangesJson ?: $this->getModelChangesJson())->map(function ($row) {
+            $attribute = $row['key'];
+            $from = $row['from'];
+            $to = $row['to'];
+
+            return sprintf('%s: %s -> %s', '<b>'.Str::ucfirst(Str::replace('_', ' ', $attribute)).'</b>', '<b style="text-decoration: line-through;">'.$from.'</b>', '<b>'.$to.'</b>');
+        })->join('<br>');
+    }
+
+    public function logDelete(): void
+    {
+        $this->createActivityLog([
+            'title' => __('activity-log.actions.delete').$this->activityLogEntityName(),
+            'description' => '',
+        ]);
     }
 
     /**
@@ -218,53 +266,6 @@ trait ActivityLoggable
         static::$availableRelations[static::class] = $relations;
 
         return $relations;
-    }
-
-    public function getModelRelationships()
-    {
-        $model = new static();
-        $relationships = [];
-
-        foreach ((new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if ($method->class != get_class($model) ||
-                ! empty($method->getParameters()) ||
-                $method->getName() == __FUNCTION__) {
-                continue;
-            }
-
-            try {
-                $return = $method->invoke($model);
-
-                if ($return instanceof Relation) {
-                    $relationships[$method->getName()] = [
-                        'type' => (new ReflectionClass($return))->getShortName(),
-                        'model' => (new ReflectionClass($return->getRelated()))->getName(),
-                    ];
-                }
-            } catch (Exception $e) {
-            }
-        }
-
-        return $relationships;
-    }
-
-    public function getModelChanges(?array $modelChangesJson = null): string
-    {
-        return collect($modelChangesJson ?: $this->getModelChangesJson())->map(function ($row) {
-            $attribute = $row['key'];
-            $from = $row['from'];
-            $to = $row['to'];
-
-            return sprintf('%s: %s -> %s', '<b>'.Str::ucfirst(Str::replace('_', ' ', $attribute)).'</b>', '<b style="text-decoration: line-through;">'.$from.'</b>', '<b>'.$to.'</b>');
-        })->join('<br>');
-    }
-
-    public function logDelete(): void
-    {
-        $this->createActivityLog([
-            'title' => __('activity-log.actions.delete').$this->activityLogEntityName(),
-            'description' => '',
-        ]);
     }
 
     public function getActivityLogEmails(): array
