@@ -7,7 +7,6 @@ use Dcodegroup\ActivityLog\Exceptions\ModelLabelNotDefinedException;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Models\CommunicationLog;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Mail\Mailables\Address;
@@ -140,14 +139,14 @@ trait ActivityLoggable
 
         //     getActivityLogModelRelationFields()
 
-        //        if (in_array($attribute, $this->getActivityLogModelRelationFields())) {
-        //
-        //            $modelClass = array_flip($this->getActivityLogModelRelationFields())[$attribute];
-        //            $from = $modelClass && $modelClass::find($from) ? $modelClass::find($from)->{$entity['modelKey']} : '+';
-        //            $to = $modelClass && $modelClass::find($to) ? $modelClass::find($to)->{$entity['modelKey']} : '+';
-        //
-        //            $key = $entity['label'];
-        //        }
+        if (in_array($attribute, collect($this->getActivityLogModelRelationFields())->pluck('foreignKey')->toArray())) {
+
+//            $modelClass = array_flip($this->getActivityLogModelRelationFields())[$attribute];
+//            $from = $modelClass && $modelClass::find($from) ? $modelClass::find($from)->{$entity['modelKey']} : '+';
+//            $to = $modelClass && $modelClass::find($to) ? $modelClass::find($to)->{$entity['modelKey']} : '+';
+//
+//            $key = $entity['label'];
+        }
         //
         //        if ($entity = $this->modelRelation()->get($attribute)) {
         //
@@ -162,6 +161,35 @@ trait ActivityLoggable
 
     public function getActivityLogModelRelationFields(): array
     {
+        $model = new static();
+        $relationships = [];
+
+        foreach ((new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+                        ld('model class: ', $method->class);
+                        ld('class: ', get_class($model));
+                        ld('method: ', $method);
+                        ld('method name: '.$method->getName());
+                        ld('is sub class of relation', is_subclass_of((string) $method->getReturnType(), Relation::class));
+                        //            ld('params: ', $method->getParameters());
+                        ld('return type: ', $method->getReturnType());
+                        ld('getname is function ', ($method->getName() == __FUNCTION__));
+            if (
+                ! empty($method->getReturnType()) &&
+                is_subclass_of((string) $method->getReturnType(), Relation::class)
+            ) {
+
+                $relationships[] = [
+                    'method' => $method->getName(),
+                    'relation' => $method->getReturnType()->getName(),
+                    'foreignKey' => $model->{$method->getName()}()->getForeignKeyName(),
+                    'localKey' => method_exists($model->{$method->getName()}(), 'getOwnerKeyName') ? $model->{$method->getName()}()->getOwnerKeyName() : $model->{$method->getName()}()->getLocalKeyName(),
+                    'modelClass' => ,
+                ];
+            }
+        }
+
+        return $relationships;
+
         //        ld('relations: ', self::$availableRelations);
 
         //        ld('available relations', $this->getAvailableRelations());
@@ -175,7 +203,7 @@ trait ActivityLoggable
         //        ld('this', $this);
 
         //        return collect($this->getAvailableRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray();
-        return collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray();
+        //        return collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray();
         // when ready cache this
         //        return Cache::rememberForever('model_relations_'.self::class, fn () => collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray());
     }
@@ -199,32 +227,26 @@ trait ActivityLoggable
         ]);
     }
 
-    /**
-     * Gets list of available relations for this model
-     * And stores it in the variable for future use
-     *
-     * @return array
-     */
-    public static function getAvailableRelations()
-    {
-        return static::$availableRelations[static::class] ?? static::setAvailableRelations(
-            array_reduce(
-                (new ReflectionClass(static::class))->getMethods(ReflectionMethod::IS_PUBLIC),
-                function ($result, ReflectionMethod $method) {
-                    // If this function has a return type
-                    ($returnType = (string) $method->getReturnType()) &&
-
-                    // And this function returns a relation
-                    is_subclass_of($returnType, Relation::class) &&
-
-                    // Add name of this method to the relations array
-                    ($result = array_merge($result, [$method->getName() => $returnType]));
-
-                    return $result;
-                }, []
-            )
-        );
-    }
+    //    public static function getAvailableRelations()
+    //    {
+    //        return static::$availableRelations[static::class] ?? static::setAvailableRelations(
+    //            array_reduce(
+    //                (new ReflectionClass(static::class))->getMethods(ReflectionMethod::IS_PUBLIC),
+    //                function ($result, ReflectionMethod $method) {
+    //                    // If this function has a return type
+    //                    ($returnType = (string) $method->getReturnType()) &&
+    //
+    //                    // And this function returns a relation
+    //                    is_subclass_of($returnType, Relation::class) &&
+    //
+    //                    // Add name of this method to the relations array
+    //                    ($result = array_merge($result, [$method->getName() => $returnType]));
+    //
+    //                    return $result;
+    //                }, []
+    //            )
+    //        );
+    //    }
 
     /**
      * Stores relationships for future use
@@ -238,36 +260,36 @@ trait ActivityLoggable
         return $relations;
     }
 
-    public function getModelRelationships()
-    {
-        $model = new static();
-        $relationships = [];
-
-        foreach ((new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            ld('model class: ', $method->class);
-            ld('class: ', get_class($model));
-            ld('method: ', $method);
-            ld('method name: '.$method->getName());
-            ld('is sub class of relation', is_subclass_of((string) $method->getReturnType(), Relation::class));
-            //            ld('params: ', $method->getParameters());
-            ld('return type: ', $method->getReturnType());
-            ld('getname is function ', ($method->getName() == __FUNCTION__));
-            if (
-                ! empty($method->getReturnType()) &&
-                is_subclass_of((string) $method->getReturnType(), Relation::class)
-            ) {
-
-                $relationships[] = [
-                    'method' => $method->getName(),
-                    'relation' => $method->getReturnType()->getName(),
-                    'foreignKey' => $model->{$method->getName()}()->getForeignKeyName(),
-                    'localKey' => method_exists($model->{$method->getName()}(), 'getOwnerKeyName') ? $model->{$method->getName()}()->getOwnerKeyName() : $model->{$method->getName()}()->getLocalKeyName(),
-                ];
-            }
-        }
-
-        return $relationships;
-    }
+    //    public function getModelRelationships()
+    //    {
+    //        $model = new static();
+    //        $relationships = [];
+    //
+    //        foreach ((new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+    //            ld('model class: ', $method->class);
+    //            ld('class: ', get_class($model));
+    //            ld('method: ', $method);
+    //            ld('method name: '.$method->getName());
+    //            ld('is sub class of relation', is_subclass_of((string) $method->getReturnType(), Relation::class));
+    //            //            ld('params: ', $method->getParameters());
+    //            ld('return type: ', $method->getReturnType());
+    //            ld('getname is function ', ($method->getName() == __FUNCTION__));
+    //            if (
+    //                ! empty($method->getReturnType()) &&
+    //                is_subclass_of((string) $method->getReturnType(), Relation::class)
+    //            ) {
+    //
+    //                $relationships[] = [
+    //                    'method' => $method->getName(),
+    //                    'relation' => $method->getReturnType()->getName(),
+    //                    'foreignKey' => $model->{$method->getName()}()->getForeignKeyName(),
+    //                    'localKey' => method_exists($model->{$method->getName()}(), 'getOwnerKeyName') ? $model->{$method->getName()}()->getOwnerKeyName() : $model->{$method->getName()}()->getLocalKeyName(),
+    //                ];
+    //            }
+    //        }
+    //
+    //        return $relationships;
+    //    }
 
     public function getActivityLogEmails(): array
     {
