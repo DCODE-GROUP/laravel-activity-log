@@ -244,16 +244,20 @@ trait ActivityLoggable
         $relationships = [];
 
         foreach ((new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            //            ld('method: ', $method);
-            //            ld('method name: '.$method->getName());
-            //            ld('params: ', $method->getParameters());
-            //            ld('return type: ', $method->getReturnType());
+            ld('model class: ', $method->class);
+            ld('class: ', get_class($model));
+            ld('method: ', $method);
+            ld('method name: '.$method->getName());
+            ld('is sub class of relation', is_subclass_of((string) $method->getReturnType(), Relation::class));
+            ld('params: ', $method->getParameters());
+            ld('return type: ', $method->getReturnType());
+            ld('getname is function ', ($method->getName() == __FUNCTION__));
             if ($method->class != get_class($model) &&
 //                ! empty($method->getParameters()) ||
                 ! empty($method->getReturnType()) &&
                 ($returnType = (string) $method->getReturnType()) &&
                 is_subclass_of($returnType, Relation::class) &&
-                $method->getName() == __FUNCTION__) {
+                ($method->getName() == __FUNCTION__)) {
 
                 ld('here');
                 $relationships[] = [
