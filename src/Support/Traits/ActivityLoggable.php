@@ -249,15 +249,16 @@ trait ActivityLoggable
             ld('method: ', $method);
             ld('method name: '.$method->getName());
             ld('is sub class of relation', is_subclass_of((string) $method->getReturnType(), Relation::class));
-            ld('params: ', $method->getParameters());
+            //            ld('params: ', $method->getParameters());
             ld('return type: ', $method->getReturnType());
             ld('getname is function ', ($method->getName() == __FUNCTION__));
             if ($method->class != get_class($model) &&
 //                ! empty($method->getParameters()) ||
                 ! empty($method->getReturnType()) &&
                 ($returnType = (string) $method->getReturnType()) &&
-                is_subclass_of($returnType, Relation::class) &&
-                ($method->getName() == __FUNCTION__)) {
+                is_subclass_of($returnType, Relation::class)
+                //                ($method->getName() == __FUNCTION__)
+            ) {
 
                 ld('here');
                 $relationships[] = [
