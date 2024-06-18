@@ -457,8 +457,6 @@ You can define the relationships for automatic labeling of associated models
     }
 ```
 
-
-
 You can use a custom formatter for fields in your model by using the `activityLogFieldFormatters` method.
 
 example. Add the following to the model
