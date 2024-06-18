@@ -261,11 +261,12 @@ trait ActivityLoggable
             ) {
 
                 ld('here');
+                //                dd($model->{$method->getName()}());
                 $relationships[] = [
                     'method' => $method->getName(),
                     'relation' => $method->getReturnType(),
-                    'foreignKeys' => $model->{$method->getName()}()->getForeignKey(),
-                    'localKey' => $model->{$method->getName()}()->getKeyName(),
+                    'foreignKeys' => $model->{$method->getName()}()->getForeignKeyName(),
+                    'localKey' => $model->{$method->getName()}()->getLocalKeyName(),
                 ];
 
             }
