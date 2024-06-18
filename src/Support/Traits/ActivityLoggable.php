@@ -181,6 +181,42 @@ trait ActivityLoggable
         //        return Cache::rememberForever('model_relations_'.self::class, fn () => collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray());
     }
 
+    public function getModelRelationships()
+    {
+        $model = new static();
+        $relationships = [];
+
+        foreach ((new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            ld('method: ', $method);
+            ld('method name: ', $method->getName());
+            ld('params: ', $method->getParameters());
+            if ($method->class != get_class($model) ||
+                ! empty($method->getParameters()) ||
+                $method->getName() == __FUNCTION__) {
+                continue;
+            }
+
+            try {
+                $return = $method->invoke($model);
+                ld('return: ', $return);
+
+                if ($return instanceof Relation) {
+                    $relationships[$method->getName()] = [
+                        'type' => (new ReflectionClass($return))->getShortName(),
+                        'model' => (new ReflectionClass($return->getRelated()))->getName(),
+                    ];
+
+                    ld('getModelRelationships relationship', $relationships);
+                }
+            } catch (Exception $e) {
+                report($e);
+                ld('something went wrong');
+            }
+        }
+
+        return $relationships;
+    }
+
     public function getModelChanges(?array $modelChangesJson = null): string
     {
         return collect($modelChangesJson ?: $this->getModelChangesJson())->map(function ($row) {
@@ -237,41 +273,6 @@ trait ActivityLoggable
         static::$availableRelations[static::class] = $relations;
 
         return $relations;
-    }
-
-    public function getModelRelationships()
-    {
-        $model = new static();
-        $relationships = [];
-
-        foreach ((new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            ld('method: ', $method);
-            ld('params: ', $method);
-            if ($method->class != get_class($model) ||
-                ! empty($method->getParameters()) ||
-                $method->getName() == __FUNCTION__) {
-                continue;
-            }
-
-            try {
-                $return = $method->invoke($model);
-                ld('return: ', $return);
-
-                if ($return instanceof Relation) {
-                    $relationships[$method->getName()] = [
-                        'type' => (new ReflectionClass($return))->getShortName(),
-                        'model' => (new ReflectionClass($return->getRelated()))->getName(),
-                    ];
-
-                    ld('getModelRelationships relationship', $relationships);
-                }
-            } catch (Exception $e) {
-                report($e);
-                ld('something went wrong');
-            }
-        }
-
-        return $relationships;
     }
 
     public function getActivityLogEmails(): array
