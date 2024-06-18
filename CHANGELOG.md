@@ -7,7 +7,7 @@ lists items that might need to run manually.
 
 ```php
     'exceptions' => [
-        'model_label' => 'No label has been found for :model',
+        'model_key' => 'No model key has been found for :model',
     ],
 
 ````
