@@ -19,13 +19,6 @@ use ReflectionMethod;
 
 trait ActivityLoggable
 {
-    /**
-     * Available relationships for the model.
-     *
-     * @var array
-     */
-    protected static $availableRelations = [];
-
     public static function bootActivityLoggable()
     {
         static::created(function ($model) {
