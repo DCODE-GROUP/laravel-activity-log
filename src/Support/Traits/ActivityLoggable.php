@@ -125,7 +125,7 @@ trait ActivityLoggable
 
     public function prepareModelChange($attribute, $from, $to): array
     {
-        ld('attribute', $attribute);
+        ld('attribute: '.$attribute);
         ld('from', $from);
         ld('to', $to);
 
@@ -140,8 +140,10 @@ trait ActivityLoggable
             if (! empty($relation)) {
                 //            $modelClass = array_flip($this->getActivityLogModelRelationFields())[$attribute];
                 $modelClass = $relation['modelClass'];
-                $from = $modelClass && $modelClass::find($from) ? $modelClass::find($from)->determineModelKey() : '+';
-                $to = $modelClass && $modelClass::find($to) ? $modelClass::find($to)->determineModelKey() : '+';
+                ld('model class: '.$modelClass);
+                ld('find from', $modelClass::find($from));
+                $from = $modelClass && $modelClass::find($from) ? ($modelClass::find($from))->determineModelKey() : '+';
+                $to = $modelClass && $modelClass::find($to) ? ($modelClass::find($to))->determineModelKey() : '+';
 
                 //                $key = $modelClass::find($from)->determineModelLabel();
                 $key = (new $modelClass())->determineModelLabel();
