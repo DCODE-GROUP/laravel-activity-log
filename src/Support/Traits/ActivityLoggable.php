@@ -125,27 +125,16 @@ trait ActivityLoggable
 
     public function prepareModelChange($attribute, $from, $to): array
     {
-        ld('attribute: '.$attribute);
-        ld('from', $from);
-        ld('to', $to);
-
         $key = $attribute;
 
         if (in_array($attribute, collect($this->getActivityLogModelRelationFields())->pluck('foreignKey')->toArray())) {
-
-            ld('got into array for attribute: '.$attribute);
             $relation = collect($this->getActivityLogModelRelationFields())->where('foreignKey', $attribute)->first();
-            ld('relation', $relation);
 
             if (! empty($relation)) {
-                //            $modelClass = array_flip($this->getActivityLogModelRelationFields())[$attribute];
                 $modelClass = $relation['modelClass'];
-                ld('model class: '.$modelClass);
-                ld('find from', $modelClass::find($from));
                 $from = $modelClass && $modelClass::find($from) ? ($modelClass::find($from))->determineModelKey() : '+';
                 $to = $modelClass && $modelClass::find($to) ? ($modelClass::find($to))->determineModelKey() : '+';
 
-                //                $key = $modelClass::find($from)->determineModelLabel();
                 $key = (new $modelClass())->determineModelLabel();
             }
         }
@@ -163,14 +152,6 @@ trait ActivityLoggable
         $relationships = [];
 
         foreach ((new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            //            ld('model class: ', $method->class);
-            //            ld('class: ', get_class($model));
-            //            ld('method: ', $method);
-            //            ld('method name: '.$method->getName());
-            //            ld('is sub class of relation', is_subclass_of((string) $method->getReturnType(), Relation::class));
-            //            //            ld('params: ', $method->getParameters());
-            //            ld('return type: ', $method->getReturnType());
-            //            ld('getname is function ', ($method->getName() == __FUNCTION__));
             if (
                 ! empty($method->getReturnType()) &&
                 is_subclass_of((string) $method->getReturnType(), Relation::class)
@@ -181,7 +162,6 @@ trait ActivityLoggable
                     'foreignKey' => $model->{$method->getName()}()->getForeignKeyName(),
                     'localKey' => method_exists($model->{$method->getName()}(), 'getOwnerKeyName') ? $model->{$method->getName()}()->getOwnerKeyName() : $model->{$method->getName()}()->getLocalKeyName(),
                     'modelClass' => $model->{$method->getName()}()->getRelated(),
-                    //                    'currentModel' => $model,
                 ];
             }
         }
@@ -195,8 +175,6 @@ trait ActivityLoggable
          * check if we have the model label in cache
          */
         if (Cache::has('model_key_'.class_basename($this))) {
-            ld('got into model key: '.'model_key_'.class_basename($this), 'it is: ', Cache::get('model_key_'.class_basename($this)));
-
             return Cache::get('model_key_'.class_basename($this));
         }
 
@@ -211,13 +189,9 @@ trait ActivityLoggable
 
         foreach ($standardKeys as $key) {
             if (collect($this->getAttributes())->has($key)) {
-                ld('has key : '.$key);
-
                 return Cache::rememberForever('model_key_'.class_basename($this), fn () => $this->{$key});
             }
         }
-
-        ld('got here should throw exception');
 
         throw new ModelKeyNotDefinedException(__('activity-log.exceptions.model_key', ['model' => class_basename($this)]));
     }
