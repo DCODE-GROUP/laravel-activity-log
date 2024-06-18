@@ -255,6 +255,7 @@ trait ActivityLoggable
                 is_subclass_of($returnType, Relation::class) &&
                 $method->getName() == __FUNCTION__) {
 
+                ld('here');
                 $relationships[] = [
                     'method' => $method->getName(),
                     'relation' => $method->getReturnType(),
