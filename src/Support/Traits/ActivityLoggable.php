@@ -197,7 +197,7 @@ trait ActivityLoggable
             }
 
             try {
-                $return = $method->invoke($model);
+                $return = $method->invoke($model, $method->getParameters());
                 //                ld('return: ', $return);
 
                 if ($return instanceof Relation) {
