@@ -125,7 +125,7 @@ trait ActivityLoggable
     {
         $key = $attribute;
 
-        ld('$attribute: '.$$attribute);
+        ld('$attribute: '.$attribute);
         ld('model relation fileds:', $this->getActivityLogModelRelationFields());
         //     getActivityLogModelRelationFields()
 
@@ -154,11 +154,6 @@ trait ActivityLoggable
         return collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray();
         // when ready cache this
         //        return Cache::rememberForever('model_relations_'.self::class, fn () => collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray());
-    }
-
-    protected function modelRelation(): Collection
-    {
-        return collect([]);
     }
 
     public function getModelChanges(?array $modelChangesJson = null): string
@@ -253,5 +248,10 @@ trait ActivityLoggable
     public function getActivityLogModelLabel(): string
     {
         return '';
+    }
+
+    protected function modelRelation(): Collection
+    {
+        return collect([]);
     }
 }
