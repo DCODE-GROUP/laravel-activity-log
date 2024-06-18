@@ -1,9 +1,9 @@
 <?php
 
-
 namespace Dcodegroup\ActivityLog\Exceptions;
 
+use Exception;
 
-class ModelLabelNotDefinedException {
-
+class ModelLabelNotDefinedException extends Exception
+{
 }
