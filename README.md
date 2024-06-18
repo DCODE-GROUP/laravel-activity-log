@@ -397,6 +397,7 @@ class OrderItem extends Model
 ```
 
 Normally a model with have the field `name` `title` or `label`. This package can work this out in most cases. However if you have a none standard field used to name a model you can use the below method to customise the label for the model.
+If no label is found then a `ModelLabelNotDefinedException` exception will be thrown.
 
 ```php
 public function getActivityLogModelLabel(): string
@@ -408,7 +409,9 @@ public function getActivityLogModelLabel(): string
 }
 ```` 
 
-You can define the relationships for automatic labeling of assoicated models
+You can define the relationships for automatic labeling of associated models
+
+** depreciated **
 
 ```php
  protected function modelRelation(): Collection
