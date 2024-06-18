@@ -137,6 +137,7 @@ trait ActivityLoggable
         if (in_array($attribute, collect($this->getActivityLogModelRelationFields())->pluck('foreignKey')->toArray())) {
 
             $relation = collect($this->getActivityLogModelRelationFields())->where('foreignKey', $attribute)->first();
+            ld('relation', $relation);
 
             if (! empty($relation)) {
                 //            $modelClass = array_flip($this->getActivityLogModelRelationFields())[$attribute];
