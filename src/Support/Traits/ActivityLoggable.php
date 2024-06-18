@@ -125,6 +125,10 @@ trait ActivityLoggable
 
     public function prepareModelChange($attribute, $from, $to): array
     {
+        ld('attribute', $attribute);
+        ld('from', $from);
+        ld('to', $to);
+
         $key = $attribute;
 
         if (in_array($attribute, collect($this->getActivityLogModelRelationFields())->pluck('foreignKey')->toArray())) {
