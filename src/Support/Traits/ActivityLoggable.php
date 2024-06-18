@@ -167,7 +167,7 @@ trait ActivityLoggable
 
         //        ld('available relations', $this->getAvailableRelations());
 
-        //        ld('model relationship', $this->getModelRelationships());
+        ld('model relationship', $this->getModelRelationships());
 
         //        $baseClass = get_class($this);
         //        ld('base class: '.$baseClass);
