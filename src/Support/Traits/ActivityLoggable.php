@@ -187,9 +187,9 @@ trait ActivityLoggable
         $relationships = [];
 
         foreach ((new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            ld('method: ', $method);
-            ld('method name: '.$method->getName());
-            ld('params: ', $method->getParameters());
+            //            ld('method: ', $method);
+            //            ld('method name: '.$method->getName());
+            //            ld('params: ', $method->getParameters());
             if ($method->class != get_class($model) ||
 //                ! empty($method->getParameters()) ||
                 $method->getName() == __FUNCTION__) {
@@ -198,7 +198,7 @@ trait ActivityLoggable
 
             try {
                 $return = $method->invoke($model);
-                ld('return: ', $return);
+                //                ld('return: ', $return);
 
                 if ($return instanceof Relation) {
                     $relationships[$method->getName()] = [
@@ -206,7 +206,7 @@ trait ActivityLoggable
                         'model' => (new ReflectionClass($return->getRelated()))->getName(),
                     ];
 
-                    ld('getModelRelationships relationship', $relationships);
+                    //                    ld('getModelRelationships relationship', $relationships);
                 }
             } catch (Exception $e) {
                 report($e);
