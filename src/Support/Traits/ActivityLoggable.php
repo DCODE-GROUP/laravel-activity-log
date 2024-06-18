@@ -266,7 +266,7 @@ trait ActivityLoggable
                     'method' => $method->getName(),
                     'relation' => $method->getReturnType(),
                     'foreignKeys' => $model->{$method->getName()}()->getForeignKeyName(),
-                    'localKey' => $model->{$method->getName()}()->getOwnerKeyName() ?: $model->{$method->getName()}()->getLocalKeyName(),
+                    'localKey' => method_exists($model->{$method->getName()}(), 'getOwnerKeyName') ? $model->{$method->getName()}()->getOwnerKeyName() : $model->{$method->getName()}()->getLocalKeyName(),
                 ];
 
             }
