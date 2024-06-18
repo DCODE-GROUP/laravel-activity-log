@@ -159,7 +159,7 @@ trait ActivityLoggable
                 $relationships[] = [
                     'method' => $method->getName(),
                     'relation' => $method->getReturnType()->getName(),
-                    'foreignKey' => $model->{$method->getName()}()->getForeignKeyName(),
+                    'foreignKey' => method_exists($model->{$method->getName()}(), 'getForeignKeyName') ? $model->{$method->getName()}()->getForeignKeyName() : $model->{$method->getName()}()->getForeignPivotKeyName(),
                     'localKey' => method_exists($model->{$method->getName()}(), 'getOwnerKeyName') ? $model->{$method->getName()}()->getOwnerKeyName() : $model->{$method->getName()}()->getLocalKeyName(),
                     'modelClass' => $model->{$method->getName()}()->getRelated(),
                 ];
