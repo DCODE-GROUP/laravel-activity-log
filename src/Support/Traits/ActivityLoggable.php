@@ -137,7 +137,6 @@ trait ActivityLoggable
         $key = $attribute;
 
         ld('$attribute: '.$attribute);
-        ld('model relationship', $this->getModelRelationships());
         ld('model relation fields:', $this->getActivityLogModelRelationFields());
 
         //     getActivityLogModelRelationFields()
@@ -162,6 +161,26 @@ trait ActivityLoggable
         ];
     }
 
+    public function getActivityLogModelRelationFields(): array
+    {
+        //        ld('relations: ', self::$availableRelations);
+
+        //        ld('available relations', $this->getAvailableRelations());
+
+        ld('model relationship', $this->getModelRelationships());
+
+        //        $baseClass = get_class($this);
+        //        ld('base class: '.$baseClass);
+        //        //        ld('relations', (new $baseClass())->getRelations());
+        //        ld('relations', $this->getRelations());
+        //        ld('this', $this);
+
+        //        return collect($this->getAvailableRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray();
+        return collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray();
+        // when ready cache this
+        //        return Cache::rememberForever('model_relations_'.self::class, fn () => collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray());
+    }
+
     public function getModelRelationships()
     {
         $model = new static();
@@ -184,30 +203,12 @@ trait ActivityLoggable
                     ];
                 }
             } catch (Exception $e) {
+                report($e);
+                ld('something went wrong');
             }
         }
 
         return $relationships;
-    }
-
-    public function getActivityLogModelRelationFields(): array
-    {
-        //        ld('relations: ', self::$availableRelations);
-
-        //        ld('available relations', $this->getAvailableRelations());
-
-        ld('model relationship', $this->getModelRelationships());
-
-        //        $baseClass = get_class($this);
-        //        ld('base class: '.$baseClass);
-        //        //        ld('relations', (new $baseClass())->getRelations());
-        //        ld('relations', $this->getRelations());
-        //        ld('this', $this);
-
-        //        return collect($this->getAvailableRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray();
-        return collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray();
-        // when ready cache this
-        //        return Cache::rememberForever('model_relations_'.self::class, fn () => collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray());
     }
 
     public function getModelChanges(?array $modelChangesJson = null): string
