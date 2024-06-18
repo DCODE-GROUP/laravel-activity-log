@@ -209,6 +209,8 @@ trait ActivityLoggable
 
         foreach ($standardKeys as $key) {
             if (collect($this->getAttributes())->has($key)) {
+                ld('has key : '.$key);
+
                 return Cache::rememberForever('model_key_'.class_basename($this), fn () => $this->{$key});
             }
         }
