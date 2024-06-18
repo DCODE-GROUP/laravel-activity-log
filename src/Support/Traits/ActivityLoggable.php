@@ -252,11 +252,11 @@ trait ActivityLoggable
             //            ld('params: ', $method->getParameters());
             ld('return type: ', $method->getReturnType());
             ld('getname is function ', ($method->getName() == __FUNCTION__));
-            if ($method->class != get_class($model) &&
-//                ! empty($method->getParameters()) ||
+            if (
+                //                $method->class != get_class($model) &&
+                //                ! empty($method->getParameters()) ||
                 ! empty($method->getReturnType()) &&
-                ($returnType = (string) $method->getReturnType()) &&
-                is_subclass_of($returnType, Relation::class)
+                is_subclass_of((string) $method->getReturnType(), Relation::class)
                 //                ($method->getName() == __FUNCTION__)
             ) {
 
