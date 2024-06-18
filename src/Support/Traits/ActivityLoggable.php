@@ -178,9 +178,9 @@ trait ActivityLoggable
                 //                }
 
                 $localKey = match (true) {
-                    method_exists($model->{$method->getName()}(), 'getOwnerKeyName') => $model->{$method->getName()}()->getOwnerKeyName(),
-                    method_exists($model->{$method->getName()}(), 'getLocalKeyName') => $model->{$method->getName()}()->getLocalKeyName(),
-                    default => $model->{$method->getName()}()->getRelatedPivotKeyName(),
+                    method_exists($relationMethod, 'getOwnerKeyName') => $relationMethod->getOwnerKeyName(),
+                    method_exists($relationMethod, 'getLocalKeyName') => $relationMethod->getLocalKeyName(),
+                    default => $relationMethod->getRelatedPivotKeyName(),
                 };
 
                 $relationships[] = [
