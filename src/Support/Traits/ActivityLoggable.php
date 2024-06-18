@@ -167,7 +167,7 @@ trait ActivityLoggable
 
         //        ld('available relations', $this->getAvailableRelations());
 
-        ld('model relationship', $this->getModelRelationships());
+        //        ld('model relationship', $this->getModelRelationships());
 
         //        $baseClass = get_class($this);
         //        ld('base class: '.$baseClass);
@@ -190,6 +190,7 @@ trait ActivityLoggable
             //            ld('method: ', $method);
             //            ld('method name: '.$method->getName());
             //            ld('params: ', $method->getParameters());
+            ld('return type: ', $method->getReturnType());
             if ($method->class != get_class($model) ||
 //                ! empty($method->getParameters()) ||
                 $method->getName() == __FUNCTION__) {
