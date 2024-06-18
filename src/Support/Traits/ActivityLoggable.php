@@ -253,40 +253,17 @@ trait ActivityLoggable
             ld('return type: ', $method->getReturnType());
             ld('getname is function ', ($method->getName() == __FUNCTION__));
             if (
-                //                $method->class != get_class($model) &&
-                //                ! empty($method->getParameters()) ||
                 ! empty($method->getReturnType()) &&
                 is_subclass_of((string) $method->getReturnType(), Relation::class)
-                //                ($method->getName() == __FUNCTION__)
             ) {
 
-                ld('here');
-                //                dd($model->{$method->getName()}());
                 $relationships[] = [
                     'method' => $method->getName(),
                     'relation' => $method->getReturnType()->getName(),
                     'foreignKeys' => $model->{$method->getName()}()->getForeignKeyName(),
                     'localKey' => method_exists($model->{$method->getName()}(), 'getOwnerKeyName') ? $model->{$method->getName()}()->getOwnerKeyName() : $model->{$method->getName()}()->getLocalKeyName(),
                 ];
-
             }
-
-            //            try {
-            //                $return = $method->invoke($model, $method->getParameters());
-            //                //                ld('return: ', $return);
-            //
-            //                if ($return instanceof Relation) {
-            //                    $relationships[$method->getName()] = [
-            //                        'type' => (new ReflectionClass($return))->getShortName(),
-            //                        'model' => (new ReflectionClass($return->getRelated()))->getName(),
-            //                    ];
-            //
-            //                    //                    ld('getModelRelationships relationship', $relationships);
-            //                }
-            //            } catch (Exception $e) {
-            //                report($e);
-            //                ld('something went wrong');
-            //            }
         }
 
         return $relationships;
