@@ -219,7 +219,7 @@ trait ActivityLoggable
 
         ld('got here should throw exception');
 
-        throw new ModelKeyNotDefinedException(__('activity-log.exceptions.model_key_not_defined', ['model' => class_basename($this)]));
+        throw new ModelKeyNotDefinedException(__('activity-log.exceptions.model_key', ['model' => class_basename($this)]));
     }
 
     public function getActivityLogModelKey(): string
