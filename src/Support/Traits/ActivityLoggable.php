@@ -141,11 +141,11 @@ trait ActivityLoggable
 
         if (in_array($attribute, collect($this->getActivityLogModelRelationFields())->pluck('foreignKey')->toArray())) {
 
-//            $modelClass = array_flip($this->getActivityLogModelRelationFields())[$attribute];
-//            $from = $modelClass && $modelClass::find($from) ? $modelClass::find($from)->{$entity['modelKey']} : '+';
-//            $to = $modelClass && $modelClass::find($to) ? $modelClass::find($to)->{$entity['modelKey']} : '+';
-//
-//            $key = $entity['label'];
+            //            $modelClass = array_flip($this->getActivityLogModelRelationFields())[$attribute];
+            //            $from = $modelClass && $modelClass::find($from) ? $modelClass::find($from)->{$entity['modelKey']} : '+';
+            //            $to = $modelClass && $modelClass::find($to) ? $modelClass::find($to)->{$entity['modelKey']} : '+';
+            //
+            //            $key = $entity['label'];
         }
         //
         //        if ($entity = $this->modelRelation()->get($attribute)) {
@@ -165,14 +165,14 @@ trait ActivityLoggable
         $relationships = [];
 
         foreach ((new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-                        ld('model class: ', $method->class);
-                        ld('class: ', get_class($model));
-                        ld('method: ', $method);
-                        ld('method name: '.$method->getName());
-                        ld('is sub class of relation', is_subclass_of((string) $method->getReturnType(), Relation::class));
-                        //            ld('params: ', $method->getParameters());
-                        ld('return type: ', $method->getReturnType());
-                        ld('getname is function ', ($method->getName() == __FUNCTION__));
+            ld('model class: ', $method->class);
+            ld('class: ', get_class($model));
+            ld('method: ', $method);
+            ld('method name: '.$method->getName());
+            ld('is sub class of relation', is_subclass_of((string) $method->getReturnType(), Relation::class));
+            //            ld('params: ', $method->getParameters());
+            ld('return type: ', $method->getReturnType());
+            ld('getname is function ', ($method->getName() == __FUNCTION__));
             if (
                 ! empty($method->getReturnType()) &&
                 is_subclass_of((string) $method->getReturnType(), Relation::class)
@@ -183,7 +183,7 @@ trait ActivityLoggable
                     'relation' => $method->getReturnType()->getName(),
                     'foreignKey' => $model->{$method->getName()}()->getForeignKeyName(),
                     'localKey' => method_exists($model->{$method->getName()}(), 'getOwnerKeyName') ? $model->{$method->getName()}()->getOwnerKeyName() : $model->{$method->getName()}()->getLocalKeyName(),
-                    'modelClass' => ,
+                    'modelClass' => '',
                 ];
             }
         }
