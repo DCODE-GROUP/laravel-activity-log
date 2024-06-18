@@ -163,7 +163,7 @@ trait ActivityLoggable
 
     public function getActivityLogModelRelationFields(): array
     {
-        ld('relations: ', self::$availableRelations);
+        //        ld('relations: ', self::$availableRelations);
 
         //        ld('available relations', $this->getAvailableRelations());
 
