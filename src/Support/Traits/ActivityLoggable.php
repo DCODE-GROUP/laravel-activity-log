@@ -160,7 +160,7 @@ trait ActivityLoggable
                     'method' => $method->getName(),
                     'relation' => $method->getReturnType()->getName(),
                     'foreignKey' => method_exists($model->{$method->getName()}(), 'getForeignKeyName') ? $model->{$method->getName()}()->getForeignKeyName() : $model->{$method->getName()}()->getForeignPivotKeyName(),
-                    'localKey' => method_exists($model->{$method->getName()}(), 'getOwnerKeyName') ? $model->{$method->getName()}()->getOwnerKeyName() : $model->{$method->getName()}()->getLocalKeyName(),
+                    'localKey' => method_exists($model->{$method->getName()}(), 'getOwnerKeyName') ? $model->{$method->getName()}()->getOwnerKeyName() : ($model->{$method->getName()}()->getLocalKeyName() ?: $model->{$method->getName()}()->getRelatedPivotKeyName()),
                     'modelClass' => $model->{$method->getName()}()->getRelated(),
                 ];
             }
