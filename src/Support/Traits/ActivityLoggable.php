@@ -154,7 +154,8 @@ trait ActivityLoggable
     {
         $baseClass = get_class($this);
         ld('base class: '.$baseClass);
-        ld('relations', (new $baseClass())->getRelations());
+        //        ld('relations', (new $baseClass())->getRelations());
+        ld('relations', $this->getRelations());
         ld('this', $this);
 
         return collect($this->getRelations())->keys()->filter(fn ($relationName) => $this->{$relationName}() instanceof BelongsTo)->mapWithKeys(fn ($item) => [$item => $this->{$item}->getForeignKey()])->toArray();
