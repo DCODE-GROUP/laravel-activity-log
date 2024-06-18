@@ -262,6 +262,8 @@ trait ActivityLoggable
                         'type' => (new ReflectionClass($return))->getShortName(),
                         'model' => (new ReflectionClass($return->getRelated()))->getName(),
                     ];
+
+                    ld('getModelRelationships relationship', $relationships);
                 }
             } catch (Exception $e) {
                 report($e);
