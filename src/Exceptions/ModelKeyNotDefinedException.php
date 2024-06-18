@@ -4,6 +4,6 @@ namespace Dcodegroup\ActivityLog\Exceptions;
 
 use Exception;
 
-class ModelLabelNotDefinedException extends Exception
+class ModelKeyNotDefinedException extends Exception
 {
 }
