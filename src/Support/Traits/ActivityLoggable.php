@@ -163,13 +163,19 @@ trait ActivityLoggable
                     $foreignKey = $model->{$method->getName()}()->getForeignPivotKeyName();
                 }
 
-                if (method_exists($model->{$method->getName()}(), 'getOwnerKeyName')) {
-                    $localKey = $model->{$method->getName()}()->getOwnerKeyName();
-                } elseif (method_exists($model->{$method->getName()}(), 'getLocalKeyName')) {
-                    $localKey = $model->{$method->getName()}()->getLocalKeyName();
-                } else {
-                    $localKey = $model->{$method->getName()}()->getRelatedPivotKeyName();
-                }
+                //                if (method_exists($model->{$method->getName()}(), 'getOwnerKeyName')) {
+                //                    $localKey = $model->{$method->getName()}()->getOwnerKeyName();
+                //                } elseif (method_exists($model->{$method->getName()}(), 'getLocalKeyName')) {
+                //                    $localKey = $model->{$method->getName()}()->getLocalKeyName();
+                //                } else {
+                //                    $localKey = $model->{$method->getName()}()->getRelatedPivotKeyName();
+                //                }
+
+                $localKey = match (true) {
+                    method_exists($model->{$method->getName()}(), 'getOwnerKeyName') => $model->{$method->getName()}()->getOwnerKeyName(),
+                    method_exists($model->{$method->getName()}(), 'getLocalKeyName') => $model->{$method->getName()}()->getLocalKeyName(),
+                    default => $model->{$method->getName()}()->getRelatedPivotKeyName(),
+                };
 
                 $relationships[] = [
                     'method' => $method->getName(),
