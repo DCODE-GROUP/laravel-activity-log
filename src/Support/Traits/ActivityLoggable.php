@@ -188,7 +188,7 @@ trait ActivityLoggable
 
         foreach ((new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
             ld('method: ', $method);
-            ld('method name: ', $method->getName());
+            ld('method name: '.$method->getName());
             ld('params: ', $method->getParameters());
             if ($method->class != get_class($model) ||
                 ! empty($method->getParameters()) ||
