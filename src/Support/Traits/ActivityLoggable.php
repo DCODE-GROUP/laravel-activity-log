@@ -141,11 +141,11 @@ trait ActivityLoggable
             if (! empty($relation)) {
                 //            $modelClass = array_flip($this->getActivityLogModelRelationFields())[$attribute];
                 $modelClass = $relation['modelClass'];
-                $from = $modelClass && $modelClass::find($from) ? $modelClass::find($from)->determineModelLabel() : '+';
-                $to = $modelClass && $modelClass::find($to) ? $modelClass::find($to)->determineModelLabel() : '+';
+                $from = $modelClass && $modelClass::find($from) ? $modelClass::find($from)->determineModelKey() : '+';
+                $to = $modelClass && $modelClass::find($to) ? $modelClass::find($to)->determineModelKey() : '+';
 
                 //                $key = $modelClass::find($from)->determineModelLabel();
-                $key = (new $modelClass)->determineModelLabel();
+                $key = (new $modelClass())->determineModelLabel();
             }
         }
 
@@ -187,6 +187,38 @@ trait ActivityLoggable
         }
 
         return $relationships;
+    }
+
+    public function determineModelKey(): string
+    {
+        /**
+         * check if we have the model label in cache
+         */
+        if (Cache::has('model_key_'.class_basename($this))) {
+            return Cache::get('model_key_'.class_basename($this));
+        }
+
+        /**
+         * Check if the label has been set in the model
+         */
+        if (! empty($this->getActivityLogModelKey())) {
+            return Cache::rememberForever('model_key_'.class_basename($this), fn () => $this->getActivityLogModelKey());
+        }
+
+        $standardKeys = ['name', 'title', 'label'];
+
+        foreach ($standardKeys as $key) {
+            if (collect($this->getAttributes())->has($key)) {
+                return Cache::rememberForever('model_key_'.class_basename($this), fn () => $this->{$key});
+            }
+        }
+
+        throw new ModelKeyNotDefinedException(__('activity-log.exceptions.model_key_not_defined', ['model' => class_basename($this)]));
+    }
+
+    public function getActivityLogModelKey(): string
+    {
+        return '';
     }
 
     public function determineModelLabel(): string
@@ -242,38 +274,6 @@ trait ActivityLoggable
         static::$availableRelations[static::class] = $relations;
 
         return $relations;
-    }
-
-    public function determineModelKey(): string
-    {
-        /**
-         * check if we have the model label in cache
-         */
-        if (Cache::has('model_key_'.class_basename($this))) {
-            return Cache::get('model_key_'.class_basename($this));
-        }
-
-        /**
-         * Check if the label has been set in the model
-         */
-        if (! empty($this->getActivityLogModelKey())) {
-            return Cache::rememberForever('model_key_'.class_basename($this), fn () => $this->getActivityLogModelKey());
-        }
-
-        $standardKeys = ['name', 'title', 'label'];
-
-        foreach ($standardKeys as $key) {
-            if (collect($this->getAttributes())->has($key)) {
-                return Cache::rememberForever('model_key_'.class_basename($this), fn () => $this->{$key});
-            }
-        }
-
-        throw new ModelKeyNotDefinedException(__('activity-log.exceptions.model_key_not_defined', ['model' => class_basename($this)]));
-    }
-
-    public function getActivityLogModelKey(): string
-    {
-        return '';
     }
 
     public function getActivityLogEmails(): array
