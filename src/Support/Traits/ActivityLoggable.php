@@ -156,6 +156,7 @@ trait ActivityLoggable
                 ! empty($method->getReturnType()) &&
                 is_subclass_of((string) $method->getReturnType(), Relation::class)
             ) {
+
                 $relationships[] = [
                     'method' => $method->getName(),
                     'relation' => $method->getReturnType()->getName(),
