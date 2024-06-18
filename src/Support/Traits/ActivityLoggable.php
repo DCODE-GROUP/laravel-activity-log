@@ -175,13 +175,13 @@ trait ActivityLoggable
                 ! empty($method->getReturnType()) &&
                 is_subclass_of((string) $method->getReturnType(), Relation::class)
             ) {
-
+                //                dd($method);
                 $relationships[] = [
                     'method' => $method->getName(),
                     'relation' => $method->getReturnType()->getName(),
                     'foreignKey' => $model->{$method->getName()}()->getForeignKeyName(),
                     'localKey' => method_exists($model->{$method->getName()}(), 'getOwnerKeyName') ? $model->{$method->getName()}()->getOwnerKeyName() : $model->{$method->getName()}()->getLocalKeyName(),
-                    'modelClass' => $method->class,
+                    'modelClass' => $model->{$method->getName()}()->getRelated(),
                     //                    'currentModel' => $model,
                 ];
             }
