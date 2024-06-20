@@ -304,9 +304,4 @@ trait ActivityLoggable
             'type' => $type,
         ]);
     }
-
-    //    protected function modelRelation(): Collection
-    //    {
-    //        return collect([]);
-    //    }
 }

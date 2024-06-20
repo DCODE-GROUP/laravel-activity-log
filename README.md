@@ -423,39 +423,6 @@ public function getActivityLogModelLabel(): string
 }
 ```` 
 
-```php
-
-You can define the relationships for automatic labeling of associated models
-
-** depreciated **
-
-```php
- protected function modelRelation(): Collection
-    {
-        return collect([
-            'project_milestone_id' => collect([
-                'label' => __('project-milestone.headings.title'),
-                'modelClass' => ProjectMilestone::class,
-                'modelKey' => 'name',
-            ]),
-            'project_id' => collect([
-                'label' => __('project.headings.title'),
-                'modelClass' => Project::class,
-                'modelKey' => 'name',
-            ]),
-            'quote_type_id' => collect([
-                'label' => __('quote-type.headings.title'),
-                'modelClass' => QuoteType::class,
-                'modelKey' => 'name',
-            ]),
-            'client_id' => collect([
-                'label' => __('client.headings.title'),
-                'modelClass' => Client::class,
-                'modelKey' => 'name',
-            ]),
-        ]);
-    }
-```
 
 You can use a custom formatter for fields in your model by using the `activityLogFieldFormatters` method.
 
