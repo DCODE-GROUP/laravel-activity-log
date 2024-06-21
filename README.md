@@ -436,6 +436,19 @@ public function getActivityLogModelKey(): string
 }
 ```
 
+By default this package will log all fields except for `created_at`, `updated_at`, `deleted_at`, `password`, and `id`.
+If you wish to exclude other fields on your model such as third party api tokens. Then implement the following method in your model.
+
+```php
+public function getActivityLogModelExcludeFields(): array
+{
+    return ['xero_api_token', 'stripe_api_token'];
+}
+```
+
+```php
+
+
 You can use a custom formatter for fields in your model by using the `activityLogFieldFormatters` method.
 
 example. Add the following to the model

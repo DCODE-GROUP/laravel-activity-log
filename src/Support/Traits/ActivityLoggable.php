@@ -107,7 +107,7 @@ trait ActivityLoggable
 
     public function getActivityLogModelAttributes(): Collection
     {
-        return collect(array_merge($this->getAttributes(), ['created_at', 'updated_at', 'deleted_at'], $this->getActivityLogModelExcludeFields()));
+        return collect(array_merge($this->getAttributes(), ['created_at', 'updated_at', 'deleted_at', 'id', 'password'], $this->getActivityLogModelExcludeFields()));
     }
 
     /**
