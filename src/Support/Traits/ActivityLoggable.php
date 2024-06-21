@@ -98,8 +98,8 @@ trait ActivityLoggable
                     $new = $formatter($new);
                 }
 
-                $from = is_array($original) ? collect($original)->map(fn ($item) => is_string($item) ? $item : new StringConverter($item))->join('|') : $original;
-                $to = is_array($new) ? collect($new)->map(fn ($item) => is_string($item) ? $item : new StringConverter($item))->join('|') : (is_string($new) ? $new : new StringConverter($this->{$attribute}));
+                $from = $this->formatValue($original);
+                $to = $this->formatValue($new);
 
                 return $this->prepareModelChange($attribute, $from, $to);
             })->toArray();
@@ -121,6 +121,17 @@ trait ActivityLoggable
     protected function activityLogFieldFormatters(): Collection
     {
         return collect([]);
+    }
+
+    private function formatValue($value)
+    {
+        if (is_array($value)) {
+            return collect($value)
+                ->map(fn ($item) => is_string($item) ? $item : new StringConverter($item))
+                ->join('|');
+        }
+
+        return is_string($value) ? $value : new StringConverter($value);
     }
 
     public function prepareModelChange($attribute, $from, $to): array
