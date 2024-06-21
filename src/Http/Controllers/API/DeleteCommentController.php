@@ -8,9 +8,7 @@ use Illuminate\Routing\Controller;
 
 class DeleteCommentController extends Controller
 {
-    public function __construct(protected ActivityLogService $service)
-    {
-    }
+    public function __construct(protected ActivityLogService $service) {}
 
     public function __invoke(ActivityLog $comment)
     {
