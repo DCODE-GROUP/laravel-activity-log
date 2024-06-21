@@ -9,9 +9,7 @@ use Illuminate\Routing\Controller;
 
 class EditCommentController extends Controller
 {
-    public function __construct(protected ActivityLogService $service)
-    {
-    }
+    public function __construct(protected ActivityLogService $service) {}
 
     public function __invoke(ActivityLog $comment, EditCommentRequest $request)
     {

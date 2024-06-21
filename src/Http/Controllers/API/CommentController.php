@@ -9,9 +9,7 @@ use Illuminate\Routing\Controller;
 
 class CommentController extends Controller
 {
-    public function __construct(protected ActivityLogService $service)
-    {
-    }
+    public function __construct(protected ActivityLogService $service) {}
 
     public function __invoke(ExistingRequest $request)
     {

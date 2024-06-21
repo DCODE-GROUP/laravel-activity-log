@@ -3,14 +3,19 @@
 namespace Dcodegroup\ActivityLog\Support\Traits;
 
 use Coduo\ToString\StringConverter;
+use Dcodegroup\ActivityLog\Exceptions\ModelKeyNotDefinedException;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Models\CommunicationLog;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use ReflectionClass;
+use ReflectionMethod;
 
 trait ActivityLoggable
 {
@@ -66,43 +71,51 @@ trait ActivityLoggable
 
     public function logUpdate(): void
     {
-        $diff = $this->getModelChangesJson(true); // true: If we want to limit the storage of fields defined in modelRelation; false : If we want to storage all model change
-        $this->createActivityLog([
-            'title' => __('activity-log.actions.update').$this->activityLogEntityName(),
-            'description' => $this->getModelChanges($diff),
-        ]);
-    }
+        $diff = $this->getModelChangesJson(); // true: If we want to limit the storage of fields defined in modelRelation; false : If we want to storage all model change
 
-    public function getModelChangesJson(bool $allowCustomAttribute = false): array
-    {
-        $attributes = collect(array_keys($this->getDirty()));
-        if ($allowCustomAttribute) {
-            $attributes = $attributes->filter(fn ($item) => $this->modelRelation()->has($item));
+        if (collect($diff)->isNotEmpty()) {
+            $this->createActivityLog([
+                'title' => __('activity-log.actions.update').$this->activityLogEntityName(),
+                'description' => $this->getModelChanges($diff),
+            ]);
         }
-
-        return $attributes->map(function ($attribute) {
-
-            $original = $this->getOriginal($attribute);
-            $new = $this->{$attribute};
-
-            /**
-             * Format the data if a custom formatter exists
-             */
-            if ($formatter = $this->activityLogFieldFormatters()->get($attribute)) {
-                $original = $formatter($original);
-                $new = $formatter($new);
-            }
-
-            $from = is_array($original) ? collect($original)->map(fn ($item) => is_string($item) ? $item : new StringConverter($item))->join('|') : $original;
-            $to = is_array($new) ? collect($new)->map(fn ($item) => is_string($item) ? $item : new StringConverter($item))->join('|') : (is_string($new) ? $new : new StringConverter($this->{$attribute}));
-
-            return $this->prepareModelChange($attribute, $from, $to);
-        })->toArray();
     }
 
-    protected function modelRelation(): Collection
+    public function getModelChangesJson(): array
     {
-        return collect([]);
+        return collect(array_keys($this->getDirty()))
+            ->filter(fn ($item) => $this->getActivityLogModelAttributes()->has($item))
+            ->map(function ($attribute) {
+
+                $original = $this->getOriginal($attribute);
+                $new = $this->{$attribute};
+
+                /**
+                 * Format the data if a custom formatter exists
+                 */
+                if ($formatter = $this->activityLogFieldFormatters()->get($attribute)) {
+                    $original = $formatter($original);
+                    $new = $formatter($new);
+                }
+
+                $from = $this->formatValue($original);
+                $to = $this->formatValue($new);
+
+                return $this->prepareModelChange($attribute, $from, $to);
+            })->toArray();
+    }
+
+    public function getActivityLogModelAttributes(): Collection
+    {
+        return collect(array_merge($this->getAttributes(), ['created_at', 'updated_at', 'deleted_at', 'id', 'password'], $this->getActivityLogModelExcludeFields()));
+    }
+
+    /**
+     * This is where you will specify what fields to ignore on a per model basis. Eg extra fields to ignore
+     */
+    public function getActivityLogModelExcludeFields(): array
+    {
+        return [];
     }
 
     protected function activityLogFieldFormatters(): Collection
@@ -110,16 +123,31 @@ trait ActivityLoggable
         return collect([]);
     }
 
+    private function formatValue($value)
+    {
+        if (is_array($value)) {
+            return collect($value)
+                ->map(fn ($item) => is_string($item) ? $item : new StringConverter($item))
+                ->join('|');
+        }
+
+        return is_string($value) ? $value : new StringConverter($value);
+    }
+
     public function prepareModelChange($attribute, $from, $to): array
     {
         $key = $attribute;
 
-        if ($entity = $this->modelRelation()->get($attribute)) {
-            $modelClass = $entity['modelClass'];
-            $from = $modelClass && $modelClass::find($from) ? $modelClass::find($from)->{$entity['modelKey']} : '+';
-            $to = $modelClass && $modelClass::find($to) ? $modelClass::find($to)->{$entity['modelKey']} : '+';
+        if (in_array($attribute, collect($this->getActivityLogModelRelationFields())->pluck('foreignKey')->toArray())) {
+            $relation = collect($this->getActivityLogModelRelationFields())->where('foreignKey', $attribute)->first();
 
-            $key = $entity['label'];
+            if (! empty($relation)) {
+                $modelClass = $relation['modelClass'];
+                $from = $modelClass && $modelClass::find($from) ? ($modelClass::find($from))->determineModelKey() : '+';
+                $to = $modelClass && $modelClass::find($to) ? ($modelClass::find($to))->determineModelKey() : '+';
+
+                $key = (new $modelClass())->determineModelLabel();
+            }
         }
 
         return [
@@ -127,6 +155,91 @@ trait ActivityLoggable
             'from' => sprintf('<span class="activity__db-content">%s</span>', $from ?? '+'),
             'to' => sprintf('<span class="activity__db-content">%s</span>', $to ?? '+'),
         ];
+    }
+
+    public function getActivityLogModelRelationFields(): array
+    {
+        $model = new static();
+        $relationships = [];
+
+        foreach ((new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            if (
+                ! empty($method->getReturnType()) &&
+                is_subclass_of((string) $method->getReturnType(), Relation::class)
+            ) {
+
+                $relationMethod = $model->{$method->getName()}();
+                $foreignKey = match (true) {
+                    method_exists($relationMethod, 'getForeignKeyName') => $relationMethod->getForeignKeyName(),
+                    default => $relationMethod->getForeignPivotKeyName(),
+                };
+
+                $localKey = match (true) {
+                    method_exists($relationMethod, 'getOwnerKeyName') => $relationMethod->getOwnerKeyName(),
+                    method_exists($relationMethod, 'getLocalKeyName') => $relationMethod->getLocalKeyName(),
+                    default => $relationMethod->getRelatedPivotKeyName(),
+                };
+
+                $relationships[] = [
+                    'method' => $method->getName(),
+                    'relation' => $method->getReturnType()->getName(),
+                    'foreignKey' => $foreignKey,
+                    'localKey' => $localKey,
+                    'modelClass' => $model->{$method->getName()}()->getRelated(),
+                ];
+            }
+        }
+
+        return $relationships;
+    }
+
+    public function determineModelKey(): string
+    {
+        /**
+         * Check if the label has been set in the model
+         */
+        if (! empty($this->getActivityLogModelKey())) {
+            return $this->getActivityLogModelKey();
+        }
+
+        $standardKeys = ['name', 'title', 'label'];
+
+        foreach ($standardKeys as $key) {
+            if (collect($this->getAttributes())->has($key)) {
+                return $this->{$key};
+            }
+        }
+
+        throw new ModelKeyNotDefinedException(__('activity-log.exceptions.model_key', ['model' => class_basename($this)]));
+    }
+
+    public function getActivityLogModelKey(): string
+    {
+        return '';
+    }
+
+    public function determineModelLabel(): string
+    {
+        /**
+         * check if we have the model label in cache
+         */
+        if (Cache::has('model_label_'.class_basename($this))) {
+            return Cache::get('model_label_'.class_basename($this));
+        }
+
+        /**
+         * Check if the label has been set in the model
+         */
+        if (! empty($this->getActivityLogModelLabel())) {
+            return Cache::rememberForever('model_label_'.class_basename($this), fn () => $this->getActivityLogModelLabel());
+        }
+
+        return Cache::rememberForever('model_label_'.class_basename($this), fn () => Str::headline(class_basename($this)));
+    }
+
+    public function getActivityLogModelLabel(): string
+    {
+        return '';
     }
 
     public function getModelChanges(?array $modelChangesJson = null): string
@@ -146,6 +259,18 @@ trait ActivityLoggable
             'title' => __('activity-log.actions.delete').$this->activityLogEntityName(),
             'description' => '',
         ]);
+    }
+
+    /**
+     * Stores relationships for future use
+     *
+     * @return array
+     */
+    public static function setAvailableRelations(array $relations)
+    {
+        static::$availableRelations[static::class] = $relations;
+
+        return $relations;
     }
 
     public function getActivityLogEmails(): array

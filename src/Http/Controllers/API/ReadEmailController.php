@@ -7,9 +7,7 @@ use Illuminate\Routing\Controller;
 
 class ReadEmailController extends Controller
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function __invoke(ActivityLog $activityLog)
     {

@@ -396,36 +396,57 @@ class OrderItem extends Model
 
 ```
 
-You can define the relationships for automatic labeling of assoicated models
+Normally a model with have the field `name` `title` or `label`. This package can work this out in most cases. However if you have a none standard field used to name a model you can use the below method to customise the label for the model.
+If no label is found then a `ModelLabelNotDefinedException` exception will be thrown.
 
 ```php
- protected function modelRelation(): Collection
-    {
-        return collect([
-            'project_milestone_id' => collect([
-                'label' => __('project-milestone.headings.title'),
-                'modelClass' => ProjectMilestone::class,
-                'modelKey' => 'name',
-            ]),
-            'project_id' => collect([
-                'label' => __('project.headings.title'),
-                'modelClass' => Project::class,
-                'modelKey' => 'name',
-            ]),
-            'quote_type_id' => collect([
-                'label' => __('quote-type.headings.title'),
-                'modelClass' => QuoteType::class,
-                'modelKey' => 'name',
-            ]),
-            'client_id' => collect([
-                'label' => __('client.headings.title'),
-                'modelClass' => Client::class,
-                'modelKey' => 'name',
-            ]),
-        ]);
-    }
+public function getActivityLogModelLabel(): string
+{
+    /**
+      * This can be any field or method to return the label but the return must be a string 
+      */
+    return $this->reference;
+}
+```` 
+
+You can give any model a custom label by adding the following method to the model.
+ If this is not set then [Str::headline](https://laravel.com/docs/11.x/strings#method-str-headline) will be used on the model.
+
+
+```php
+public function getActivityLogModelLabel(): string
+{
+    /**
+      * This can be any field or method to return the label but the return must be a string 
+      */
+    return __('order.title');
+}
+```` 
+
+Automatically the package will try and find the key for the model. Typically, this will be a field named `name`, `title` or `label`. 
+However this may not always be the case and the key may change depending on the the state of a model. Eg type Quote might be `quote_number` Order might use `sales_order_number`.
+If one of the defaults is not found then an `ModelKeyNotDefinedException` exception will be thrown.
+
+This should only ever occur in your local environment. If this occurs then implement the follow method in your model.
+
+```php
+public function getActivityLogModelKey(): string
+{
+    return (string) $this->custom_field_name;
+}
 ```
 
+By default this package will log all fields except for `created_at`, `updated_at`, `deleted_at`, `password`, and `id`.
+If you wish to exclude other fields on your model such as third party api tokens. Then implement the following method in your model.
+
+```php
+public function getActivityLogModelExcludeFields(): array
+{
+    return ['xero_api_token', 'stripe_api_token'];
+}
+```
+
+```php
 
 
 You can use a custom formatter for fields in your model by using the `activityLogFieldFormatters` method.
