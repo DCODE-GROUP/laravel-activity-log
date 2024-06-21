@@ -423,6 +423,18 @@ public function getActivityLogModelLabel(): string
 }
 ```` 
 
+Automatically the package will try and find the key for the model. Typically, this will be a field named `name`, `title` or `label`. 
+However this may not always be the case and the key may change depending on the the state of a model. Eg type Quote might be `quote_number` Order might use `sales_order_number`.
+If one of the defaults is not found then an `ModelKeyNotDefinedException` exception will be thrown.
+
+This should only ever occur in your local environment. If this occurs then implement the follow method in your model.
+
+```php
+public function getActivityLogModelKey(): string
+{
+    return (string) $this->custom_field_name;
+}
+```
 
 You can use a custom formatter for fields in your model by using the `activityLogFieldFormatters` method.
 
