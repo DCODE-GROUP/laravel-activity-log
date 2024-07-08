@@ -4,15 +4,15 @@
       <span v-if="!isOpen && isNeedStrip" v-html="stripedContent"></span>
       <span v-else v-html="content"></span>
       <span v-if="isEdited" class="readmore-container--edited"
-      >({{ $t("activity-log.words.edited") }})</span
+        >({{ $t("activity-log.words.edited") }})</span
       >
     </div>
     <template v-if="this.enable && isNeedStrip">
       <a @click.prevent="toggle" class="inline text-blue-600 cursor-pointer">{{
-          isOpen
-            ? $t("activity-log.words.read_less")
-            : $t("activity-log.words.read_more")
-        }}</a>
+        isOpen
+          ? $t("activity-log.words.read_less")
+          : $t("activity-log.words.read_more")
+      }}</a>
     </template>
   </div>
 </template>
