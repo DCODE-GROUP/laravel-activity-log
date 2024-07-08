@@ -1,21 +1,18 @@
 <template>
   <div>
     <div class="readmore-container">
-      <span
-        v-if="!isOpen && content.length > 100"
-        v-html="content.slice(0, 100).concat('...')"
-      ></span>
+      <span v-if="!isOpen && isNeedStrip" v-html="stripedContent"></span>
       <span v-else v-html="content"></span>
-      <span v-if="isEdited" class="readmore-container--edited">
-        ({{ $t("activity-log.words.edited") }})</span
+      <span v-if="isEdited" class="readmore-container--edited"
+      >({{ $t("activity-log.words.edited") }})</span
       >
     </div>
-    <template v-if="this.enable && content.length > 100">
+    <template v-if="this.enable && isNeedStrip">
       <a @click.prevent="toggle" class="inline text-blue-600 cursor-pointer">{{
-        isOpen
-          ? $t("activity-log.words.read_less")
-          : $t("activity-log.words.read_more")
-      }}</a>
+          isOpen
+            ? $t("activity-log.words.read_less")
+            : $t("activity-log.words.read_more")
+        }}</a>
     </template>
   </div>
 </template>
@@ -46,7 +43,35 @@ export default {
       isOpen: this.open,
     };
   },
+  computed: {
+    isNeedStrip() {
+      return (
+        this.getTextContent(this.content) > 100 ||
+        this.content.split("<br>").length > 1 ||
+        this.getTextContent(this.content.split("<br>")[0]).length > 100
+      );
+    },
+    stripedContent() {
+      if (!this.isNeedStrip) return this.content;
+
+      if (this.content.split("<br>").length > 1) {
+        if (this.getTextContent(this.content.split("<br>")[0]).length > 100) {
+          return this.content.split("<br>")[0].slice(0, 100).concat("...");
+        } else {
+          return this.content.split("<br>")[0].concat("...");
+        }
+      }
+
+      return this.content.slice(0, 100).concat("...");
+    },
+  },
   methods: {
+    getTextContent(content) {
+      const element = document.createElement("div");
+      element.innerHTML = content;
+      return element.innerText;
+    },
+
     toggle() {
       this.isOpen = !this.isOpen;
     },
