@@ -3,7 +3,7 @@
     {{ $content }}
     @isset($action)
         @component('mail::button', ['url' => $action, 'color' => 'primary'])
-            Click here!!
+           View {{ $modelName }}
         @endcomponent
     @endisset
     Regards,
