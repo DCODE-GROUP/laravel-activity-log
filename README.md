@@ -536,12 +536,6 @@ In addition, we can add activity log wherever we want the model
         ]);
 ```
 
-Add content markdown email to support comment-notification.Located in
-
-```
-resources\views\mail\comment-notification.blade.php
-```
-
 # Changelog
 
 Please see [CHANGELOG](./CHANGELOG.md) for more information about recent changes.
