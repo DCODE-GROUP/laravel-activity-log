@@ -95,6 +95,7 @@ class ActivityLogService
                     $data = [
                         'content' => $mailable['content'],
                         'title' => $mailable['title'],
+                        'modelName' => $mailable['modelName'],
                     ];
                     if (method_exists($model, 'getActivityLogEmails') && ! in_array($email, $model->getActivityLogEmails())) {
                         $data['action'] = $mailable['action'];

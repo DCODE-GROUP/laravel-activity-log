@@ -84,7 +84,7 @@ return [
     'user_search_term' => env('LARAVEL_ACTIVITY_LOG_USER_SEARCH_TERM', ['email']),
     'user_search' => env('LARAVEL_ACTIVITY_LOG_USER_SEARCH', 'full_name'),
     'user_search_relationship' => env('LARAVEL_ACTIVITY_LOG_USER_SEARCH_RELATIONSHIP', []),
-    'comment_email_template' => env('LARAVEL_ACTIVITY_LOG_COMMENT_EMAIL_TEMPLATE', 'mail.comment-notification'),
+    'comment_email_template' => env('LARAVEL_ACTIVITY_LOG_COMMENT_EMAIL_TEMPLATE', 'activity-log::mail.comment-notification'),
     'filter_mention_user_role' => env('LARAVEL_ACTIVITY_LOG_FILTER_MENTION_USER_ROLE', ''),
 
     /*
