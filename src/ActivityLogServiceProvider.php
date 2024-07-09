@@ -14,29 +14,11 @@ class ActivityLogServiceProvider extends ServiceProvider
         $this->offerPublishing();
         $this->registerRoutes();
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'activity-log-translations');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'activity-log');
 
         $this->registerCommands();
 
         Route::model(config('activity-log.binding'), config('activity-log.model'));
-    }
-
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->mergeConfigFrom(__DIR__.'/../config/activity-log.php', 'activity-log');
-    }
-
-    protected function registerCommands()
-    {
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                InstallCommand::class,
-            ]);
-        }
     }
 
     /**
@@ -73,5 +55,24 @@ class ActivityLogServiceProvider extends ServiceProvider
         ], function () {
             $this->loadRoutesFrom(__DIR__.'/../routes/activity-log.php');
         });
+    }
+
+    protected function registerCommands()
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                InstallCommand::class,
+            ]);
+        }
+    }
+
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->mergeConfigFrom(__DIR__.'/../config/activity-log.php', 'activity-log');
     }
 }
