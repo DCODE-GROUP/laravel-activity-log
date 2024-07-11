@@ -13,7 +13,7 @@ trait ModelDeterminable
         /**
          * Check if the label has been set in the model
          */
-        if (!empty($this->getActivityLogModelKey())) {
+        if (! empty($this->getActivityLogModelKey())) {
             return $this->getActivityLogModelKey();
         }
 
@@ -38,23 +38,22 @@ trait ModelDeterminable
         /**
          * check if we have the model label in cache
          */
-        if (Cache::has('model_label_' . class_basename($this))) {
-            return Cache::get('model_label_' . class_basename($this));
+        if (Cache::has('model_label_'.class_basename($this))) {
+            return Cache::get('model_label_'.class_basename($this));
         }
 
         /**
          * Check if the label has been set in the model
          */
-        if (!empty($this->getActivityLogModelLabel())) {
-            return Cache::rememberForever('model_label_' . class_basename($this), fn() => $this->getActivityLogModelLabel());
+        if (! empty($this->getActivityLogModelLabel())) {
+            return Cache::rememberForever('model_label_'.class_basename($this), fn () => $this->getActivityLogModelLabel());
         }
 
-        return Cache::rememberForever('model_label_' . class_basename($this), fn() => Str::headline(class_basename($this)));
+        return Cache::rememberForever('model_label_'.class_basename($this), fn () => Str::headline(class_basename($this)));
     }
 
     public function getActivityLogModelLabel(): string
     {
         return '';
     }
-
 }
