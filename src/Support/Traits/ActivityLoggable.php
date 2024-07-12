@@ -101,8 +101,14 @@ trait ActivityLoggable
                 $from = $this->formatValue($original);
                 $to = $this->formatValue($new);
 
-                return $this->prepareModelChange($attribute, $from, $to);
-            })->toArray();
+                try {
+                    return $this->prepareModelChange($attribute, $from, $to);
+                } catch (\Throwable $t) {
+                    return null;
+                }
+            })
+            ->filter()
+            ->toArray();
     }
 
     public function getActivityLogModelAttributes(): Collection
