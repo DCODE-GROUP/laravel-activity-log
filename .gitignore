@@ -4,6 +4,7 @@ vendor
 coverage
 .phpunit.result.cache
 .idea
+.vscode
 .php_cs.cache
 tests/temp
 .php-cs-fixer.cache
