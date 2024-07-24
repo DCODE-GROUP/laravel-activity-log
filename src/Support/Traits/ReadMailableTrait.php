@@ -16,7 +16,7 @@ trait ReadMailableTrait
 
     public function prepareContent(): Content
     {
-        return new Content();
+        return new Content;
     }
 
     /**
