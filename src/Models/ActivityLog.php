@@ -88,7 +88,7 @@ class ActivityLog extends Model
 
     public function communicationLog(): BelongsTo
     {
-        return $this->belongsTo(CommunicationLog::class, 'communication_log_id');
+        return $this->belongsTo(config('activity-log.communication_log_model'), 'communication_log_id');
     }
 
     public function getAvailableTypes(): array
