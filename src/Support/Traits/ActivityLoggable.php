@@ -272,4 +272,8 @@ trait ActivityLoggable
             'type' => $type,
         ]);
     }
+
+    public function getMentionCommentUrl(Model $model): string {
+        return '';
+    }
 }
