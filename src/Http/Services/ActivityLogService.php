@@ -2,7 +2,6 @@
 
 namespace Dcodegroup\ActivityLog\Http\Services;
 
-use Dcodegroup\ActivityLog\Contracts\HasActivityUser;
 use Dcodegroup\ActivityLog\Mail\CommentNotification;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Resources\ActivityLogCollection;
@@ -62,7 +61,7 @@ class ActivityLogService
             $identiy = Str::replaceStart('@[', '', $key);
             $identiy = Str::replaceEnd(']', '', $identiy);
 
-            $users = $this->userModel::query()
+            $this->userModel::query()
                 ->with($this->userSearchRelationship)
                 ->where(function (Builder $q) use ($identiy) {
                     foreach ($this->userSearchTerm as $field) {
@@ -85,26 +84,25 @@ class ActivityLogService
                         }
                         $q->orWhere($field, $identiy);
                     }
-                })->get();
-            /** @var HasActivityUser $userModel */
-            foreach ($users as $userModel) {
-                $email = $userModel->getActivityLogEmail();
+                })->get()->each(function ($userModel) use ($mailable, $key, &$comment) {
+                    $email = $userModel->getActivityLogEmail();
 
-                if ($mailable) {
-                    $model = $mailable['model'];
-                    $data = [
-                        'content' => $mailable['content'],
-                        'title' => $mailable['title'],
-                        'modelName' => $mailable['modelName'],
-                    ];
-                    if (method_exists($model, 'getActivityLogEmails') && ! in_array($email, $model->getActivityLogEmails())) {
-                        $data['action'] = $model->getMentionCommentUrl($userModel) !== '' ? $model->getMentionCommentUrl($userModel) : $mailable['action'];
+                    if ($mailable) {
+                        $model = $mailable['model'];
+                        $data = [
+                            'content' => $mailable['content'],
+                            'title' => $mailable['title'],
+                            'modelName' => $mailable['modelName'],
+                        ];
+                        if (method_exists($model, 'getActivityLogEmails') && ! in_array($email, $model->getActivityLogEmails())) {
+                            // @phpstan-ignore-next-line
+                            $data['action'] = ! empty($model->getMentionCommentUrl($userModel)) ? $model->getMentionCommentUrl($userModel) : $mailable['action'];
+                        }
+                        Mail::to($email)->send(new CommentNotification($data, $model));
                     }
-                    Mail::to($email)->send(new CommentNotification($data, $model));
-                }
-                $to = is_array($email) ? implode(', ', $email) : $email;
-                $comment = str_replace($key, '<a class="activity__comment--tag" href="mailto:'.$to.'">@'.$userModel->getActivityLogUserName().'</a>', $comment);
-            }
+                    $to = is_array($email) ? implode(', ', $email) : $email;
+                    $comment = str_replace($key, '<a class="activity__comment--tag" href="mailto:'.$to.'">@'.$userModel->getActivityLogUserName().'</a>', $comment);
+                });
         }
         $activityLog->update(['description' => $comment], ['timestamps' => false]);
 

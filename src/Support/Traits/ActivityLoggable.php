@@ -14,6 +14,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use ReflectionClass;
 use ReflectionMethod;
+use Throwable;
 
 trait ActivityLoggable
 {
@@ -103,7 +104,7 @@ trait ActivityLoggable
 
                 try {
                     return $this->prepareModelChange($attribute, $from, $to);
-                } catch (\Throwable $t) {
+                } catch (Throwable $t) {
                     return null;
                 }
             })
@@ -152,7 +153,7 @@ trait ActivityLoggable
                 $from = $modelClass && $modelClass::find($from) ? ($modelClass::find($from))->determineModelKey() : '+';
                 $to = $modelClass && $modelClass::find($to) ? ($modelClass::find($to))->determineModelKey() : '+';
 
-                $key = (new $modelClass)->determineModelLabel();
+                $key = (new $modelClass())->determineModelLabel();
             }
         }
 
@@ -165,7 +166,7 @@ trait ActivityLoggable
 
     public function getActivityLogModelRelationFields(): array
     {
-        $model = new static;
+        $model = new static();
         $relationships = [];
 
         foreach ((new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
