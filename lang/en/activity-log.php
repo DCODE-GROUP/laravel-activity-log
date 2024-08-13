@@ -30,7 +30,7 @@ return [
     'actions' => [
         'create' => ' created a ',
         'update' => ' updated a ',
-        'delete' => ' deleted a',
+        'delete' => ' deleted a ',
         'add_comment' => ' added a comment',
         'update_entity' => 'updated an entity',
     ],
