@@ -58,12 +58,11 @@ class ActivityLogService
         $regexp = '/@\[[^\]]*\]/';
         $mentionedUsers = Str::matchAll($regexp, trim($comment));
         foreach ($mentionedUsers as $key) {
-            $identiy = Str::replaceStart('@[', '', $key);
-            $identiy = Str::replaceEnd(']', '', $identiy);
+            $identity = str($key)->replaceStart('@[', '')->replaceEnd(']', '')->toString();
 
             $this->userModel::query()
                 ->with($this->userSearchRelationship)
-                ->where(function (Builder $q) use ($identiy) {
+                ->where(function (Builder $q) use ($identity) {
                     foreach ($this->userSearchTerm as $field) {
                         if (is_array($field)) {
                             $query = 'concat(';
@@ -71,18 +70,18 @@ class ActivityLogService
                                 $query .= collect($field)->first() !== $item ? $item : $item.", ' ', ";
                             }
                             $query .= ')';
-                            $q->orWhere(DB::raw($query), $identiy);
+                            $q->orWhere(DB::raw($query), $identity);
 
                             continue;
                         }
                         $parts = explode('.', $field);
                         if (count($parts) > 1) {
                             [$relation, $relationField] = $parts;
-                            $q->orWhereHas($relation, fn (Builder $builder) => $builder->where($relationField, $identiy));
+                            $q->orWhereHas($relation, fn (Builder $builder) => $builder->where($relationField, $identity));
 
                             continue;
                         }
-                        $q->orWhere($field, $identiy);
+                        $q->orWhere($field, $identity);
                     }
                 })->get()->each(function ($userModel) use ($mailable, $key, &$comment) {
                     $email = $userModel->getActivityLogEmail();
