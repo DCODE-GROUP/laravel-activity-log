@@ -314,7 +314,10 @@ export default {
     await this.getActivityLog();
     this.collapView(this.defaultCollapView);
   },
-
+  beforeUnmount: function created() {
+    this.bus.$off(this.filterEvent);
+    this.bus.$off("activityLogTermChanged");
+  },
   methods: {
     searchTerm() {
       this.filters[`filter[term]`] = this.searchKey;

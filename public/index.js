@@ -19174,6 +19174,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   mounted: function mounted() {
     this.getActivityLog();
   },
+  beforeUnmount: function created() {
+    this.bus.$off(this.filterEvent);
+  },
   methods: {
     searchTerm: function searchTerm() {
       var _this2 = this;
@@ -19394,6 +19397,9 @@ function ActivityLogListvue_type_script_lang_js_toPrimitive(t, r) { if ("object"
   },
   mounted: function mounted() {
     this.getActivityLog();
+  },
+  beforeUnmount: function created() {
+    this.bus.$off(this.filterEvent);
   },
   methods: {
     searchTerm: function searchTerm() {
