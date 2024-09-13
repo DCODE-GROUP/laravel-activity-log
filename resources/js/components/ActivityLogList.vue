@@ -130,6 +130,9 @@ export default {
   mounted() {
     this.getActivityLog();
   },
+  beforeUnmount: function created() {
+    this.bus.$off(this.filterEvent);
+  },
   methods: {
     searchTerm() {
       this.filters[`filter[term]`] = this.searchKey;
