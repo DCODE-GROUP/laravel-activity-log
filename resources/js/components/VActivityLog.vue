@@ -14,6 +14,7 @@
         :load-users-url="loadUsersUrl"
         :user="username"
         :timezone="timezone"
+        :can-mention-in-comment="canMentionInComment"
         @addComment="addComment($event)"
       ></comment>
     </div>
@@ -269,6 +270,10 @@ export default {
     timezone: {
       type: String,
       required: false,
+    },
+    canMentionInComment: {
+      type: Boolean,
+      default: true,
     },
   },
   data() {
