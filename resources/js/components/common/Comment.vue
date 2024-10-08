@@ -9,6 +9,7 @@
         insert-space
         @open="loadUsers()"
         @search="loadUsers($event)"
+        v-if="canMentionInComment"
       >
         <textarea
           @keyup.enter="addCommentByEnter"
@@ -41,6 +42,15 @@
           </div>
         </template>
       </Mentionable>
+      <div v-else>
+        <textarea
+          @keyup.enter="addCommentByEnter"
+          class="content__text--textarea focus:ring-0"
+          v-model="comment"
+          rows="3"
+          :placeholder="$t('activity-log.placeholders.add_comment')"
+        ></textarea>
+      </div>
     </div>
 
     <div class="content__action">
@@ -114,6 +124,10 @@ export default {
     timezone: {
       type: String,
       required: false,
+    },
+    canMentionInComment: {
+      type: Boolean,
+      default: true,
     },
   },
   data() {
