@@ -29,7 +29,6 @@ class ExistingRequest extends FormRequest
             ],
             'modelId' => [
                 'required_without:filter.id',
-                'string',
                 Rule::exists($this->input('modelClass'), 'id'),
             ],
         ];
