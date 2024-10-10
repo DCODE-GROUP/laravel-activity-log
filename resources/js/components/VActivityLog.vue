@@ -3,7 +3,8 @@
     <div class="activity activity--comment" v-if="allowComment">
       <div class="activity__user--avatar !w-[48px] !h-[48px]">
         <span class="font-bold !text-lg">{{
-          username.charAt(0).toUpperCase() + username.charAt(1).toUpperCase()
+          username.charAt(0).toUpperCase() +
+          getUserKeyName(username).toUpperCase()
         }}</span>
       </div>
       <comment
@@ -89,7 +90,7 @@
           class="absolute -right-1 -bottom-1 justify-center text-[10px] font-bold tracking-widest w-[24px] h-[24px] flex justify-center items-center text-white rounded-full bg-gray-600 ring-0 ring-neutral-500"
           >{{
             activity.user.charAt(0).toUpperCase() +
-            activity.user.charAt(1).toUpperCase()
+            getUserKeyName(activity.user).toUpperCase()
           }}</span
         >
       </div>
@@ -324,6 +325,12 @@ export default {
     this.bus.$off("activityLogTermChanged");
   },
   methods: {
+    getUserKeyName(username) {
+      const spaceIndex = username.indexOf(" ");
+      return spaceIndex > -1
+        ? username.charAt(spaceIndex + 1)
+        : username.charAt(1);
+    },
     searchTerm() {
       this.filters[`filter[term]`] = this.searchKey;
       this.$nextTick(() => this.getActivityLog());
