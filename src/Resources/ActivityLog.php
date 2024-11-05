@@ -52,8 +52,8 @@ class ActivityLog extends JsonResource
             'date' => $this->resource->communicationLog->created_at->format(config('activity-log.datetime_format')),
             'reads_count' => $this->resource->communicationLog->reads->count(),
             'read_at_date' => $this->resource->communicationLog->reads->last()?->created_at?->setTimezone(
-                    request()->input('timezone', config('app.timezone', 'UTC')),
-                )?->format(config('activity-log.datetime_format')),
+                request()->input('timezone', config('app.timezone', 'UTC')),
+            )?->format(config('activity-log.datetime_format')),
         ];
     }
 }
