@@ -42,7 +42,7 @@
               name="name"
               v-model="searchKey"
               :placeholder="$t('activity-log.placeholders.search_description')"
-              v-on:keyup.enter="searchTerm"
+              v-on:keydown.enter.stop.prevent="searchTerm"
           />
           <button
               class="absolute left-2.5 top-1/2 -translate-y-1/2"
