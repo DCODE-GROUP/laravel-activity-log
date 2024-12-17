@@ -42,7 +42,7 @@
             name="name"
             v-model="searchKey"
             :placeholder="$t('activity-log.placeholders.search_description')"
-            v-on:keyup.enter="searchTerm"
+            v-on:keydown.enter.stop.prevent="searchTerm"
           />
           <button
             class="absolute left-2.5 top-1/2 -translate-y-1/2"
@@ -144,9 +144,11 @@
                   }}</span>
                 </div>
               </div>
-              <div v-else class="content__status--description">
+              <div
+                v-else-if="activity.description"
+                class="content__status--description"
+              >
                 <read-more-content
-                  v-if="activity.description"
                   :content="activity.description"
                   :is-edited="activity.is_edited"
                 ></read-more-content>
@@ -155,9 +157,15 @@
           </div>
           <div class="content__status--time block">
             <div class="flex">
-              {{ activity.created_at_date }}
+              <span
+                class="pr-smSpace"
+                :class="{ 'pr-7': !activity.description }"
+              >
+                {{ activity.created_at_date }}
+              </span>
               <a
-                class="cursor-pointer px-smSpace items-center"
+                v-if="activity.description"
+                class="cursor-pointer pr-3xsSpace items-center"
                 @click.prevent="individualCollapse(index)"
               >
                 <icon

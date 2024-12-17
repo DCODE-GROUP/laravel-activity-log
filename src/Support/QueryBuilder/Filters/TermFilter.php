@@ -21,7 +21,11 @@ class TermFilter implements Filter
                 return $q->where('email', 'like', "%$value%");
             }
         })
-            ->orWhere('created_at', 'like', "%$value%")
-            ->orWhere('description', 'like', "%$value%");
+            ->where(function (Builder $q) use ($value) {
+                $q->where('created_at', 'like', "%$value%")
+                    ->orWhere('description', 'like', "%$value%")
+                    ->orWhere('title', 'like', "%$value%");
+            });
+
     }
 }
