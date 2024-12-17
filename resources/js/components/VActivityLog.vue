@@ -144,9 +144,8 @@
                   }}</span>
                 </div>
               </div>
-              <div v-else class="content__status--description">
+              <div v-else-if="activity.description" class="content__status--description">
                 <read-more-content
-                  v-if="activity.description"
                   :content="activity.description"
                   :is-edited="activity.is_edited"
                 ></read-more-content>
@@ -154,10 +153,13 @@
             </div>
           </div>
           <div class="content__status--time block">
-            <div class="flex">
-              {{ activity.created_at_date }}
+            <div class="flex px-smSpace items-center">
+              <span class="pr-smSpace" :class="{'pr-7': !activity.description}">
+                 {{ activity.created_at_date }}
+              </span>
               <a
-                class="cursor-pointer px-smSpace items-center"
+                v-if="activity.description"
+                class="cursor-pointer pr-3xsSpace items-center"
                 @click.prevent="individualCollapse(index)"
               >
                 <icon

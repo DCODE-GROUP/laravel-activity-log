@@ -17,6 +17,15 @@ class ActivityLogController extends Controller
     {
         $communication = config('activity-log.communication_log_relationship');
         $query = QueryBuilder::for(config('activity-log.activity_log_model'))
+            ->when($request->has('modelClass'), fn (Builder $q) => $q->where('activitiable_type', $request->input('modelClass')))
+            ->when($request->has('modelId'), fn (Builder $q) => $q->where('activitiable_id', $request->input('modelId')))
+            ->where(fn (Builder $builder) => $builder
+                ->whereNull('communication_log_id')
+                ->orWhere(fn (Builder $builder) => $builder
+                    ->whereNotNull('communication_log_id')
+                    ->whereNot('title', 'like', '% read an %')
+                    ->whereNot('title', 'like', '% view a %'))
+            )
             ->with([
                 config('activity-log.user_relationship'),
                 $communication,
@@ -37,16 +46,6 @@ class ActivityLogController extends Controller
                 'created_at',
             ])
             ->defaultSort('-id');
-
-        $query->when($request->has('modelClass'), fn () => $query->where('activitiable_type', $request->input('modelClass')));
-        $query->when($request->has('modelId'), fn () => $query->where('activitiable_id', $request->input('modelId')));
-        $query->where(fn (Builder $builder) => $builder
-            ->whereNull('communication_log_id')
-            ->orWhere(fn (Builder $builder) => $builder
-                ->whereNotNull('communication_log_id')
-                ->whereNot('title', 'like', '% read an %')
-                ->whereNot('title', 'like', '% view a %'))
-        );
 
         return new ActivityLogCollection(
             $query->paginate(config('activity-log.default_filter_pagination'))
