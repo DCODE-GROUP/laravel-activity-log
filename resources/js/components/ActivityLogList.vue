@@ -7,11 +7,11 @@
       <div class="flex w-[21.875rem] space-x-1">
         <label class="relative block w-full">
           <input
-            class="pl-8"
-            type="text"
-            name="name"
             v-model="searchKey"
             :placeholder="$t('activity-log.search.placeholder')"
+            class="pl-8"
+            name="name"
+            type="text"
             v-on:keyup.enter="searchTerm"
           />
           <button
@@ -20,8 +20,8 @@
             @click="searchTerm"
           >
             <icon
-              icon="MagnifyingGlassIcon"
               classes="text-primary-400 w-4 h-4"
+              icon="MagnifyingGlassIcon"
             ></icon>
           </button>
         </label>
@@ -37,7 +37,7 @@
         <col class="w-2/12" />
       </colgroup>
       <tbody class="">
-        <tr :key="activity.id" v-for="activity in activities">
+        <tr v-for="activity in activities" :key="activity.id">
           <td class="bg-slate-50 py-4 pl-3">
             {{
               activity.meta
@@ -49,8 +49,8 @@
             <div class="">
               <icon
                 v-if="activity.communication"
-                classes="w-5 h-5 mr-xsSpace inline cursor-pointer hover:text-blue-400"
                 :icon="activity.communication.icon"
+                classes="w-5 h-5 mr-xsSpace inline cursor-pointer hover:text-blue-400"
                 @click="openModal(activity)"
               ></icon>
               <span v-html="activity.description"></span>
@@ -78,7 +78,7 @@ export default {
   props: {
     getUrl: {
       type: String,
-      default: "/api/generic/activity-logs",
+      default: "/activity-logs",
     },
     modelClass: {
       type: String,

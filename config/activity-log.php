@@ -24,7 +24,7 @@ return [
     | Here you can configure the route paths and route name variables.
     |
     | What should the route path for the activity log be
-    | eg 'api/generic/activity-logs'
+    | eg '/activity-logs'
     |
     | What should the route name for the activity log be
     | eg eg 'api.generic.activity-logs',
