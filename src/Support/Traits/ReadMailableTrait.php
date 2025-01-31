@@ -36,7 +36,7 @@ trait ReadMailableTrait
 
     public function send($mailer)
     {
-        //todo: this code to skip error on phpunit test
+        // todo: this code to skip error on phpunit test
         if (app()->environment('testing')) {
             return parent::send($mailer);
         }
