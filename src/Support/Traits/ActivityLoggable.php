@@ -42,8 +42,8 @@ trait ActivityLoggable
             'title' => __('activity-log.actions.create').$this->activityLogEntityName(),
         ];
 
-        if (session()->has('session_uuid')) {
-            $data['session_uuid'] = session('session_uuid');
+        if (cache()->has('session_uuid')) {
+            $data['session_uuid'] = cache('session_uuid');
         }
 
         $this->createActivityLog($data);
@@ -91,7 +91,7 @@ trait ActivityLoggable
             $this->createActivityLog([
                 'title' => __('activity-log.actions.update').$this->activityLogEntityName(),
                 'description' => $this->getModelChanges($diff),
-                'session_uuid' => session('session_uuid'),
+                'session_uuid' => cache('session_uuid'),
             ]);
         }
     }
