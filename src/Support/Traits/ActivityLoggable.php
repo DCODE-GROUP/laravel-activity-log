@@ -43,16 +43,23 @@ trait ActivityLoggable
         ]);
     }
 
-    public function createActivityLog(array $description): ActivityLog
+    public function createActivityLog(array $data): ActivityLog
     {
-        $diff = data_get($description, 'diff', []);
+        $diff = data_get($data, 'diff', []);
 
         if (count($diff) === 1 && data_get($diff, '0.key') === 'Status') {
-            $description['title'] = Str::replace('updated', 'updated status for', $description['title']);
-            $description['type'] = ActivityLog::TYPE_STATUS;
+            $data['title'] = Str::replace('updated', 'updated status for', $data['title']);
+            $data['type'] = ActivityLog::TYPE_STATUS;
         }
 
-        return $this->targetModel()->activityLogs()->create($description);
+        if (Arr::exists($data, 'session_uuid')) {
+            return $this->targetModel()->activityLogs()->updateOrCreate(
+                ['session_uuid' => $data['session_uuid']],
+                Arr::except($data, 'session_uuid')
+            );
+        }
+
+        return $this->targetModel()->activityLogs()->create($data);
     }
 
     public function activityLogs(): MorphMany
@@ -78,6 +85,7 @@ trait ActivityLoggable
             $this->createActivityLog([
                 'title' => __('activity-log.actions.update').$this->activityLogEntityName(),
                 'description' => $this->getModelChanges($diff),
+                'session_uuid' => session('session_uuid'),
             ]);
         }
     }
@@ -153,7 +161,7 @@ trait ActivityLoggable
                 $from = $modelClass && $modelClass::find($from) ? ($modelClass::find($from))->determineModelKey() : '+';
                 $to = $modelClass && $modelClass::find($to) ? ($modelClass::find($to))->determineModelKey() : '+';
 
-                $key = (new $modelClass)->determineModelLabel();
+                $key = (new $modelClass())->determineModelLabel();
             }
         }
 
@@ -166,7 +174,7 @@ trait ActivityLoggable
 
     public function getActivityLogModelRelationFields(): array
     {
-        $model = new static;
+        $model = new static();
         $relationships = [];
 
         foreach ((new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
