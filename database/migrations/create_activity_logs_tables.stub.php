@@ -28,6 +28,7 @@ return new class extends Migration
 
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->increments('id');
+            $table->ulid('uuid')->nullable();
             $table->uuidMorphs('activitiable');
             $table->string('type')->default(ActivityLog::TYPE_DATA);
             $table->foreignIdFor(CommunicationLog::class)->nullable();
