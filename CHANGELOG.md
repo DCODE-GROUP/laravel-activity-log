@@ -3,13 +3,13 @@
 lists items that might need to run manually.
 
 * 20250207 - 2.0.14
-  Create a migration to add the `uuid` to the `activity_logss` table.
+  Create a migration to add the `session_uuid` to the `activity_logss` table.
 
 ```php
  public function up(): void
     {
         Schema::table('activity_logs', function (Blueprint $table) {
-            $table->ulid('uuid')->nullable()->after('id');
+            $table->uuid('session_uuid')->nullable()->after('diff');
         });
     }
 ```
