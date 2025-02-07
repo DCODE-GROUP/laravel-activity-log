@@ -37,10 +37,21 @@ trait ActivityLoggable
 
     public function logCreate(): void
     {
-        $this->createActivityLog([
+        $data = [
             'type' => ActivityLog::TYPE_DATA,
             'title' => __('activity-log.actions.create').$this->activityLogEntityName(),
-        ]);
+        ];
+
+        if (session()->has('session_uuid')) {
+            $data['session_uuid'] = session('session_uuid');
+        }
+
+        $this->createActivityLog($data);
+    }
+
+    public function activityLogEntityName(): string
+    {
+        return Arr::join(Str::ucsplit(class_basename($this)), ' ').' (id:'.$this->id.')';
     }
 
     public function createActivityLog(array $data): ActivityLog
@@ -70,11 +81,6 @@ trait ActivityLoggable
     public function targetModel(): self|Model
     {
         return $this;
-    }
-
-    public function activityLogEntityName(): string
-    {
-        return Arr::join(Str::ucsplit(class_basename($this)), ' ').' (id:'.$this->id.')';
     }
 
     public function logUpdate(): void
