@@ -28,7 +28,6 @@ return new class extends Migration
 
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->increments('id');
-            $table->ulid('uuid')->nullable();
             $table->uuidMorphs('activitiable');
             $table->string('type')->default(ActivityLog::TYPE_DATA);
             $table->foreignIdFor(CommunicationLog::class)->nullable();
@@ -37,6 +36,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->text('meta')->nullable();
             $table->json('diff')->nullable();
+            $table->uuid('session_uuid')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->foreign('created_by')->references('id')->on(config('activity-log.user_table'))->onDelete('cascade');
             $table->unsignedBigInteger('updated_by')->nullable();
