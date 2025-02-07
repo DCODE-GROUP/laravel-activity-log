@@ -2,6 +2,18 @@
 
 lists items that might need to run manually.
 
+* 20250207 - 2.0.14
+  Create a migration to add the `uuid` to the `activity_logss` table.
+
+```php
+ public function up(): void
+    {
+        Schema::table('activity_logs', function (Blueprint $table) {
+            $table->ulid('uuid')->nullable()->after('id');
+        });
+    }
+```
+
 * 20240618
   Added the exception block to the language file.
 
