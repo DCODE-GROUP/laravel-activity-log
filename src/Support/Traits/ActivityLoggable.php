@@ -37,22 +37,40 @@ trait ActivityLoggable
 
     public function logCreate(): void
     {
-        $this->createActivityLog([
+        $data = [
             'type' => ActivityLog::TYPE_DATA,
             'title' => __('activity-log.actions.create').$this->activityLogEntityName(),
-        ]);
-    }
+        ];
 
-    public function createActivityLog(array $description): ActivityLog
-    {
-        $diff = data_get($description, 'diff', []);
-
-        if (count($diff) === 1 && data_get($diff, '0.key') === 'Status') {
-            $description['title'] = Str::replace('updated', 'updated status for', $description['title']);
-            $description['type'] = ActivityLog::TYPE_STATUS;
+        if (cache()->has('session_uuid')) {
+            $data['session_uuid'] = cache('session_uuid');
         }
 
-        return $this->targetModel()->activityLogs()->create($description);
+        $this->createActivityLog($data);
+    }
+
+    public function activityLogEntityName(): string
+    {
+        return Arr::join(Str::ucsplit(class_basename($this)), ' ').' (id:'.$this->id.')';
+    }
+
+    public function createActivityLog(array $data): ActivityLog
+    {
+        $diff = data_get($data, 'diff', []);
+
+        if (count($diff) === 1 && data_get($diff, '0.key') === 'Status') {
+            $data['title'] = Str::replace('updated', 'updated status for', $data['title']);
+            $data['type'] = ActivityLog::TYPE_STATUS;
+        }
+
+        if (Arr::exists($data, 'session_uuid')) {
+            return $this->targetModel()->activityLogs()->updateOrCreate(
+                ['session_uuid' => $data['session_uuid']],
+                Arr::except($data, 'session_uuid')
+            );
+        }
+
+        return $this->targetModel()->activityLogs()->create($data);
     }
 
     public function activityLogs(): MorphMany
@@ -65,11 +83,6 @@ trait ActivityLoggable
         return $this;
     }
 
-    public function activityLogEntityName(): string
-    {
-        return Arr::join(Str::ucsplit(class_basename($this)), ' ').' (id:'.$this->id.')';
-    }
-
     public function logUpdate(): void
     {
         $diff = $this->getModelChangesJson(); // true: If we want to limit the storage of fields defined in modelRelation; false : If we want to storage all model change
@@ -78,6 +91,7 @@ trait ActivityLoggable
             $this->createActivityLog([
                 'title' => __('activity-log.actions.update').$this->activityLogEntityName(),
                 'description' => $this->getModelChanges($diff),
+                'session_uuid' => cache('session_uuid'),
             ]);
         }
     }
