@@ -43,7 +43,7 @@ export default {
       axios
         .delete(this.endpoint)
         .then(({ data }) => {
-          this.bus.$emit("addComment", data.data);
+          this.bus.$emit("refreshActivityLog");
           this.bus.$emit("closeActivityLogModal");
         })
         .catch(({ error }) => {

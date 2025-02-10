@@ -181,7 +181,7 @@ export default {
           .patch(this.commentUrl + "/" + this.activity.id, params)
           .then(({ data }) => {
             this.bus.$emit("cancelEditComment");
-            this.bus.$emit("addComment", data.data);
+            this.bus.$emit("closeActivityLogModal");
           })
           .catch(console.error);
       } else {
