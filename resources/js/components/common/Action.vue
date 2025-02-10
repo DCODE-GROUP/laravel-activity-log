@@ -61,8 +61,7 @@ export default {
       this.active = false;
     },
     openDeleteModal(activity) {
-      this.bus.$emit(this.modalEvent, {
-        confirmTitle: this.$t("activity-log.headings.confirm_delete"),
+      this.$emit(this.modalEvent, {
         componentName: "ActivityLogDeleteComment",
         componentData: {
           endpoint: this.getUrl + "/comment/" + activity.id,

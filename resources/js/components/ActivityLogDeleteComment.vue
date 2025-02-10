@@ -2,7 +2,7 @@
   <div class="flex flex-col flex-1">
     <div class="flex flex-col gap-4 flex-1">
       <div class="p-4 flex-1 flex flex-col gap-2">
-        {{ $t("ticket_design.phrases.confirm_delete") }}
+        {{ $t("activity-log.headings.confirm_delete") }}
       </div>
 
       <footer
