@@ -14,7 +14,6 @@ class ActivityLog extends JsonResource
 {
     public function toArray(Request $request): array
     {
-
         $createdAt = $this->resource->created_at->setTimezone($request->input('timezone', config('app.timezone', 'UTC')))->diffForHumans();
         $createdDate = $this->resource->created_at->setTimezone($request->input('timezone', config('app.timezone', 'UTC')))->format(config('activity-log.datetime_format'));
 
@@ -33,6 +32,7 @@ class ActivityLog extends JsonResource
             'communication' => $this->getCommunicationLog(),
             'icon' => ActivityLogModel::ICON_TYPE_MAP[$this->resource->type] ?? ActivityLogModel::ICON_TYPE_MAP[ActivityLogModel::TYPE_DATA],
             'color' => ActivityLogModel::COLOR_TYPE_MAP[$this->resource->type] ?? ActivityLogModel::COLOR_TYPE_MAP[ActivityLogModel::TYPE_DATA],
+            'delete_comment_endpoint' => $this->resource->type === ActivityLogModel::TYPE_COMMENT ? route(config('activity-log.route_name').'.comment.delete', $this->resource->id) : null,
         ];
     }
 

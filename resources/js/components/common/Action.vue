@@ -31,17 +31,17 @@
 </template>
 
 <script>
-import axios from "axios";
 import Icon from "./Icon.vue";
+import ActivityLogModal from "../ActivityLogModal.vue";
 
 export default {
   name: "Action",
   inject: ["bus"],
-  components: { Icon },
+  components: { ActivityLogModal, Icon },
   props: {
     modalEvent: {
       type: String,
-      default: "openModal",
+      default: "openActivityLogModal",
     },
     activity: {
       type: Object,
@@ -61,19 +61,13 @@ export default {
     onClickOutside(event) {
       this.active = false;
     },
-    openDeleteModal(activity) {
+    openDeleteModal() {
       this.bus.$emit(this.modalEvent, {
-        componentData: `<h5>${this.$t("activity-log.words.delete_note")}</h5><br/><span>${this.$t("activity-log.words.delete_note_content")}</span>`,
-        callback: this.deleteItem,
+        componentName: "ActivityLogDeleteComment",
+        componentData: {
+          endpoint: this.activity.delete_comment_endpoint,
+        },
       });
-    },
-    deleteItem() {
-      axios
-        .delete(this.getUrl + "/comment/" + this.activity.id)
-        .then(({ data }) => {
-          this.$emit("addComment", data.data);
-        })
-        .catch(console.error);
     },
     editItem() {
       this.$emit("editComment", this.activity.id);

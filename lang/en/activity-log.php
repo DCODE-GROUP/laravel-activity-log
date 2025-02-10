@@ -6,6 +6,7 @@ return [
         'title' => 'Activity Log',
         'page_title' => 'Activity Log - Page',
         'subjects' => ':model mentioned you in a comment on :entity ',
+        'confirm_delete_comment' => 'Confirm Delete Comment',
     ],
 
     'fields' => [

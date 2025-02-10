@@ -1,16 +1,16 @@
 <template>
   <div class="activity__toggle">
     <button
-      type="button"
+      :aria-checked="value"
+      :class="{ 'activity__toggle--button--active': value }"
       class="activity__toggle--button"
       role="switch"
-      :aria-checked="value"
+      type="button"
       @click="toggle"
-      :class="{ 'activity__toggle--button--active': value }"
     >
       <span
-        aria-hidden="true"
         :class="{ 'translate-x-5': value, 'translate-x-0': !value }"
+        aria-hidden="true"
       ></span>
     </button>
     <span :class="labelClass">{{ title }}</span>
@@ -20,6 +20,7 @@
 <script>
 export default {
   name: "Toggle",
+  inject: ["bus"],
   props: {
     value: {
       required: true,
@@ -34,7 +35,7 @@ export default {
   },
   methods: {
     toggle() {
-      this.$emit("input", !this.value);
+      this.bus.$emit("input", !this.value);
     },
   },
 };

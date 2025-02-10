@@ -206,6 +206,7 @@
         </template>
       </div>
     </div>
+    <activity-log-modal></activity-log-modal>
   </div>
 </template>
 <script>
@@ -258,7 +259,7 @@ export default {
     },
     modalEvent: {
       type: String,
-      default: "openModal",
+      default: "openActivityLogModal",
     },
     activityEmailComponentName: {
       type: String,
@@ -285,6 +286,7 @@ export default {
       default: true,
     },
   },
+
   data() {
     return {
       username:
@@ -311,6 +313,7 @@ export default {
       ],
     };
   },
+
   created() {
     this.bus.$on(this.filterEvent, ({ params }) => {
       this.filters = Object.assign({}, params, {
@@ -323,15 +326,22 @@ export default {
       this.filters[`filter[${name}]`] = term;
       this.$nextTick(() => this.getActivityLog());
     });
+
+    this.bus.$on("refreshActivityLog", () => {
+      this.$nextTick(() => this.getActivityLog());
+    });
   },
+
   async mounted() {
     await this.getActivityLog();
     this.collapView(this.defaultCollapView);
   },
+
   beforeUnmount: function created() {
     this.bus.$off(this.filterEvent);
     this.bus.$off("activityLogTermChanged");
   },
+
   methods: {
     getUserKeyName(username) {
       const spaceIndex = username.indexOf(" ");
