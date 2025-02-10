@@ -32,11 +32,12 @@
 
 <script>
 import Icon from "./Icon.vue";
+import ActivityLogModal from "../ActivityLogModal.vue";
 
 export default {
   name: "Action",
   inject: ["bus"],
-  components: { Icon },
+  components: { ActivityLogModal, Icon },
   props: {
     modalEvent: {
       type: String,

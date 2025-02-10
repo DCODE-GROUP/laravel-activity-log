@@ -206,6 +206,7 @@
         </template>
       </div>
     </div>
+    <activity-log-modal></activity-log-modal>
   </div>
 </template>
 <script>
