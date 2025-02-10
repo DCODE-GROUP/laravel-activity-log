@@ -67,17 +67,8 @@ export default {
         componentData: {
           endpoint: this.activity.delete_comment_endpoint,
         },
-        // callback: this.deleteItem,
       });
     },
-    // deleteItem() {
-    //   axios
-    //     .delete(this.getUrl + "/comment/" + this.activity.id)
-    //     .then(({ data }) => {
-    //       this.$emit("addComment", data.data);
-    //     })
-    //     .catch(console.error);
-    // },
     editItem() {
       this.$emit("editComment", this.activity.id);
     },

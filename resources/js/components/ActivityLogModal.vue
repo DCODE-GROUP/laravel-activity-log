@@ -64,10 +64,7 @@ export default {
     };
   },
   created() {
-    console.log("inside created of activity log modal");
     this.bus.$on("openActivityLogModal", (payload) => {
-      console.log(payload);
-      console.log("inside the triggered event");
       this.open();
       this.componentName = payload.componentName;
       this.componentData = payload.componentData;
