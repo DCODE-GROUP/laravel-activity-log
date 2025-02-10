@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import Icon from "./Icon.vue";
 
 export default {
@@ -63,18 +62,22 @@ export default {
     },
     openDeleteModal(activity) {
       this.bus.$emit(this.modalEvent, {
-        componentData: `<h5>${this.$t("activity-log.words.delete_note")}</h5><br/><span>${this.$t("activity-log.words.delete_note_content")}</span>`,
-        callback: this.deleteItem,
+        confirmTitle: this.$t("activity-log.headings.confirm_delete"),
+        componentName: "ActivityLogDeleteComment",
+        componentData: {
+          endpoint: this.getUrl + "/comment/" + this.activity.id,
+        },
+        // callback: this.deleteItem,
       });
     },
-    deleteItem() {
-      axios
-        .delete(this.getUrl + "/comment/" + this.activity.id)
-        .then(({ data }) => {
-          this.$emit("addComment", data.data);
-        })
-        .catch(console.error);
-    },
+    // deleteItem() {
+    //   axios
+    //     .delete(this.getUrl + "/comment/" + this.activity.id)
+    //     .then(({ data }) => {
+    //       this.$emit("addComment", data.data);
+    //     })
+    //     .catch(console.error);
+    // },
     editItem() {
       this.$emit("editComment", this.activity.id);
     },
