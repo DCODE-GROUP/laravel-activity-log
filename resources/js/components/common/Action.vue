@@ -61,11 +61,11 @@ export default {
     onClickOutside(event) {
       this.active = false;
     },
-    openDeleteModal(activity) {
+    openDeleteModal() {
       this.bus.$emit(this.modalEvent, {
         componentName: "ActivityLogDeleteComment",
         componentData: {
-          endpoint: activity.delete_comment_endpoint,
+          endpoint: this.activity.delete_comment_endpoint,
         },
         // callback: this.deleteItem,
       });
