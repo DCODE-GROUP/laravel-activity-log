@@ -65,7 +65,7 @@ export default {
       this.bus.$emit(this.modalEvent, {
         componentName: "ActivityLogDeleteComment",
         componentData: {
-          endpoint: this.getUrl + "/comment/" + activity.id,
+          endpoint: activity.delete_comment_endpoint,
         },
         // callback: this.deleteItem,
       });
