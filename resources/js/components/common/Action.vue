@@ -61,6 +61,7 @@ export default {
       this.active = false;
     },
     openDeleteModal(activity) {
+      console.log("going to emit event: " + this.modalEvent);
       this.$emit(this.modalEvent, {
         componentName: "ActivityLogDeleteComment",
         componentData: {
