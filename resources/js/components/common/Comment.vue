@@ -189,7 +189,7 @@ export default {
           .post(this.commentUrl, params)
           .then(({ data }) => {
             this.comment = null;
-            this.$emit("addComment", data.data);
+            this.bus.$emit("refreshActivityLog", data.data);
           })
           .catch(console.error);
       }
