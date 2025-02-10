@@ -36,7 +36,6 @@ import ActivityLogModal from "../ActivityLogModal.vue";
 
 export default {
   name: "Action",
-  inject: ["bus"],
   components: { ActivityLogModal, Icon },
   props: {
     modalEvent: {

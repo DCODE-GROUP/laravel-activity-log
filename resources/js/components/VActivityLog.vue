@@ -407,13 +407,13 @@ export default {
         this.filters[`filter[created_by]`] = "";
       }
       this.isFilterUser = $event;
-      this.bus.$emit(this.filterEvent, {
+      this.$emit(this.filterEvent, {
         params: this.filters,
         field: "created_by",
       });
     },
     openModal(activity) {
-      this.bus.$emit(this.modalEvent, {
+      this.$emit(this.modalEvent, {
         componentName: this.activityEmailComponentName,
         componentData: {
           content: activity.communication.content,

@@ -25,7 +25,7 @@ import axios from "axios";
 
 export default {
   name: "ActivityLogDeleteComment",
-  inject: ["bus", "i18n"],
+  inject: ["i18n"],
 
   props: {
     endpoint: {
@@ -43,14 +43,14 @@ export default {
       axios
         .delete(this.endpoint)
         .then(({ data }) => {
-          this.bus.$emit("addComment", data.data);
+          this.$emit("addComment", data.data);
         })
         .catch(({ error }) => {
           console.error(error);
         });
     },
     close() {
-      this.bus.$emit("modalClose");
+      this.$emit("modalClose");
     },
   },
 };
