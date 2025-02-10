@@ -9,11 +9,11 @@
         class="sticky bottom-0 inset-x-0 p-4 border-t border-slate-200 flex gap-2 justify-end bg-white"
       >
         <v-dsg-button type="secondary" @click="close">
-          {{ this.i18n.trans("generic.buttons.cancel") }}
+          {{ $t("generic.buttons.cancel") }}
         </v-dsg-button>
 
         <v-dsg-button type="error" @click.prevent="destroy">
-          {{ this.i18n.trans("generic.buttons.delete") }}
+          {{ $t("generic.buttons.delete") }}
         </v-dsg-button>
       </footer>
     </div>
