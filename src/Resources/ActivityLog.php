@@ -32,7 +32,7 @@ class ActivityLog extends JsonResource
             'communication' => $this->getCommunicationLog(),
             'icon' => ActivityLogModel::ICON_TYPE_MAP[$this->resource->type] ?? ActivityLogModel::ICON_TYPE_MAP[ActivityLogModel::TYPE_DATA],
             'color' => ActivityLogModel::COLOR_TYPE_MAP[$this->resource->type] ?? ActivityLogModel::COLOR_TYPE_MAP[ActivityLogModel::TYPE_DATA],
-            'delete_comment_endpoint' => $this->resource->type === ActivityLogModel::TYPE_COMMENT ? route('activity-log.comments.delete', $this->resource->id) : null,
+            'delete_comment_endpoint' => $this->resource->type === ActivityLogModel::TYPE_COMMENT ? route('activity-log.comment.delete', $this->resource->id) : null,
         ];
     }
 
