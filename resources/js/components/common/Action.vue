@@ -65,7 +65,7 @@ export default {
         confirmTitle: this.$t("activity-log.headings.confirm_delete"),
         componentName: "ActivityLogDeleteComment",
         componentData: {
-          endpoint: this.getUrl + "/comment/" + this.activity.id,
+          endpoint: this.getUrl + "/comment/" + activity.id,
         },
         // callback: this.deleteItem,
       });
