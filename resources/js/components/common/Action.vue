@@ -41,7 +41,7 @@ export default {
   props: {
     modalEvent: {
       type: String,
-      default: "openModal",
+      default: "openActivityLogModal",
     },
     activity: {
       type: Object,

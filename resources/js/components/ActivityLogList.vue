@@ -102,7 +102,7 @@ export default {
     },
     modalEvent: {
       type: String,
-      default: "openModal",
+      default: "openActivityLogModal",
     },
     filterEvent: {
       type: String,

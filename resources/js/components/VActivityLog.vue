@@ -258,7 +258,7 @@ export default {
     },
     modalEvent: {
       type: String,
-      default: "openModal",
+      default: "openActivityLogModal",
     },
     activityEmailComponentName: {
       type: String,
