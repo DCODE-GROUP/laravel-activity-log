@@ -2,21 +2,21 @@
   <div class="content">
     <div class="content__text">
       <Mentionable
-        :keys="['@']"
+        v-if="canMentionInComment"
         :items="items"
-        offset="10"
+        :keys="['@']"
         filtering-disabled
         insert-space
+        offset="10"
         @open="loadUsers()"
         @search="loadUsers($event)"
-        v-if="canMentionInComment"
       >
         <textarea
-          @keyup.enter="addCommentByEnter"
-          class="content__text--textarea focus:ring-0"
           v-model="comment"
-          rows="3"
           :placeholder="$t('activity-log.placeholders.add_comment')"
+          class="content__text--textarea focus:ring-0"
+          rows="3"
+          @keyup.enter="addCommentByEnter"
         ></textarea>
         <template #no-result>
           <div class="dim">
@@ -44,11 +44,11 @@
       </Mentionable>
       <div v-else>
         <textarea
-          @keyup.enter="addCommentByEnter"
-          class="content__text--textarea focus:ring-0"
           v-model="comment"
-          rows="3"
           :placeholder="$t('activity-log.placeholders.add_comment')"
+          class="content__text--textarea focus:ring-0"
+          rows="3"
+          @keyup.enter="addCommentByEnter"
         ></textarea>
       </div>
     </div>
@@ -64,12 +64,12 @@
           {{ $t("activity-log.buttons.cancel") }}
         </div>
         <div
-          class="content__action-button cursor-pointer"
           :class="{
             'content__action-button--disable': activity
               ? activity.meta === comment || !comment
               : !comment,
           }"
+          class="content__action-button cursor-pointer"
           @click="addComment"
         >
           {{
@@ -89,6 +89,7 @@ import { Mentionable } from "vue-mention";
 
 export default {
   name: "Comment",
+  inject: ["bus"],
   components: {
     Mentionable,
   },
@@ -161,7 +162,7 @@ export default {
       }
     },
     cancel() {
-      this.$emit("cancelEditComment");
+      this.bus.$emit("cancelEditComment");
     },
     addComment() {
       if (!this.comment) {
@@ -179,8 +180,8 @@ export default {
         axios
           .patch(this.commentUrl + "/" + this.activity.id, params)
           .then(({ data }) => {
-            this.$emit("cancelEditComment");
-            this.$emit("addComment", data.data);
+            this.bus.$emit("cancelEditComment");
+            this.bus.$emit("addComment", data.data);
           })
           .catch(console.error);
       } else {

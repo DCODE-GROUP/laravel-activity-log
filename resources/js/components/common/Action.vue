@@ -36,6 +36,7 @@ import ActivityLogModal from "../ActivityLogModal.vue";
 
 export default {
   name: "Action",
+  inject: ["bus"],
   components: { ActivityLogModal, Icon },
   props: {
     modalEvent: {
@@ -61,8 +62,7 @@ export default {
       this.active = false;
     },
     openDeleteModal(activity) {
-      console.log("going to emit event: " + this.modalEvent);
-      this.$emit(this.modalEvent, {
+      this.bus.$emit(this.modalEvent, {
         componentName: "ActivityLogDeleteComment",
         componentData: {
           endpoint: this.getUrl + "/comment/" + activity.id,
