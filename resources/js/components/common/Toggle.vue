@@ -20,7 +20,6 @@
 <script>
 export default {
   name: "Toggle",
-  inject: ["bus"],
   props: {
     value: {
       required: true,
@@ -35,7 +34,7 @@ export default {
   },
   methods: {
     toggle() {
-      this.bus.$emit("input", !this.value);
+      this.$emit("input", !this.value);
     },
   },
 };
