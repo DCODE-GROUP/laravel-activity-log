@@ -7,6 +7,7 @@
         :keys="['@']"
         filtering-disabled
         insert-space
+        :allowSpace="canMentionSpace"
         offset="10"
         @open="loadUsers()"
         @search="loadUsers($event)"
@@ -130,6 +131,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    canMentionSpace: {
+      type: Boolean,
+      default: true,
+    }
   },
   data() {
     return {

@@ -23,7 +23,7 @@ updating
    ...
     "floating-vue": "^2.0.0-beta.1",
     "vue-markdown-render": "^2.1.1",
-    "vue-mention": "^2.0.0-alpha.3"
+    "@dcodegroup/vue-mention": "^0.0.1",
 }
 ```
 

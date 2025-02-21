@@ -9,6 +9,7 @@
       </div>
       <comment
         :can-mention-in-comment="canMentionInComment"
+        :can-mention-space="canMentionSpace"
         :comment-url="commentUrl"
         :enter-to-comment="enterToComment"
         :load-users-url="loadUsersUrl"
@@ -282,6 +283,10 @@ export default {
       required: false,
     },
     canMentionInComment: {
+      type: Boolean,
+      default: true,
+    },
+    canMentionSpace: {
       type: Boolean,
       default: true,
     },
