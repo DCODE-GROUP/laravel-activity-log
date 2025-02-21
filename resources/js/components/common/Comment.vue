@@ -134,7 +134,7 @@ export default {
     canMentionSpace: {
       type: Boolean,
       default: true,
-    }
+    },
   },
   data() {
     return {
