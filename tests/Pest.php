@@ -1,6 +1,6 @@
 <?php
 
-use Spatie\LoginLink\Tests\TestSupport\TestCase;
+use Dcodegroup\ActivityLog\Tests\TestSupport\TestCase;
 
 uses(TestCase::class)->in(__DIR__);
 
