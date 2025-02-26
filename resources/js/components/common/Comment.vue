@@ -86,7 +86,7 @@
 
 <script>
 import axios from "axios";
-import { Mentionable } from "vue-mention";
+import { Mentionable } from "@dcodegroup/vue-mention";
 
 export default {
   name: "Comment",
