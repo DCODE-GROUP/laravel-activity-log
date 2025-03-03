@@ -20,7 +20,10 @@
         @addComment="addComment($event)"
       ></comment>
     </div>
-    <div class="flex items-end justify-between space-x-2 py-smSpace">
+    <div
+      v-if="!isWidgetView"
+      class="flex items-end justify-between space-x-2 py-smSpace"
+    >
       <div class="flex justify-start space-x-2">
         <div class="w-[48px]"></div>
         <toggle
@@ -72,7 +75,8 @@
     </div>
     <div
       v-for="(activity, index) in activities"
-      class="activity activity--min relative !mt-0 pt-8 pl-0"
+      class="activity activity--min relative !mt-0 pl-0"
+      :class="{ 'pt-8': !isWidgetView, 'pb-lgSpace': isWidgetView }"
     >
       <div
         v-show="index < activities.length - 1"
@@ -181,7 +185,7 @@
                 ></icon>
               </a>
             </div>
-            <div v-if="activity.type === 'Comment'">
+            <div v-if="activity.type === 'Comment' && allowAction">
               <action
                 :activity="activity"
                 :get-url="getUrl"
@@ -246,6 +250,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    isWidgetView: {
+      type: Boolean,
+      default: false,
+    },
     refreshSelf: {
       type: Boolean,
       default: false,
@@ -294,8 +302,9 @@ export default {
 
   data() {
     return {
-      username:
-        this.currentUser.full_name ?? this.$t("activity-log.fields.system"),
+      username: this.currentUser
+        ? this.currentUser.full_name
+        : this.$t("activity-log.fields.system"),
       collapseStage: {},
       isCollapsedView: this.defaultCollapView,
       isFilterUser: false,
