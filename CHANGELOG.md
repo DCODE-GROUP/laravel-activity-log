@@ -2,6 +2,17 @@
 
 lists items that might need to run manually.
 
+* 20250313
+
+Ensure these pacakges are in `package.json`
+
+```json
+...
+    "floating-vue": "^2.0.0-beta.1",
+    "vue-markdown-render": "^2.1.1",
+    "@dcodegroup/vue-mention": "^0.0.1",
+```
+
 * 20240618
   Added the exception block to the language file.
 
