@@ -48,7 +48,7 @@ class ActivityLogController extends Controller
             ->defaultSort('-id');
 
         return new ActivityLogCollection(
-            $query->paginate($request->has('pagination') ? $request->input('pagination') :config('activity-log.default_filter_pagination'))
+            $query->paginate($request->has('pagination') ? $request->input('pagination') : config('activity-log.default_filter_pagination'))
         );
     }
 }
