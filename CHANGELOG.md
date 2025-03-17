@@ -1,6 +1,17 @@
 ## CHANGELOG
 
 lists items that might need to run manually.
+* 20250317
+
+Ensure these pacakges are in `package.json`
+
+```json
+...
+    "floating-vue": "^5.2.2",
+    "vue-markdown-render": "^2.1.1",
+    "@dcodegroup/vue-mention": "^0.0.2",
+```
+
 
 * 20250313
 

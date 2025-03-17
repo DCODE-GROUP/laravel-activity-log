@@ -73,6 +73,7 @@
         $t("activity-log.words.loading")
       }}</span>
     </div>
+    <template v-if="activities.length">
     <div
       v-for="(activity, index) in activities"
       class="activity activity--min relative !mt-0 pl-0"
@@ -211,6 +212,14 @@
         </template>
       </div>
     </div>
+    </template>
+    <div
+        v-else
+        class="flex h-full items-center justify-center space-x-2 py-8"
+        role="status"
+    >
+      <span class="text-lg font-medium text-tertiary-500">{{ noActivityText}}</span>
+    </div>
     <activity-log-modal></activity-log-modal>
   </div>
 </template>
@@ -297,6 +306,10 @@ export default {
     canMentionSpace: {
       type: Boolean,
       default: true,
+    },
+    noActivityText: {
+      type: String,
+      default: "No activity found",
     },
   },
 
