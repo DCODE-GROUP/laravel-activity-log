@@ -21,9 +21,9 @@ updating
 ```bash
 "dependencies": {
    ...
-    "floating-vue": "^2.0.0-beta.1",
+    "floating-vue": "^5.2.2",
     "vue-markdown-render": "^2.1.1",
-    "@dcodegroup/vue-mention": "^0.0.1",
+    "@dcodegroup/vue-mention": "^0.0.2",
 }
 ```
 
