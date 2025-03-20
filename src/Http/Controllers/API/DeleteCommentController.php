@@ -14,7 +14,7 @@ class DeleteCommentController extends Controller
     public function __invoke(ActivityLog $comment)
     {
         $model = $comment->activitiable()->first();
-        ActivityLogCommentDeleted::dispatch($comment);
+        event(new ActivityLogCommentDeleted($comment));
         $comment->delete();
 
         return $this->service->getActivityLogs($model);

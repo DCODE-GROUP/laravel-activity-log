@@ -26,7 +26,7 @@ class CommentController extends Controller
                 'title' => 'left a comment.',
                 'description' => $comment,
             ]);
-            ActivityLogCommentCreated::dispatch($activity);
+            event(new ActivityLogCommentCreated($activity));
             $url = $request->input('currentUrl').'#activity_'.$activity->id;
             $user = $request->filled('currentUser') ? $request->input('currentUser') : 'System';
             $modelName = $model->activityLogEntityName();
