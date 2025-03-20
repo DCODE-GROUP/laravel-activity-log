@@ -1,17 +1,33 @@
 ## CHANGELOG
 
 lists items that might need to run manually.
+
+* 20250320
+
+The package provides the following events:
+
+* **`ActivityLogCommentCreated`**: This event is fired when an activity log comment is created. The event receives the
+  activity log
+  instance.
+* **`ActivityLogCommentDeleted`**: This event is fired when an activity log comment is deleted. The event receives the
+  activity log instance.
+* **`ActivityLogCommentUpdated`**:  This event is fired when an activity log comment is update. The event receives the
+  activity log instance.
+* **`ActivityLogCommunicationRead`**:  This event is fired when an communication log is marked read. The event receives
+  the
+  communication log instance.
+
+
 * 20250317
 
 Ensure these pacakges are in `package.json`
 
 ```json
 ...
-    "floating-vue": "^5.2.2",
-    "vue-markdown-render": "^2.1.1",
-    "@dcodegroup/vue-mention": "^0.0.2",
+"floating-vue": "^5.2.2",
+"vue-markdown-render": "^2.1.1",
+"@dcodegroup/vue-mention": "^0.0.2",
 ```
-
 
 * 20250313
 
@@ -19,9 +35,9 @@ Ensure these pacakges are in `package.json`
 
 ```json
 ...
-    "floating-vue": "^2.0.0-beta.1",
-    "vue-markdown-render": "^2.1.1",
-    "@dcodegroup/vue-mention": "^0.0.1",
+"floating-vue": "^2.0.0-beta.1",
+"vue-markdown-render": "^2.1.1",
+"@dcodegroup/vue-mention": "^0.0.1",
 ```
 
 * 20240618
