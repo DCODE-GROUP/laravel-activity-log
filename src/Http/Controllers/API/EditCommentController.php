@@ -2,6 +2,7 @@
 
 namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
+use Dcodegroup\ActivityLog\Events\ActivityLogCommentCreated;
 use Dcodegroup\ActivityLog\Http\Requests\EditCommentRequest;
 use Dcodegroup\ActivityLog\Http\Services\ActivityLogService;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
@@ -15,6 +16,11 @@ class EditCommentController extends Controller
     {
         $this->service->mentionUserInComment($request->input('comment'), $comment);
         $model = $comment->activitiable()->first();
+
+        /**
+         * Where does the edit occur?
+         */
+        ActivityLogCommentCreated::dispatch($comment);
 
         return $this->service->getActivityLogs($model);
     }

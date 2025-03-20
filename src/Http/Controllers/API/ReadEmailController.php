@@ -19,6 +19,7 @@ class ReadEmailController extends Controller
                     'communication_log_id' => $activityLog->communication_log_id,
                     'type' => ActivityLog::TYPE_NOTIFICATION,
                 ])->save();
+                EmailRead::dispatch($activityLog);
             }
         }
     }
