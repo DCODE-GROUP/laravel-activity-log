@@ -15,7 +15,7 @@ The package provides the following events:
   activity log instance.
 * **`ActivityLogCommunicationRead`**:  This event is fired when an communication log is marked read. The event receives
   the
-  communication log instance.
+  activity log instance.
 
 
 * 20250317

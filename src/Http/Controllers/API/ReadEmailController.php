@@ -4,7 +4,6 @@ namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
 use Dcodegroup\ActivityLog\Events\ActivityLogCommunicationRead;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
-use Dcodegroup\ActivityLog\Models\CommunicationLog;
 use Illuminate\Routing\Controller;
 
 class ReadEmailController extends Controller
@@ -22,11 +21,7 @@ class ReadEmailController extends Controller
                     'type' => ActivityLog::TYPE_NOTIFICATION,
                 ])->save();
 
-                $communicationLog = CommunicationLog::query()->find($activityLog->communication_log_id);
-                if ($communicationLog instanceof CommunicationLog) {
-                    event(new ActivityLogCommunicationRead($communicationLog));
-                }
-
+                event(new ActivityLogCommunicationRead($activityLog));
             }
         }
     }

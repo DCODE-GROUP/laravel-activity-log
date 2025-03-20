@@ -2,9 +2,9 @@
 
 namespace Dcodegroup\ActivityLog\Events;
 
-use Dcodegroup\ActivityLog\Models\CommunicationLog;
+use Dcodegroup\ActivityLog\Models\ActivityLog;
 
 class ActivityLogCommunicationRead
 {
-    public function __construct(public CommunicationLog $communicationLog) {}
+    public function __construct(public ActivityLog $activityLog) {}
 }

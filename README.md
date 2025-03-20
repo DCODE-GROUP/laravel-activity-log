@@ -515,14 +515,15 @@ functionality is needed
 
 The package provides the following events:
 
-* **`ActivityLogCommentCreated`**: This event is fired when an activity log comment is created. The event receives the activity log
+* **`ActivityLogCommentCreated`**: This event is fired when an activity log comment is created. The event receives the
+  activity log
   instance.
 * **`ActivityLogCommentDeleted`**: This event is fired when an activity log comment is deleted. The event receives the
   activity log instance.
 * **`ActivityLogCommentUpdated`**:  This event is fired when an activity log comment is update. The event receives the
   activity log instance.
 * **`ActivityLogCommunicationRead`**:  This event is fired when an communication log is marked read. The event receives the
-  communication log instance.
+  activity log instance.
 
 ## Usage
 
