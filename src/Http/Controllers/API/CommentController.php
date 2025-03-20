@@ -2,6 +2,7 @@
 
 namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
+use Dcodegroup\ActivityLog\Events\ActivityLogCommentCreated;
 use Dcodegroup\ActivityLog\Http\Requests\ExistingRequest;
 use Dcodegroup\ActivityLog\Http\Services\ActivityLogService;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
@@ -25,6 +26,7 @@ class CommentController extends Controller
                 'title' => 'left a comment.',
                 'description' => $comment,
             ]);
+            event(new ActivityLogCommentCreated($activity));
             $url = $request->input('currentUrl').'#activity_'.$activity->id;
             $user = $request->filled('currentUser') ? $request->input('currentUser') : 'System';
             $modelName = $model->activityLogEntityName();
