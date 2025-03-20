@@ -13,7 +13,7 @@ class ReadEmailController extends Controller
     public function __invoke(ActivityLog $activityLog)
     {
         if (! auth()->check()) {
-            if ($activityLog->communication_log_id) {
+            if (! empty($activityLog->communication_log_id)) {
                 $activityLog->replicate()->fill([
                     'title' => __('activity-log.words.read_email'),
                     'description' => '',
