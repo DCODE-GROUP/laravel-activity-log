@@ -20,15 +20,11 @@ class InstallCommand extends Command
      */
     protected $description = 'Install all of the Activity Log Feature';
 
-    /**
-     * @return void
-     */
-    public function handle()
+    public function handle(): void
     {
         if (app()->environment('local')) {
             $this->comment('Publishing Activity Log Migrations');
             $this->callSilent('vendor:publish', ['--tag' => 'activity-log-migrations']);
-
         }
 
         $this->comment('Publishing Activity Log Configuration...');
