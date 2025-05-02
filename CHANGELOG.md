@@ -2,6 +2,32 @@
 
 lists items that might need to run manually.
 
+* 20250502
+
+Add index to the `type` column in the `activity_logs` table.
+
+Migration file below
+
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('activity_logs', function (Blueprint $table) {
+            $table->index('type');
+        });
+    }
+};
+```
+
+```php
+
 * 20250320
 
 The package provides the following events:
