@@ -4,6 +4,9 @@ on:
   workflow_call:
   workflow_dispatch:
   push:
+    paths:
+      - '**.php'
+      - 'phpstan.neon.dist'
 
 jobs:
   php-cs-fixer:
@@ -66,7 +69,7 @@ jobs:
           APP_ENV: testing
 
       - name: Run PHPStan
-        run: ./vendor/bin/phpstan --error-format=github -c ./phpstan.neon.dist
+        run: ./vendor/bin/phpstan
 
   eslint:
     runs-on: ubuntu-latest
