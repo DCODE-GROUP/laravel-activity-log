@@ -16,6 +16,7 @@ class ActivityLogController extends Controller
     public function __invoke(ExistingRequest $request): ActivityLogCollection
     {
         $communication = config('activity-log.communication_log_relationship');
+        // @phpstan-ignore-next-line
         $query = QueryBuilder::for(config('activity-log.activity_log_model'))
             ->when($request->has('modelClass'), fn (Builder $q) => $q->where('activitiable_type', $request->input('modelClass')))
             ->when($request->has('modelId'), fn (Builder $q) => $q->where('activitiable_id', $request->input('modelId')))
