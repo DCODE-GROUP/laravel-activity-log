@@ -66,7 +66,7 @@ jobs:
           APP_ENV: testing
 
       - name: Run PHPStan
-        run: ./vendor/bin/phpstan --error-format=github -c phpstan.neon.dist
+        run: ./vendor/bin/phpstan --error-format=github -c ./phpstan.neon.dist
 
   eslint:
     runs-on: ubuntu-latest
