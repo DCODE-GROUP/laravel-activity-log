@@ -4,9 +4,6 @@ on:
   workflow_call:
   workflow_dispatch:
   push:
-    paths:
-      - '**.php'
-      - 'phpstan.neon.dist'
 
 jobs:
   php-cs-fixer:
