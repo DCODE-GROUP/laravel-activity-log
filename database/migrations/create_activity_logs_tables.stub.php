@@ -8,12 +8,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
         Schema::create('communication_logs', function (Blueprint $table) {
             $table->id();
@@ -29,7 +24,7 @@ return new class extends Migration
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->increments('id');
             $table->uuidMorphs('activitiable');
-            $table->string('type')->default(ActivityLog::TYPE_DATA);
+            $table->string('type')->default(ActivityLog::TYPE_DATA)->index();
             $table->foreignIdFor(CommunicationLog::class)->nullable();
             $table->foreign('communication_log_id')->references('id')->on('communication_logs');
             $table->string('title')->nullable()->default('updated this record');
@@ -45,12 +40,7 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('activity_logs');
         Schema::dropIfExists('communication_logs');
