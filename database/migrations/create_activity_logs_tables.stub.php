@@ -29,7 +29,7 @@ return new class extends Migration
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->increments('id');
             $table->uuidMorphs('activitiable');
-            $table->string('type')->default(ActivityLog::TYPE_DATA);
+            $table->string('type')->default(ActivityLog::TYPE_DATA)->index();
             $table->foreignIdFor(CommunicationLog::class)->nullable();
             $table->foreign('communication_log_id')->references('id')->on('communication_logs');
             $table->string('title')->nullable()->default('updated this record');
