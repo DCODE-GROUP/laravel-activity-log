@@ -21,9 +21,11 @@ class ActivityLogController extends Controller
         $communication = config('activity-log.communication_log_relationship');
 
         // @phpstan-ignore-next-line
-        $queryBuilder = QueryBuilder::for(config('activity-log.activity_log_model'))->where(fn ($query) => $query
-            ->when($request->has('modelClass'), fn (Builder $q) => $q->where('activitiable_type', $request->input('modelClass')))
-            ->when($request->has('modelId'), fn (Builder $q) => $q->where('activitiable_id', $request->input('modelId'))));
+        $queryBuilder = QueryBuilder::for(config('activity-log.activity_log_model'))
+            ->where(fn ($query) => $query
+                ->when($request->has('modelClass'), fn (Builder $q) => $q->where('activitiable_type', $request->input('modelClass')))
+                ->when($request->has('modelId'), fn (Builder $q) => $q->where('activitiable_id', $request->input('modelId')))
+            );
 
         if ($request->has('modelClass') && $request->has('modelId') && $request->has('extra_models')) {
             $modelClass = $request->input('modelClass');
@@ -67,7 +69,7 @@ class ActivityLogController extends Controller
                 AllowedFilter::exact('id'),
                 AllowedFilter::exact('type'),
                 AllowedFilter::custom('date', new DateRangeFilter('created_at')),
-                AllowedFilter::custom('term', new TermFilter),
+                AllowedFilter::custom('term', new TermFilter()),
             ])
             ->allowedSorts([
                 'id',
