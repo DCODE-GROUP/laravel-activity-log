@@ -1,6 +1,15 @@
 ## CHANGELOG
 
 lists items that might need to run manually.
+* 20250509
+
+Added – Support for `extra_models` parameter in the Activity Log API endpoint.
+`extra_models`: A comma-separated list of relationship method names to include related models' activities.
+
+When provided, the system will dynamically load specified relationships, and include related models' activities in the query using `orWhere` clauses.
+This enhancement allows for broader and more flexible activity retrieval across related models.
+
+
 
 * 20250502
 

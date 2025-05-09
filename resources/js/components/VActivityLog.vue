@@ -317,6 +317,9 @@ export default {
       type: String,
       default: "No activity found",
     },
+    extra_models: {
+      type: String,
+    },
   },
 
   data() {
@@ -394,6 +397,7 @@ export default {
         modelClass: this.modelClass,
         modelId: this.modelId,
         ...{ timezone: this.timezone },
+        ...{ extra_models: this.extra_models },
         ...this.filters,
       };
       return axios
