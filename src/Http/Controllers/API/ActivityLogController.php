@@ -28,7 +28,7 @@ class ActivityLogController extends Controller
         if ($request->has('modelClass') && $request->has('modelId') && $request->has('extra_models')) {
             $modelClass = $request->input('modelClass');
             $modelId = $request->input('modelId');
-            $extraModels =explode(',' , $request->input('extra_models'));
+            $extraModels = explode(',', $request->input('extra_models'));
             if (class_exists($modelClass) && is_subclass_of($modelClass, Model::class)) {
                 $model = $modelClass::find($modelId);
                 if ($model) {
@@ -39,9 +39,9 @@ class ActivityLogController extends Controller
                                 $relatedTable = $model->$relation()->getRelated();
 
                                 if ($relatedItems instanceof Collection) {
-                                    $queryBuilder->orWhere(fn($query) => $query->where('activitiable_type', get_class($relatedTable))->whereIn('activitiable_id', $relatedItems->pluck('id')->toArray()));
-                                } else if ($relatedItems) {
-                                    $queryBuilder->orWhere(fn($query) => $query->where('activitiable_type', get_class($relatedTable))->where('activitiable_id', $relatedItems->pluck('id')->toArray()));
+                                    $queryBuilder->orWhere(fn ($query) => $query->where('activitiable_type', get_class($relatedTable))->whereIn('activitiable_id', $relatedItems->pluck('id')->toArray()));
+                                } elseif ($relatedItems) {
+                                    $queryBuilder->orWhere(fn ($query) => $query->where('activitiable_type', get_class($relatedTable))->where('activitiable_id', $relatedItems->pluck('id')->toArray()));
                                 }
                             }
                         }
@@ -50,9 +50,9 @@ class ActivityLogController extends Controller
             }
         }
         $query = $queryBuilder
-            ->where(fn(Builder $builder) => $builder
+            ->where(fn (Builder $builder) => $builder
                 ->whereNull('communication_log_id')
-                ->orWhere(fn(Builder $builder) => $builder
+                ->orWhere(fn (Builder $builder) => $builder
                     ->whereNotNull('communication_log_id')
                     ->whereNot('title', 'like', '% read an %')
                     ->whereNot('title', 'like', '% view a %'))
