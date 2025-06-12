@@ -21,9 +21,9 @@ class ActivityLogMessageSentListener
                 'cc' => $this->formatAddressField($message, 'Cc'),
                 'bcc' => $this->formatAddressField($message, 'Bcc'),
             ], $this->formatAddressField($message, 'To'), $message->getBody()->bodyToString() ?: '');
-            $this->activityLog = $model->createActivityLog([
+            $model->createActivityLog([
                 'type' => ActivityLog::TYPE_NOTIFICATION,
-                'title' => __('activity-log.words.send_email').$this->formatAddressField($message, 'To'),
+                'title' => __('activity-log.words.send_email') . $this->formatAddressField($message, 'To'),
                 'description' => '',
                 'communication_log_id' => $communicationLog->id,
             ]);

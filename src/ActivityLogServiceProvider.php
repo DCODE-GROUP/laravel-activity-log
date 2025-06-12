@@ -4,6 +4,7 @@ namespace Dcodegroup\ActivityLog;
 
 use Dcodegroup\ActivityLog\Commands\InstallCommand;
 use Dcodegroup\ActivityLog\Listeners\ActivityLogMessageSentListener;
+use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -15,7 +16,7 @@ class ActivityLogServiceProvider extends ServiceProvider
      *
      * @var array<class-string, array<int, class-string>>
      */
-    protected $listen = [
+    protected array $listen = [
         MessageSent::class => [
             ActivityLogMessageSentListener::class,
         ],

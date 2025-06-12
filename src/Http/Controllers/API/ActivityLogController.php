@@ -64,7 +64,7 @@ class ActivityLogController extends Controller
                 }
             }
         }
-
+        // @phpstan-ignore-next-line
         $query = $queryBuilder
             ->where(fn (Builder $builder) => $builder
                 ->whereNull('communication_log_id')
