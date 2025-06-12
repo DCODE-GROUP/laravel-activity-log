@@ -22,39 +22,53 @@ class ActivityLogController extends Controller
 
         // @phpstan-ignore-next-line
         $queryBuilder = QueryBuilder::for(config('activity-log.activity_log_model'))
-            ->where(fn ($query) => $query
-                ->when($request->has('modelClass'), fn (Builder $q) => $q->where('activitiable_type', $request->input('modelClass')))
-                ->when($request->has('modelId'), fn (Builder $q) => $q->where('activitiable_id', $request->input('modelId')))
+            ->where(fn($query) => $query
+                ->when($request->has('modelClass'), fn(Builder $q) => $q->where('activitiable_type', $request->input('modelClass')))
+                ->when($request->has('modelId'), fn(Builder $q) => $q->where('activitiable_id', $request->input('modelId')))
             );
 
-        if ($request->has('modelClass') && $request->has('modelId') && $request->has('extra_models')) {
-            $modelClass = $request->input('modelClass');
-            $modelId = $request->input('modelId');
-            $extraModels = explode(',', $request->input('extra_models'));
-            if (class_exists($modelClass) && is_subclass_of($modelClass, Model::class)) {
-                $model = $modelClass::find($modelId);
-                if ($model) {
-                    foreach ($extraModels as $relation) {
-                        if (method_exists($model, $relation)) {
-                            if ($model->$relation() instanceof Relation) {
-                                $relatedItems = $model->$relation;
-                                $relatedTable = $model->$relation()->getRelated();
+        if (
+            $request->filled(['modelClass', 'modelId', 'extra_models']) &&
+            class_exists($request->modelClass) &&
+            is_subclass_of($request->modelClass, Model::class)
+        ) {
+            $modelClass = $request->modelClass;
+            $modelId = $request->modelId;
+            $extraModels = explode(',', $request->extra_models);
 
-                                if ($relatedItems instanceof Collection) {
-                                    $queryBuilder->orWhere(fn ($query) => $query->where('activitiable_type', get_class($relatedTable))->whereIn('activitiable_id', $relatedItems->pluck('id')->toArray()));
-                                } elseif ($relatedItems) {
-                                    $queryBuilder->orWhere(fn ($query) => $query->where('activitiable_type', get_class($relatedTable))->where('activitiable_id', $relatedItems->pluck('id')->toArray()));
-                                }
-                            }
-                        }
+            $model = $modelClass::find($modelId);
+
+            if ($model) {
+                foreach ($extraModels as $relation) {
+                    if (!method_exists($model, $relation)) {
+                        continue;
+                    }
+
+                    $relationInstance = $model->$relation();
+                    if (!($relationInstance instanceof Relation)) {
+                        continue;
+                    }
+
+                    $relatedItems = $model->$relation;
+                    $relatedClass = get_class($relationInstance->getRelated());
+
+                    $ids = $relatedItems instanceof Collection
+                        ? $relatedItems->pluck('id')->toArray()
+                        : ($relatedItems ? [$relatedItems->id] : []);
+
+                    if (!empty($ids)) {
+                        $queryBuilder->orWhere(fn($query) => $query->where('activitiable_type', $relatedClass)
+                            ->whereIn('activitiable_id', $ids)
+                        );
                     }
                 }
             }
         }
+
         $query = $queryBuilder
-            ->where(fn (Builder $builder) => $builder
+            ->where(fn(Builder $builder) => $builder
                 ->whereNull('communication_log_id')
-                ->orWhere(fn (Builder $builder) => $builder
+                ->orWhere(fn(Builder $builder) => $builder
                     ->whereNotNull('communication_log_id')
                     ->whereNot('title', 'like', '% read an %')
                     ->whereNot('title', 'like', '% view a %'))

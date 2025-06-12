@@ -36,27 +36,7 @@ trait ReadMailableTrait
 
     public function send($mailer)
     {
-        // todo: this code to skip error on phpunit test
-        if (app()->environment('testing')) {
-            return parent::send($mailer);
-        }
-
-        if (method_exists($this->model, 'createCommunicationLog') && method_exists($this->model, 'createActivityLog')) {
-            $envelope = $this->envelope();
-            $to = $this->to[0]['address'];
-            $communicationLog = $this->model->createCommunicationLog([
-                'subject' => $envelope->subject,
-                'cc' => $envelope->cc,
-                'bcc' => $envelope->bcc,
-            ], $to, $this->render() ?: '');
-            $this->activityLog = $this->model->createActivityLog([
-                'type' => ActivityLog::TYPE_NOTIFICATION,
-                'title' => __('activity-log.words.send_email').$to,
-                'description' => '',
-                'communication_log_id' => $communicationLog->id,
-            ]);
-        }
-
+        $this->mailableModel = $this->model;
         return parent::send($mailer);
     }
 }
