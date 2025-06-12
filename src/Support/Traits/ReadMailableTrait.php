@@ -3,6 +3,7 @@
 namespace Dcodegroup\ActivityLog\Support\Traits;
 
 use Dcodegroup\ActivityLog\Models\ActivityLog;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Mail\Mailables\Content;
 
 trait ReadMailableTrait
@@ -13,6 +14,8 @@ trait ReadMailableTrait
     protected $activityLog = null;
 
     protected $model = null;
+
+    public Model $mailableModel;
 
     public function prepareContent(): Content
     {
