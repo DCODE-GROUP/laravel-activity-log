@@ -22,9 +22,9 @@ class ActivityLogController extends Controller
 
         // @phpstan-ignore-next-line
         $queryBuilder = QueryBuilder::for(config('activity-log.activity_log_model'))
-            ->where(fn($query) => $query
-                ->when($request->has('modelClass'), fn(Builder $q) => $q->where('activitiable_type', $request->input('modelClass')))
-                ->when($request->has('modelId'), fn(Builder $q) => $q->where('activitiable_id', $request->input('modelId')))
+            ->where(fn ($query) => $query
+                ->when($request->has('modelClass'), fn (Builder $q) => $q->where('activitiable_type', $request->input('modelClass')))
+                ->when($request->has('modelId'), fn (Builder $q) => $q->where('activitiable_id', $request->input('modelId')))
             );
 
         if (
@@ -40,12 +40,12 @@ class ActivityLogController extends Controller
 
             if ($model) {
                 foreach ($extraModels as $relation) {
-                    if (!method_exists($model, $relation)) {
+                    if (! method_exists($model, $relation)) {
                         continue;
                     }
 
                     $relationInstance = $model->$relation();
-                    if (!($relationInstance instanceof Relation)) {
+                    if (! ($relationInstance instanceof Relation)) {
                         continue;
                     }
 
@@ -56,8 +56,8 @@ class ActivityLogController extends Controller
                         ? $relatedItems->pluck('id')->toArray()
                         : ($relatedItems ? [$relatedItems->id] : []);
 
-                    if (!empty($ids)) {
-                        $queryBuilder->orWhere(fn($query) => $query->where('activitiable_type', $relatedClass)
+                    if (! empty($ids)) {
+                        $queryBuilder->orWhere(fn ($query) => $query->where('activitiable_type', $relatedClass)
                             ->whereIn('activitiable_id', $ids)
                         );
                     }
@@ -66,9 +66,9 @@ class ActivityLogController extends Controller
         }
 
         $query = $queryBuilder
-            ->where(fn(Builder $builder) => $builder
+            ->where(fn (Builder $builder) => $builder
                 ->whereNull('communication_log_id')
-                ->orWhere(fn(Builder $builder) => $builder
+                ->orWhere(fn (Builder $builder) => $builder
                     ->whereNotNull('communication_log_id')
                     ->whereNot('title', 'like', '% read an %')
                     ->whereNot('title', 'like', '% view a %'))

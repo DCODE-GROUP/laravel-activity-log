@@ -40,6 +40,7 @@ trait ReadMailableTrait
     public function send($mailer)
     {
         $this->mailableModel = $this->model;
+
         return parent::send($mailer);
     }
 }
