@@ -140,7 +140,7 @@ export default {
     },
     openModal(activity) {
       this.bus.$emit(this.modalEvent, {
-        componentName: "SummaryEmail",
+        componentName: "ActivityEmail",
         componentData: {
           content: activity.communication.content,
           to: activity.communication.to,
