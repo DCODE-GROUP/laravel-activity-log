@@ -16,6 +16,8 @@ import {
   ArrowPathIcon,
   EllipsisHorizontalIcon,
   TrashIcon,
+  PhoneIcon,
+  ArrowDownTrayIcon,
 } from "@heroicons/vue/24/outline";
 
 export default {
@@ -30,7 +32,9 @@ export default {
     ChatBubbleLeftRightIcon,
     BellIcon,
     PencilIcon,
+    PhoneIcon,
     ArrowPathIcon,
+    ArrowDownTrayIcon,
     EllipsisHorizontalIcon,
     TrashIcon,
   },

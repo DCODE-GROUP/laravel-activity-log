@@ -37,6 +37,7 @@ return [
     ],
 
     'buttons' => [
+        'download_phone_call' => 'Download Phone Call',
         'comment' => 'Comment',
         'save' => 'Save',
         'preview_email' => '  Preview Email',
