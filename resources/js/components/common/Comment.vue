@@ -66,9 +66,9 @@
         </div>
         <div
           :class="{
-            'content__action-button--disable': loading || (activity
-              ? activity.meta === comment || !comment
-              : !comment),
+            'content__action-button--disable':
+              loading ||
+              (activity ? activity.meta === comment || !comment : !comment),
           }"
           class="content__action-button cursor-pointer"
           @click="addComment"
