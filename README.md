@@ -81,6 +81,31 @@ class User extends Authenticatable implements HasActivityUser
    
 ```
 
+
+## Service Provider
+
+Add the following contract to the `EventServiceProvider`.
+
+```php  
+<?php
+use Dcodegroup\ActivityLog\Listeners\ActivityLogMessageSentListener;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Mail\Events\MessageSent;
+
+
+class EventServiceProvider extends ServiceProvider
+{
+    protected $listen = [
+
+        MessageSent::class => [
+            ActivityLogMessageSentListener::class,
+        ],
+    ];
+}
+   
+```
+
+
 #### JS
 
 Add the following alias to `vite.config.js`

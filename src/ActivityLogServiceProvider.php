@@ -3,12 +3,25 @@
 namespace Dcodegroup\ActivityLog;
 
 use Dcodegroup\ActivityLog\Commands\InstallCommand;
+use Dcodegroup\ActivityLog\Listeners\ActivityLogMessageSentListener;
+use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class ActivityLogServiceProvider extends ServiceProvider
 {
+    /**
+     * The event to listener mappings for the application.
+     *
+     * @var array<class-string, array<int, class-string>>
+     */
+    protected array $listen = [
+        MessageSent::class => [
+            ActivityLogMessageSentListener::class,
+        ],
+    ];
+
     public function boot(): void
     {
         $this->offerPublishing();
