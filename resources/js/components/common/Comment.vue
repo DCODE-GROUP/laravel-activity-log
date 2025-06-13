@@ -66,9 +66,9 @@
         </div>
         <div
           :class="{
-            'content__action-button--disable': activity
+            'content__action-button--disable': loading || (activity
               ? activity.meta === comment || !comment
-              : !comment,
+              : !comment),
           }"
           class="content__action-button cursor-pointer"
           @click="addComment"
@@ -170,9 +170,10 @@ export default {
       this.bus.$emit("cancelEditComment");
     },
     addComment() {
-      if (!this.comment) {
+      if (!this.comment || this.loading) {
         return;
       }
+      this.loading = true;
       const params = {
         modelClass: this.modelClass,
         modelId: this.modelId,
@@ -185,6 +186,7 @@ export default {
         axios
           .patch(this.commentUrl + "/" + this.activity.id, params)
           .then(({ data }) => {
+            this.loading = false;
             this.bus.$emit("cancelEditComment");
             this.bus.$emit("closeActivityLogModal");
           })
@@ -194,6 +196,7 @@ export default {
           .post(this.commentUrl, params)
           .then(({ data }) => {
             this.comment = null;
+            this.loading = false;
             this.bus.$emit("refreshActivityLog", data.data);
           })
           .catch(console.error);
