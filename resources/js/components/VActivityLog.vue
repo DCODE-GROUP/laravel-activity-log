@@ -89,7 +89,7 @@
         >
           <icon
             v-if="activity.type"
-            :classes="'w-[24px] h-[24px] text-' + activity.color + '-500'"
+            :classes="'w-[18px] h-[18px] text-' + activity.color + '-500'"
             :icon="activity.icon"
           ></icon>
           <span
@@ -162,6 +162,26 @@
                     :content="activity.description"
                     :is-edited="activity.is_edited"
                   ></read-more-content>
+                </div>
+                <div
+                  v-if="activity.type === 'Phone Call'"
+                  class="flex items-center space-x-2 sm:flex-col sm:space-x-0 sm:space-y-smSpace sm:items-start py-smSpace"
+                >
+                  <a
+                    class="btn btn--secondary max-h-[32px] rounded-lg"
+                    :href="activity.meta"
+                  >
+                    <div
+                      class="flex items-center flex-row-reverse space-x-reverse"
+                    >
+                      <span>{{
+                        $t("activity-log.buttons.download_phone_call")
+                      }}</span>
+                      <div class="btn-icon btn__icon--left">
+                        <icon icon="ArrowDownTrayIcon"></icon>
+                      </div>
+                    </div>
+                  </a>
                 </div>
               </div>
             </div>

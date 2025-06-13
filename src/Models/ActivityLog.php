@@ -31,6 +31,8 @@ class ActivityLog extends Model
 
     final public const TYPE_STATUS = 'Change of Status';
 
+    final public const TYPE_PHONE = 'Phone Call';
+
     final public const TYPE_COMMENT = 'Comment';
 
     final public const TYPE_NOTIFICATION = 'Notification';
@@ -40,6 +42,7 @@ class ActivityLog extends Model
         self::TYPE_STATUS => 'ArrowPathIcon',
         self::TYPE_COMMENT => 'ChatBubbleLeftEllipsisIcon',
         self::TYPE_NOTIFICATION => 'BellIcon',
+        self::TYPE_PHONE => 'PhoneIcon',
     ];
 
     final public const COLOR_TYPE_MAP = [
@@ -47,6 +50,7 @@ class ActivityLog extends Model
         self::TYPE_STATUS => 'violet',
         self::TYPE_COMMENT => 'teal',
         self::TYPE_NOTIFICATION => 'orange',
+        self::TYPE_PHONE => 'orange',
     ];
 
     /**
