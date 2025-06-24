@@ -48,7 +48,7 @@ class ActivityLogController extends Controller
                     if ($relationInstance instanceof Relation) {
                         $relatedItems = $model->$relation;
                         $relatedClass = get_class($relationInstance->getRelated());
-                    } else if ($relationInstance instanceof Builder) {
+                    } elseif ($relationInstance instanceof Builder) {
                         $relatedItems = $relationInstance->get();
                         if ($relatedItems->isEmpty()) {
                             continue;
