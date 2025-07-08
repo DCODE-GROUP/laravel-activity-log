@@ -1,0 +1,23 @@
+providers:
+  - Dcodegroup\ActivityLog\Tests\Support\WorkbenchServiceProvider
+
+migrations:
+  - database/migrations
+
+workbench:
+  start: "/"
+  install: true
+  discovers:
+    web: true
+    api: false
+    commands: true
+    components: true
+    views: true
+  build: [
+    - cache:clear
+  ]
+  assets: [
+    - laravel-assets
+    - filament-views
+  ]
+  sync: []
