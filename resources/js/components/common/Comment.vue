@@ -1,94 +1,97 @@
 <template>
   <div class="content relative">
     <!-- Overlay shown when loading -->
-    <div v-if="loading" class="absolute inset-0 z-10 flex items-center justify-center bg-white bg-opacity-70" :aria-label="$t('activity-log.words.loading')">
+    <div
+      v-if="loading"
+      class="absolute inset-0 z-10 flex items-center justify-center bg-white bg-opacity-70"
+      :aria-label="$t('activity-log.words.loading')"
+    >
       <Icon class="h-lgSpace w-lgSpace animate-spin" icon="ArrowPathIcon" />
     </div>
 
+    <div class="">
+      <div class="content__text">
+        <Mentionable
+          v-if="canMentionInComment"
+          :items="items"
+          :keys="['@']"
+          filtering-disabled
+          insert-space
+          :allowSpace="canMentionSpace"
+          offset="10"
+          @open="loadUsers()"
+          @search="loadUsers($event)"
+        >
+          <textarea
+            v-model="comment"
+            :placeholder="$t('activity-log.placeholders.add_comment')"
+            class="content__text--textarea focus:ring-0"
+            rows="3"
+            @keyup.enter="addCommentByEnter"
+          ></textarea>
+          <template #no-result>
+            <div class="dim">
+              {{
+                loading
+                  ? $t("activity-log.fields.loading")
+                  : $t("activity-log.fields.no_result")
+              }}
+            </div>
+          </template>
 
-  <div class="">
-    <div class="content__text">
-      <Mentionable
-        v-if="canMentionInComment"
-        :items="items"
-        :keys="['@']"
-        filtering-disabled
-        insert-space
-        :allowSpace="canMentionSpace"
-        offset="10"
-        @open="loadUsers()"
-        @search="loadUsers($event)"
-      >
-        <textarea
-          v-model="comment"
-          :placeholder="$t('activity-log.placeholders.add_comment')"
-          class="content__text--textarea focus:ring-0"
-          rows="3"
-          @keyup.enter="addCommentByEnter"
-        ></textarea>
-        <template #no-result>
-          <div class="dim">
+          <template #item-@="{ item }">
+            <div class="mention-wrapper">
+              <div class="mention-wrapper--avatar activity__user--avatar">
+                <span class="font-bold !text-sm">{{
+                  item.label.charAt(0).toUpperCase() +
+                  item.label.charAt(1).toUpperCase()
+                }}</span>
+              </div>
+              <span class="dim">
+                {{ item.label }}
+              </span>
+            </div>
+          </template>
+        </Mentionable>
+        <div v-else>
+          <textarea
+            v-model="comment"
+            :placeholder="$t('activity-log.placeholders.add_comment')"
+            class="content__text--textarea focus:ring-0"
+            rows="3"
+            @keyup.enter="addCommentByEnter"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="content__action">
+        <div class="content__action-attachment"></div>
+        <div class="content__action-action flex">
+          <div
+            v-if="activity"
+            class="content__action-button content__action-button--cancel cursor-pointer mr-smSpace"
+            @click="cancel"
+          >
+            {{ $t("activity-log.buttons.cancel") }}
+          </div>
+          <div
+            :class="{
+              'content__action-button--disable':
+                loading ||
+                (activity ? activity.meta === comment || !comment : !comment),
+            }"
+            class="content__action-button cursor-pointer"
+            @click="addComment"
+          >
             {{
-              loading
-                ? $t("activity-log.fields.loading")
-                : $t("activity-log.fields.no_result")
+              activity
+                ? $t("activity-log.buttons.save")
+                : $t("activity-log.buttons.comment")
             }}
           </div>
-        </template>
-
-        <template #item-@="{ item }">
-          <div class="mention-wrapper">
-            <div class="mention-wrapper--avatar activity__user--avatar">
-              <span class="font-bold !text-sm">{{
-                item.label.charAt(0).toUpperCase() +
-                item.label.charAt(1).toUpperCase()
-              }}</span>
-            </div>
-            <span class="dim">
-              {{ item.label }}
-            </span>
-          </div>
-        </template>
-      </Mentionable>
-      <div v-else>
-        <textarea
-          v-model="comment"
-          :placeholder="$t('activity-log.placeholders.add_comment')"
-          class="content__text--textarea focus:ring-0"
-          rows="3"
-          @keyup.enter="addCommentByEnter"
-        ></textarea>
-      </div>
-    </div>
-
-    <div class="content__action">
-      <div class="content__action-attachment"></div>
-      <div class="content__action-action flex">
-        <div
-          v-if="activity"
-          class="content__action-button content__action-button--cancel cursor-pointer mr-smSpace"
-          @click="cancel"
-        >
-          {{ $t("activity-log.buttons.cancel") }}
-        </div>
-        <div
-          :class="{
-            'content__action-button--disable':
-              loading ||
-              (activity ? activity.meta === comment || !comment : !comment),
-          }"
-          class="content__action-button cursor-pointer"
-          @click="addComment"
-        >
-          {{
-            activity
-              ? $t("activity-log.buttons.save")
-              : $t("activity-log.buttons.comment")
-          }}
         </div>
       </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -102,7 +105,7 @@ export default {
   inject: ["bus"],
   components: {
     Mentionable,
-    Icon
+    Icon,
   },
   props: {
     enterToComment: {

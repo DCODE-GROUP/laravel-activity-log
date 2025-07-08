@@ -136,7 +136,9 @@
                         v-if="activity.communication.type === 'Sms'"
                         class="flex items-center flex-row-reverse space-x-reverse"
                       >
-                        <span>{{ $t("activity-log.buttons.preview_sms") }}</span>
+                        <span>{{
+                          $t("activity-log.buttons.preview_sms")
+                        }}</span>
                         <div class="btn-icon btn__icon--left">
                           <icon icon="ChatBubbleLeftRightIcon"></icon>
                         </div>
