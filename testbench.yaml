@@ -2,7 +2,8 @@ providers:
   - Dcodegroup\ActivityLog\Tests\Support\WorkbenchServiceProvider
 
 migrations:
-  - database/migrations
+  - workbench/database/migrations
+  - database/migrations  
 
 workbench:
   start: "/"

@@ -1,5 +1,12 @@
 <template>
-  <div class="content">
+  <div class="content relative">
+    <!-- Overlay shown when loading -->
+    <div v-if="loading" class="absolute inset-0 z-10 flex items-center justify-center bg-white bg-opacity-70" :aria-label="$t('activity-log.words.loading')">
+      <Icon class="h-lgSpace w-lgSpace animate-spin" icon="ArrowPathIcon" />
+    </div>
+
+
+  <div class="">
     <div class="content__text">
       <Mentionable
         v-if="canMentionInComment"
@@ -82,17 +89,20 @@
       </div>
     </div>
   </div>
+  </div>
 </template>
 
 <script>
 import axios from "axios";
 import { Mentionable } from "@dcodegroup/vue-mention";
+import Icon from "./Icon.vue";
 
 export default {
   name: "Comment",
   inject: ["bus"],
   components: {
     Mentionable,
+    Icon
   },
   props: {
     enterToComment: {

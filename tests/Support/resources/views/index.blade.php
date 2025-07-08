@@ -20,7 +20,7 @@
     <v-activity-log
     model-id="1"
     :is-widget-view="true"
-    model-class="Workbench\App\Models\User"
+    model-class="Workbench\App\Models\Ticket"
     :allow-comment="true"
     filter-event="activityTableFilterChange"
     >

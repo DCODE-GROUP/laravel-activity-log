@@ -28,6 +28,8 @@ class WorkbenchServiceProvider extends EventServiceProvider
 
         // Apply it globally to all routes
         app('router')->pushMiddlewareToGroup('web', 'force-login');
+        $userModel = config('auth.providers.users.model');
+        config(['activity-log.user_model' => $userModel]);
 
     }
 

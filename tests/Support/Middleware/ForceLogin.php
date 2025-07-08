@@ -14,7 +14,6 @@ class ForceLogin
         if (! Auth::check()) {
             Auth::loginUsingId(User::first()->id);
         }
-        \Log::info('ForceLogin ran', ['user_id' => optional(auth()->user())->id]);
 
         return $next($request);
     }
