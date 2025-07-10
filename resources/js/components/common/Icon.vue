@@ -18,6 +18,7 @@ import {
   TrashIcon,
   PhoneIcon,
   ArrowDownTrayIcon,
+  XMarkIcon,
 } from "@heroicons/vue/24/outline";
 
 export default {
@@ -37,6 +38,7 @@ export default {
     ArrowDownTrayIcon,
     EllipsisHorizontalIcon,
     TrashIcon,
+    XMarkIcon,
   },
   props: {
     icon: {
