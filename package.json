@@ -1,7 +1,9 @@
 {
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev:fe": "vite",
+    "testbench": "vendor/bin/testbench serve",
+    "dev": "concurrently \"npm run dev:fe\" \"npm run testbench\"",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx,vue,ts,tsx,json,scss",
     "lint:fix": "eslint . --ext js,jsx,vue,ts,tsx,json,scss --fix"
@@ -9,11 +11,14 @@
   "name": "activity-log",
   "devDependencies": {
     "@babel/eslint-parser": "^7.23.0",
+    "@dcodegroup/vue-mention": "^0.0.2",
     "@heroicons/vue": "^2.1.1",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
+    "@vitejs/plugin-vue": "^6.0.0",
     "@vue/compiler-sfc": "^3.2.33",
     "autoprefixer": "10.4.5",
     "axios": "1.7.8",
+    "concurrently": "^9.2.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-standard": "^17.1.0",
@@ -26,20 +31,23 @@
     "eslint-plugin-prettier-vue": "^5.0.0",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-vue": "^9.22.0",
+    "floating-vue": "^5.2.2",
+    "mitt": "^3.0.1",
     "npm-run-all": "^4.1.5",
+    "postcss": "^8.5.6",
     "resolve-url-loader": "^4.0.0",
     "sass": "^1.39.0",
     "sass-loader": "^12.1.0",
     "tailwindcss": "^3.4.1",
+    "vite": "^6.0.0",
     "vite-plugin-laravel-translations": "^0.2.2",
     "vue": "^3.2.37",
     "vue-loader": "^16.8.3",
+    "vue-markdown-render": "^2.1.1",
     "vue-router": "^3.0.1"
   },
   "dependencies": {
-    "@dcodegroup/vue-mention": "^0.0.2",
-    "floating-vue": "^5.2.2",
     "laravel-vue-i18n": "^2.7.6",
-    "vue-markdown-render": "^2.1.1"
+    "vue-i18n": "^9.14.4"
   }
 }

@@ -584,6 +584,10 @@ Please see [CHANGELOG](./CHANGELOG.md) for more information about recent changes
 We believe in the power of collaboration! If you share our passion for pushing the boundaries of business software, feel
 free to contribute, report issues, or suggest improvements. Your insights make us better.
 
+## Development
+
+You can use `pnpm run dev` to start the testbench development server and Vite.  The /vue endpoint allows you to interact with the components and will hotreload components during development.
+
 # Security
 
 If you've found an issue related to this package that includes any security concerns; please
