@@ -10,7 +10,7 @@
             class="-ml-1 flex h-xlSpace w-xlSpace cursor-pointer items-center justify-center rounded hover:bg-tertiary-100"
             @click="close"
           >
-            <v-icon icon="XMarkIcon"></v-icon>
+            <icon icon="XMarkIcon"></icon>
           </span>
         </div>
         <slot>
@@ -47,9 +47,12 @@
   </div>
 </template>
 <script>
+import Icon from "./common/Icon.vue";
+
 export default {
   name: "ActivityLogModal",
   inject: ["bus"],
+  components: { Icon },
   data() {
     return {
       isOpen: false,

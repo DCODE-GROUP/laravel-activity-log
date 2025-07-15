@@ -25,7 +25,7 @@
           <textarea
             v-model="comment"
             :placeholder="$t('activity-log.placeholders.add_comment')"
-            class="content__text--textarea focus:ring-0"
+            class="content__text--textarea"
             rows="3"
             @keyup.enter="addCommentByEnter"
           ></textarea>
@@ -180,7 +180,7 @@ export default {
       }
     },
     cancel() {
-      this.bus.$emit("cancelEditComment");
+      this.$emit("cancelEditComment");
     },
     addComment() {
       if (!this.comment || this.loading) {
@@ -200,8 +200,8 @@ export default {
           .patch(this.commentUrl + "/" + this.activity.id, params)
           .then(({ data }) => {
             this.loading = false;
-            this.bus.$emit("cancelEditComment");
-            this.bus.$emit("closeActivityLogModal");
+            this.$emit("cancelEditComment");
+            this.$emit("addComment", data.data);
           })
           .catch(console.error);
       } else {
@@ -210,7 +210,7 @@ export default {
           .then(({ data }) => {
             this.comment = null;
             this.loading = false;
-            this.bus.$emit("refreshActivityLog", data.data);
+            this.$emit("addComment", data.data);
           })
           .catch(console.error);
       }

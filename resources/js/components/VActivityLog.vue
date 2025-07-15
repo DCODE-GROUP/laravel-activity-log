@@ -213,7 +213,7 @@
                     ></icon>
                   </a>
                 </div>
-                <div v-if="activity.type === 'Comment' && allowAction">
+                <div v-if="activity.type === 'Comment' && !isWidgetView">
                   <action
                     :activity="activity"
                     :get-url="getUrl"
