@@ -14,7 +14,7 @@
         <span class="font-semibold">{{ date }}</span>
       </div>
     </div>
-    <div class="pt-smSpace" v-if="isMarkdownContent">
+    <div class="pt-smSpace" v-if="showMarkdownContent">
       <vue-markdown :source="content" />
     </div>
     <template v-else>
@@ -49,6 +49,22 @@ export default {
     isMarkdownContent: {
       type: Boolean,
       default: false,
+    },
+  },
+  computed: {
+    showMarkdownContent() {
+      const markdownPatterns = [
+        /^#{1,6} /m, // # Heading
+        /\*\*(.*?)\*\*/g, // bold
+        /\*(.*?)\*/g, // italic
+        /\[(.*?)\]\((.*?)\)/g, // link
+        /^>\s/m, // blockquote
+        /^-\s|\*\s|\+\s/m, // list
+      ];
+      return (
+        this.isMarkdownContent &&
+        markdownPatterns.some((pattern) => pattern.test(this.content))
+      );
     },
   },
 };
