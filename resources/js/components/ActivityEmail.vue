@@ -54,14 +54,17 @@ export default {
   computed: {
     showMarkdownContent() {
       const markdownPatterns = [
-        /^#{1,6} /m,            // # Heading
-        /\*\*(.*?)\*\*/g,       // bold
-        /\*(.*?)\*/g,           // italic
-        /\[(.*?)\]\((.*?)\)/g,  // link
-        /^>\s/m,                // blockquote
-        /^-\s|\*\s|\+\s/m       // list
+        /^#{1,6} /m, // # Heading
+        /\*\*(.*?)\*\*/g, // bold
+        /\*(.*?)\*/g, // italic
+        /\[(.*?)\]\((.*?)\)/g, // link
+        /^>\s/m, // blockquote
+        /^-\s|\*\s|\+\s/m, // list
       ];
-      return this.isMarkdownContent && markdownPatterns.some(pattern => pattern.test(this.content));
+      return (
+        this.isMarkdownContent &&
+        markdownPatterns.some((pattern) => pattern.test(this.content))
+      );
     },
   },
 };
