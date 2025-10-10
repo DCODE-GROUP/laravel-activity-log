@@ -151,6 +151,7 @@ trait ActivityLoggable
             //            ld('relation', $relation);
             ld('method: '.data_get($relation, 'method'));
             if (! empty($relation)) {
+                ld('got into relation');
                 $modelClass = $relation['modelClass'];
                 $from = $modelClass && $modelClass::find($from) ? ($modelClass::find($from))->determineModelKey() : '+';
                 $to = $modelClass && $modelClass::find($to) ? ($modelClass::find($to))->determineModelKey() : '+';
