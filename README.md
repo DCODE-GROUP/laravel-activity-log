@@ -471,8 +471,7 @@ public function getActivityLogModelExcludeFields(): array
 }
 ```
 
-```php
-
+### Custom Formatters
 
 You can use a custom formatter for fields in your model by using the `activityLogFieldFormatters` method.
 
@@ -493,6 +492,8 @@ use Illuminate\Support\Collection;
 `price` is the key for the field.
 Right hand side should be a closure than can then be used for format the value that will be present.
 
+### Entity name override
+
 You can override the default name / label for an entity. Simply create a method named `` that returns a string. Below is
 the default.
 
@@ -502,6 +503,26 @@ the default.
      return Arr::join(Str::ucsplit(class_basename($this)), ' ').' (id:'.$this->id.')';
   }
 ```
+
+### Override relations entity name for another value like the name of the field
+
+If you have a field such as `Approved By`. You may have a field in your database such as `approved_by` with a
+relationship name such as `approvedBy` that links to the `User::class` model. This would prefix the activity log message with User: for the field modified. 
+This is not useful when you may have multiple relationships to users on the one model. You can customise the relationship name with this field. Or multiple at once. 
+
+```php
+public function activityLogRelationNames(): Collection
+  {
+        return collect([
+            'assignedUser' => __('tickets.fields.assigned_user_id'),
+            'requestor' => __('tickets.fields.requestor_id'),
+            'approvedBy' => __('tickets.fields.approved_by'),
+        ]);
+  }
+```
+
+
+### Communication Log
 
 *`createCommunicationLog(array $data, string $to, string $content, string $type = CommunicationLog::TYPE_EMAIL): CommunicationLog`
 **: Create a new communication log.
