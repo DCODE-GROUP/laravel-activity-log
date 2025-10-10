@@ -148,17 +148,18 @@ trait ActivityLoggable
         if (in_array($attribute, collect($this->getActivityLogModelRelationFields())->pluck('foreignKey')->toArray())) {
             $relation = collect($this->getActivityLogModelRelationFields())->where('foreignKey', $attribute)->first();
 
-            ld('relation', $relation);
+            //            ld('relation', $relation);
+            ld('method', data_get($relation, 'method'));
             if (! empty($relation)) {
                 $modelClass = $relation['modelClass'];
                 $from = $modelClass && $modelClass::find($from) ? ($modelClass::find($from))->determineModelKey() : '+';
                 $to = $modelClass && $modelClass::find($to) ? ($modelClass::find($to))->determineModelKey() : '+';
 
-                //                if ($this->activityLogRelationNames()->has($relation)) {
-                //                    $key = $this->activityLogRelationNames()->get($relation);
-                //                } else {
-                //                    $key = (new $modelClass())->determineModelLabel();
-                //                }
+                if ($this->activityLogRelationNames()->has(data_get($relation, 'method'))) {
+                    $key = $this->activityLogRelationNames()->get(data_get($relation, 'method'));
+                } else {
+                    $key = (new $modelClass)->determineModelLabel();
+                }
             }
         }
 
@@ -205,6 +206,11 @@ trait ActivityLoggable
         return $relationships;
     }
 
+    public function activityLogRelationNames(): Collection
+    {
+        return collect();
+    }
+
     public function getModelChanges(?array $modelChangesJson = null): string
     {
         return collect($modelChangesJson ?: $this->getModelChangesJson())->map(function ($row) {
@@ -234,11 +240,6 @@ trait ActivityLoggable
         static::$availableRelations[static::class] = $relations;
 
         return $relations;
-    }
-
-    public function activityLogRelationNames(): Collection
-    {
-        return collect();
     }
 
     public function getActivityLogEmails(): array
