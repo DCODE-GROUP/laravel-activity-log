@@ -149,13 +149,14 @@ trait ActivityLoggable
             $relation = collect($this->getActivityLogModelRelationFields())->where('foreignKey', $attribute)->first();
 
             //            ld('relation', $relation);
-            ld('method', data_get($relation, 'method'));
+            ld('method: '.data_get($relation, 'method'));
             if (! empty($relation)) {
                 $modelClass = $relation['modelClass'];
                 $from = $modelClass && $modelClass::find($from) ? ($modelClass::find($from))->determineModelKey() : '+';
                 $to = $modelClass && $modelClass::find($to) ? ($modelClass::find($to))->determineModelKey() : '+';
 
                 if ($this->activityLogRelationNames()->has(data_get($relation, 'method'))) {
+                    ld('got into here');
                     $key = $this->activityLogRelationNames()->get(data_get($relation, 'method'));
                 } else {
                     $key = (new $modelClass)->determineModelLabel();
