@@ -160,6 +160,7 @@ trait ActivityLoggable
                 ld('this', $this);
                 ld('defaultkey', $defaultKey);
                 ld('relation names', $this->activityLogRelationNames());
+                ld($this->activityLogRelationNames()->has(data_get($relation, 'method')));
                 if ($this->activityLogRelationNames()->has(data_get($relation, 'method'))) {
                     ld('got into here');
                     $key = $this->activityLogRelationNames()->get(data_get($relation, 'method'), $defaultKey);

@@ -480,13 +480,12 @@ example. Add the following to the model
 ```php
 use Illuminate\Support\Collection;
 
-...
-    public function activityLogFieldFormatters(): Collection
-    {
-        return collect([
-            'price' => fn ($value) => Number::currency(($value / 100), 'AUD'),
-        ]);
-    }
+public function activityLogFieldFormatters(): Collection
+{
+    return collect([
+        'price' => fn ($value) => Number::currency(($value / 100), 'AUD'),
+    ]);
+}
 ```
 
 `price` is the key for the field.
