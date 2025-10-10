@@ -155,11 +155,12 @@ trait ActivityLoggable
                 $from = $modelClass && $modelClass::find($from) ? ($modelClass::find($from))->determineModelKey() : '+';
                 $to = $modelClass && $modelClass::find($to) ? ($modelClass::find($to))->determineModelKey() : '+';
 
+                $defaultKey = (new $modelClass)->determineModelLabel();
                 if ($this->activityLogRelationNames()->has(data_get($relation, 'method'))) {
                     ld('got into here');
-                    $key = $this->activityLogRelationNames()->get(data_get($relation, 'method'));
+                    $key = $this->activityLogRelationNames()->get(data_get($relation, 'method'), $defaultKey);
                 } else {
-                    $key = (new $modelClass)->determineModelLabel();
+                    $key = $defaultKey;
                 }
             }
         }
