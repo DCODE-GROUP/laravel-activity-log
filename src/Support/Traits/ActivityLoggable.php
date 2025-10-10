@@ -148,12 +148,17 @@ trait ActivityLoggable
         if (in_array($attribute, collect($this->getActivityLogModelRelationFields())->pluck('foreignKey')->toArray())) {
             $relation = collect($this->getActivityLogModelRelationFields())->where('foreignKey', $attribute)->first();
 
+            ld('relation', $relation);
             if (! empty($relation)) {
                 $modelClass = $relation['modelClass'];
                 $from = $modelClass && $modelClass::find($from) ? ($modelClass::find($from))->determineModelKey() : '+';
                 $to = $modelClass && $modelClass::find($to) ? ($modelClass::find($to))->determineModelKey() : '+';
 
-                $key = (new $modelClass)->determineModelLabel();
+                //                if ($this->activityLogRelationNames()->has($relation)) {
+                //                    $key = $this->activityLogRelationNames()->get($relation);
+                //                } else {
+                //                    $key = (new $modelClass())->determineModelLabel();
+                //                }
             }
         }
 
