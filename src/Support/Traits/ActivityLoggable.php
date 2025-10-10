@@ -167,6 +167,8 @@ trait ActivityLoggable
             }
         }
 
+        ld('key: '.$key);
+
         return [
             'key' => $key,
             'from' => sprintf('<span class="activity__db-content">%s</span>', $from ?? '+'),
