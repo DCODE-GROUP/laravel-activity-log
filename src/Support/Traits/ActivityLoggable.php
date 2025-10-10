@@ -231,6 +231,11 @@ trait ActivityLoggable
         return $relations;
     }
 
+    public function activityLogRelationNames(): Collection
+    {
+        return collect();
+    }
+
     public function getActivityLogEmails(): array
     {
         return [];
