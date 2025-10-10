@@ -156,6 +156,7 @@ trait ActivityLoggable
                 $to = $modelClass && $modelClass::find($to) ? ($modelClass::find($to))->determineModelKey() : '+';
 
                 $defaultKey = (new $modelClass)->determineModelLabel();
+                ld('relation names', $this->activityLogRelationNames());
                 if ($this->activityLogRelationNames()->has(data_get($relation, 'method'))) {
                     ld('got into here');
                     $key = $this->activityLogRelationNames()->get(data_get($relation, 'method'), $defaultKey);
