@@ -507,7 +507,7 @@ the default.
 
 If you have a field such as `Approved By`. You may have a field in your database such as `approved_by` with a
 relationship name such as `approvedBy` that links to the `User::class` model. This would prefix the activity log message with User: for the field modified. 
-This is not useful when you may have multiple relationships to users on the one model. You can customise the relationship name with this field. Or multiple at once. 
+This is not useful when you may have multiple relationships to users on the one model. You can customise the relationship name with this field, or multiple at once.
 
 ```php
 public function activityLogRelationNames(): Collection
