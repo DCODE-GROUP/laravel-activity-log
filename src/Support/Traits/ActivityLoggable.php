@@ -127,7 +127,7 @@ trait ActivityLoggable
 
     protected function activityLogFieldFormatters(): Collection
     {
-        return collect([]);
+        return collect();
     }
 
     private function formatValue($value)
@@ -146,31 +146,25 @@ trait ActivityLoggable
         $key = $attribute;
 
         if (in_array($attribute, collect($this->getActivityLogModelRelationFields())->pluck('foreignKey')->toArray())) {
-            $relation = collect($this->getActivityLogModelRelationFields())->where('foreignKey', $attribute)->first();
+            $relation = collect($this->getActivityLogModelRelationFields())
+                ->where('foreignKey', $attribute)
+                ->first();
 
-            //            ld('relation', $relation);
-            ld('method: '.data_get($relation, 'method'));
             if (! empty($relation)) {
-                ld('got into relation');
                 $modelClass = $relation['modelClass'];
                 $from = $modelClass && $modelClass::find($from) ? ($modelClass::find($from))->determineModelKey() : '+';
                 $to = $modelClass && $modelClass::find($to) ? ($modelClass::find($to))->determineModelKey() : '+';
 
                 $defaultKey = (new $modelClass)->determineModelLabel();
-                ld('this', $this);
-                ld('defaultkey', $defaultKey);
-                ld('relation names', $this->activityLogRelationNames());
-                ld($this->activityLogRelationNames()->has(data_get($relation, 'method')));
-                if ($this->activityLogRelationNames()->has(data_get($relation, 'method'))) {
-                    ld('got into here');
-                    $key = $this->activityLogRelationNames()->get(data_get($relation, 'method'), $defaultKey);
+                if ($this->activityLogRelationNames()
+                    ->has(data_get($relation, 'method'))) {
+                    $key = $this->activityLogRelationNames()
+                        ->get(data_get($relation, 'method'), $defaultKey);
                 } else {
                     $key = $defaultKey;
                 }
             }
         }
-
-        ld('key: '.$key);
 
         return [
             'key' => $key,
