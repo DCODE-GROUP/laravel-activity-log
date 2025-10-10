@@ -127,7 +127,7 @@ trait ActivityLoggable
 
     protected function activityLogFieldFormatters(): Collection
     {
-        return collect([]);
+        return collect();
     }
 
     private function formatValue($value)
@@ -146,14 +146,23 @@ trait ActivityLoggable
         $key = $attribute;
 
         if (in_array($attribute, collect($this->getActivityLogModelRelationFields())->pluck('foreignKey')->toArray())) {
-            $relation = collect($this->getActivityLogModelRelationFields())->where('foreignKey', $attribute)->first();
+            $relation = collect($this->getActivityLogModelRelationFields())
+                ->where('foreignKey', $attribute)
+                ->first();
 
             if (! empty($relation)) {
                 $modelClass = $relation['modelClass'];
                 $from = $modelClass && $modelClass::find($from) ? ($modelClass::find($from))->determineModelKey() : '+';
                 $to = $modelClass && $modelClass::find($to) ? ($modelClass::find($to))->determineModelKey() : '+';
 
-                $key = (new $modelClass)->determineModelLabel();
+                $defaultKey = (new $modelClass)->determineModelLabel();
+                if ($this->activityLogRelationNames()
+                    ->has(data_get($relation, 'method'))) {
+                    $key = $this->activityLogRelationNames()
+                        ->get(data_get($relation, 'method'), $defaultKey);
+                } else {
+                    $key = $defaultKey;
+                }
             }
         }
 
@@ -198,6 +207,11 @@ trait ActivityLoggable
         }
 
         return $relationships;
+    }
+
+    public function activityLogRelationNames(): Collection
+    {
+        return collect();
     }
 
     public function getModelChanges(?array $modelChangesJson = null): string
