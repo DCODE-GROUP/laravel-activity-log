@@ -375,6 +375,24 @@ export default {
   },
 
   created() {
+    this.bus.$on("refreshActivityLog", (payload) => {
+      // Back-compat: if no payload, refresh everyone (old callers)
+      if (!payload) {
+        this.$nextTick(() => this.getActivityLog());
+        return;
+      }
+
+      const myKey = `${this.modelClass}:${this.modelId}:${this.extra_models || ""}`;
+
+      // Only refresh if the message matches THIS instance
+      if (payload.key === myKey) {
+        // OPTIONAL: skip if the sender is this component
+        if (payload.senderUid && payload.senderUid === this._uid) return;
+
+        this.$nextTick(() => this.getActivityLog());
+      }
+    });
+
     this.bus.$on(this.filterEvent, ({ params }) => {
       this.filters = Object.assign({}, params, {
         "filter[term]": this.filters["filter[term]"],
@@ -503,6 +521,18 @@ export default {
       if (this.refreshSelf) {
         this.getActivityLog();
       }
+
+      this.$emit("commentAdded", {
+        event: $event,
+        activities: this.activities,
+        modelId: this.modelId,
+        modelClass: this.modelClass,
+      });
+
+      this.bus.$emit("refreshActivityLog", {
+        key: `${this.modelClass}:${this.modelId}:${this.extra_models || ""}`,
+        senderUid: this._uid, // Vue internal uid; good enough for “don’t refresh self”
+      });
     },
     editComment($event) {
       this.editId = $event;
