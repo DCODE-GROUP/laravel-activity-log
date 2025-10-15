@@ -375,7 +375,7 @@ export default {
   },
 
   created() {
-  this.bus.$on("refreshActivityLog", (payload) => {
+    this.bus.$on("refreshActivityLog", (payload) => {
       // Back-compat: if no payload, refresh everyone (old callers)
       if (!payload) {
         this.$nextTick(() => this.getActivityLog());
@@ -392,7 +392,7 @@ export default {
         this.$nextTick(() => this.getActivityLog());
       }
     });
-    
+
     this.bus.$on(this.filterEvent, ({ params }) => {
       this.filters = Object.assign({}, params, {
         "filter[term]": this.filters["filter[term]"],
@@ -531,7 +531,7 @@ export default {
 
       this.bus.$emit("refreshActivityLog", {
         key: `${this.modelClass}:${this.modelId}:${this.extra_models || ""}`,
-        senderUid: this._uid, // Vue internal uid; good enough for “don’t refresh self” 
+        senderUid: this._uid, // Vue internal uid; good enough for “don’t refresh self”
       });
     },
     editComment($event) {
