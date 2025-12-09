@@ -16,9 +16,7 @@ class CustomHtmlMail extends Mailable
     use ReadMailableTrait;
     use SerializesModels;
 
-    public function __construct(protected CommunicationLog $communicationLog)
-    {
-    }
+    public function __construct(protected CommunicationLog $communicationLog) {}
 
     /**
      * Get the message envelope.
