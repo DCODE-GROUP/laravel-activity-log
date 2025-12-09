@@ -2,6 +2,7 @@
 
 use Dcodegroup\ActivityLog\Http\Controllers\API\ActivityLogController;
 use Dcodegroup\ActivityLog\Http\Controllers\API\CommentController;
+use Dcodegroup\ActivityLog\Http\Controllers\API\ResendCommunicationController;
 use Dcodegroup\ActivityLog\Http\Controllers\API\DeleteCommentController;
 use Dcodegroup\ActivityLog\Http\Controllers\API\EditCommentController;
 use Dcodegroup\ActivityLog\Http\Controllers\API\FilterController;

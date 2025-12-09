@@ -333,6 +333,10 @@ export default {
       type: String,
       default: "activityLogFilterChange",
     },
+    resendEvent: {
+      type: String,
+      default: "activityLogResend",
+    },
     modalEvent: {
       type: String,
       default: "openActivityLogModal",
