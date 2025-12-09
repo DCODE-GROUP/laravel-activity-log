@@ -2,11 +2,11 @@
 
 use Dcodegroup\ActivityLog\Http\Controllers\API\ActivityLogController;
 use Dcodegroup\ActivityLog\Http\Controllers\API\CommentController;
-use Dcodegroup\ActivityLog\Http\Controllers\API\ResendCommunicationController;
 use Dcodegroup\ActivityLog\Http\Controllers\API\DeleteCommentController;
 use Dcodegroup\ActivityLog\Http\Controllers\API\EditCommentController;
 use Dcodegroup\ActivityLog\Http\Controllers\API\FilterController;
 use Dcodegroup\ActivityLog\Http\Controllers\API\ReadEmailController;
+use Dcodegroup\ActivityLog\Http\Controllers\API\ResendCommunicationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/'.config('activity-log.route_path'), ActivityLogController::class)->name(config('activity-log.route_name'));
