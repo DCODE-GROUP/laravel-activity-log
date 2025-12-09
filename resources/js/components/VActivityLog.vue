@@ -115,35 +115,55 @@
                     v-if="activity.communication"
                     class="flex items-center space-x-2 sm:flex-col sm:space-x-0 sm:space-y-smSpace sm:items-start"
                   >
-                    <button
-                      class="btn btn--secondary max-h-[32px] rounded-lg"
-                      type="button"
-                      @click="openModal(activity)"
-                    >
-                      <div
-                        v-if="activity.communication.type === 'Email'"
-                        class="flex items-center flex-row-reverse space-x-reverse"
+                    <div class="flex gap-2">
+                      <button
+                          class="btn btn--secondary max-h-[32px] rounded-lg"
+                          type="button"
+                          @click="openModal(activity)"
                       >
+                        <div
+                            v-if="activity.communication.type === 'Email'"
+                            class="flex items-center flex-row-reverse space-x-reverse"
+                        >
                         <span>{{
-                          $t("activity-log.buttons.preview_email")
-                        }}</span>
-                        <div class="btn-icon btn__icon--left">
-                          <icon icon="EnvelopeIcon"></icon>
+                            $t("activity-log.buttons.preview_email")
+                          }}</span>
+                          <div class="btn-icon btn__icon--left">
+                            <icon icon="EnvelopeIcon"></icon>
+                          </div>
                         </div>
-                      </div>
 
-                      <div
-                        v-if="activity.communication.type === 'Sms'"
-                        class="flex items-center flex-row-reverse space-x-reverse"
-                      >
+                        <div
+                            v-if="activity.communication.type === 'Sms'"
+                            class="flex items-center flex-row-reverse space-x-reverse"
+                        >
                         <span>{{
-                          $t("activity-log.buttons.preview_sms")
-                        }}</span>
-                        <div class="btn-icon btn__icon--left">
-                          <icon icon="ChatBubbleLeftRightIcon"></icon>
+                            $t("activity-log.buttons.preview_sms")
+                          }}</span>
+                          <div class="btn-icon btn__icon--left">
+                            <icon icon="ChatBubbleLeftRightIcon"></icon>
+                          </div>
                         </div>
-                      </div>
-                    </button>
+                      </button>
+                      <button
+                          v-if="allowResend"
+                          class="btn btn--secondary max-h-[32px] rounded-lg"
+                          type="button"
+                          @click="resentCommunication(activity.communication)"
+                          :disabled="resent"
+                      >
+                        <div
+                            class="flex items-center flex-row-reverse space-x-reverse"
+                        >
+                        <span>{{
+                            resent ? $t("activity-log.buttons.resent") : $t("activity-log.buttons.resend")
+                          }}</span>
+                          <div class="btn-icon btn__icon--left">
+                            <icon icon="ArrowPathIcon"></icon>
+                          </div>
+                        </div>
+                      </button>
+                    </div>
                     <div v-if="activity.communication.type === 'Email'">
                       <span v-if="activity.communication.reads_count"
                         >{{ $t("activity-log.phases.opened_on") }}
@@ -277,6 +297,10 @@ export default {
       type: String,
       default: "/activity-logs/filters/facets/created_by",
     },
+    resendUrl: {
+      type: String,
+      default: "/activity-logs/resent-communication",
+    },
     modelClass: {
       type: String,
       required: true,
@@ -286,6 +310,10 @@ export default {
       required: true,
     },
     allowComment: {
+      type: Boolean,
+      default: false,
+    },
+    allowResend: {
       type: Boolean,
       default: false,
     },
@@ -361,6 +389,7 @@ export default {
       searchKey: null,
       activities: [],
       editId: null,
+      resent: null,
       colors: [
         "bg-violet-50",
         "text-violet-500",
@@ -511,6 +540,19 @@ export default {
           isMarkdownContent: this.isMarkdownContent,
         },
       });
+    },
+    resentCommunication(communication) {
+      this.loading = true;
+      axios
+          .post(`${this.resendUrl}/${communication.id}`)
+          .then(() => {
+            this.loading = false;
+            this.resent = true;
+          })
+          .catch(console.error)
+          .finally(() => {
+            this.loading = false;
+          });
     },
     addComment($event) {
       this.activities = [];

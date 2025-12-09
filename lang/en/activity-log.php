@@ -45,6 +45,8 @@ return [
         'delete' => 'Delete',
         'edit' => 'Edit',
         'cancel' => 'Cancel',
+        'resend' => 'Resend',
+        'resent' => 'Resent',
     ],
 
     'placeholders' => [
