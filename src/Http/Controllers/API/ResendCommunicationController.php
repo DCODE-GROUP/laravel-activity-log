@@ -2,7 +2,7 @@
 
 namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
-use Dcodegroup\ActivityLog\CustomHtmlMail;
+use Dcodegroup\ActivityLog\Mail\CustomHtmlMail;
 use Dcodegroup\ActivityLog\Models\CommunicationLog;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Mail;
