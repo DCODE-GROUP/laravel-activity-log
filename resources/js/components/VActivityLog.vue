@@ -117,15 +117,15 @@
                   >
                     <div class="flex gap-2">
                       <button
-                          class="btn btn--secondary max-h-[32px] rounded-lg"
-                          type="button"
-                          @click="openModal(activity)"
+                        class="btn btn--secondary max-h-[32px] rounded-lg"
+                        type="button"
+                        @click="openModal(activity)"
                       >
                         <div
-                            v-if="activity.communication.type === 'Email'"
-                            class="flex items-center flex-row-reverse space-x-reverse"
+                          v-if="activity.communication.type === 'Email'"
+                          class="flex items-center flex-row-reverse space-x-reverse"
                         >
-                        <span>{{
+                          <span>{{
                             $t("activity-log.buttons.preview_email")
                           }}</span>
                           <div class="btn-icon btn__icon--left">
@@ -134,10 +134,10 @@
                         </div>
 
                         <div
-                            v-if="activity.communication.type === 'Sms'"
-                            class="flex items-center flex-row-reverse space-x-reverse"
+                          v-if="activity.communication.type === 'Sms'"
+                          class="flex items-center flex-row-reverse space-x-reverse"
                         >
-                        <span>{{
+                          <span>{{
                             $t("activity-log.buttons.preview_sms")
                           }}</span>
                           <div class="btn-icon btn__icon--left">
@@ -146,17 +146,19 @@
                         </div>
                       </button>
                       <button
-                          v-if="allowResend"
-                          class="btn btn--secondary max-h-[32px] rounded-lg"
-                          type="button"
-                          @click="resentCommunication(activity.communication)"
-                          :disabled="resent"
+                        v-if="allowResend"
+                        class="btn btn--secondary max-h-[32px] rounded-lg"
+                        type="button"
+                        @click="resentCommunication(activity.communication)"
+                        :disabled="resent"
                       >
                         <div
-                            class="flex items-center flex-row-reverse space-x-reverse"
+                          class="flex items-center flex-row-reverse space-x-reverse"
                         >
-                        <span>{{
-                            resent ? $t("activity-log.buttons.resent") : $t("activity-log.buttons.resend")
+                          <span>{{
+                            resent
+                              ? $t("activity-log.buttons.resent")
+                              : $t("activity-log.buttons.resend")
                           }}</span>
                           <div class="btn-icon btn__icon--left">
                             <icon icon="ArrowPathIcon"></icon>
@@ -548,15 +550,15 @@ export default {
     resentCommunication(communication) {
       this.loading = true;
       axios
-          .post(`${this.resendUrl}/${communication.id}`)
-          .then(() => {
-            this.loading = false;
-            this.resent = true;
-          })
-          .catch(console.error)
-          .finally(() => {
-            this.loading = false;
-          });
+        .post(`${this.resendUrl}/${communication.id}`)
+        .then(() => {
+          this.loading = false;
+          this.resent = true;
+        })
+        .catch(console.error)
+        .finally(() => {
+          this.loading = false;
+        });
     },
     addComment($event) {
       this.activities = [];
