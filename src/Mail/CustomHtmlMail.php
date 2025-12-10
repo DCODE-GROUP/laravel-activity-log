@@ -5,8 +5,6 @@ namespace Dcodegroup\ActivityLog\Mail;
 use Dcodegroup\ActivityLog\Models\CommunicationLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class CustomHtmlMail extends Mailable
