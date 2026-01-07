@@ -2,7 +2,7 @@
 
 namespace Dcodegroup\ActivityLog\Http\Services;
 
-use Dcodegroup\ActivityLog\Mail\CommentNotification;
+use Dcodegroup\ActivityLog\Jobs\SendCommentNotificationJob;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Resources\ActivityLogCollection;
 use Illuminate\Database\Eloquent\Builder;
@@ -97,7 +97,8 @@ class ActivityLogService
                             // @phpstan-ignore-next-line
                             $data['action'] = ! empty($model->getMentionCommentUrl($userModel)) ? $model->getMentionCommentUrl($userModel) : $mailable['action'];
                         }
-                        Mail::to($email)->send(new CommentNotification($data, $model));
+
+                        SendCommentNotificationJob::dispatch($email, $data, $model);
                     }
                     $to = is_array($email) ? implode(', ', $email) : $email;
                     $comment = str_replace($key, '<a class="activity__comment--tag" href="mailto:'.$to.'">@'.$userModel->getActivityLogUserName().'</a>', $comment);

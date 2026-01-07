@@ -3,13 +3,14 @@
 namespace Dcodegroup\ActivityLog\Mail;
 
 use Dcodegroup\ActivityLog\Support\Traits\ReadMailableTrait;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class CommentNotification extends Mailable
+class CommentNotification extends Mailable implements ShouldQueue
 {
     use Queueable;
     use ReadMailableTrait;
