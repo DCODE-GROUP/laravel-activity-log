@@ -121,4 +121,15 @@ return [
 
     'open_modal_event' => env('LARAVEL_ACTIVITY_LOG_EVENT_OPEN_MODEL', 'openModal'),
     'reload_event' => env('LARAVEL_ACTIVITY_LOG_EVENT_RELOAD', 'getActivities'),
+
+    /*
+     |--------------------------------------------------------------------------
+     | Email Queue Names
+     |--------------------------------------------------------------------------
+     |
+    */
+
+    'queue_names' => [
+        'mention' => env('LARAVEL_ACTIVITY_LOG_MENTION_QUEUE_CONNECTION', 'redis')
+    ],
 ];
