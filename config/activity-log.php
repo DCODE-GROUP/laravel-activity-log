@@ -130,6 +130,6 @@ return [
     */
 
     'queue_names' => [
-        'mention' => env('LARAVEL_ACTIVITY_LOG_MENTION_QUEUE_CONNECTION', 'redis')
+        'mention' => env('LARAVEL_ACTIVITY_LOG_MENTION_QUEUE_CONNECTION', 'redis'),
     ],
 ];
