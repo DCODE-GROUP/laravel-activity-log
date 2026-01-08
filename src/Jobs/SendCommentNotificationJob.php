@@ -3,14 +3,14 @@
 namespace Dcodegroup\ActivityLog\Jobs;
 
 use Dcodegroup\ActivityLog\Mail\CommentNotification;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class SendCommentNotificationJob  implements ShouldQueue
+class SendCommentNotificationJob implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
