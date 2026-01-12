@@ -303,6 +303,16 @@ return [
 
     'open_modal_event' => env('LARAVEL_ACTIVITY_LOG_EVENT_OPEN_MODEL', 'openModal'),
     'reload_event' => env('LARAVEL_ACTIVITY_LOG_EVENT_RELOAD', 'getActivities'),
+    
+    /*
+     |--------------------------------------------------------------------------
+     | Email Queue Name
+     | eg 'sync' or 'redis'
+     |--------------------------------------------------------------------------
+     |
+    */
+
+    'queue_name' => env('LARAVEL_ACTIVITY_LOG_QUEUE_CONNECTION', 'sync'),
 ];
 
 
