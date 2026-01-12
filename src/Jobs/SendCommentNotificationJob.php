@@ -19,7 +19,7 @@ class SendCommentNotificationJob implements ShouldQueue
 
     public function __construct(protected string $email, protected array $emailContent, protected $entityModel)
     {
-        $this->onQueue(config('activity-log.queue_names.mention'));
+        $this->onQueue(config('activity-log.queue_name'));
     }
 
     public function handle(): void
