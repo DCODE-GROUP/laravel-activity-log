@@ -129,5 +129,5 @@ return [
      |
     */
 
-    'queue_name' => env('LARAVEL_ACTIVITY_LOG_QUEUE_CONNECTION', 'sync'),
+    'queue_name' => env('LARAVEL_ACTIVITY_LOG_QUEUE_NAME', 'default'),
 ];

@@ -307,12 +307,11 @@ return [
     /*
      |--------------------------------------------------------------------------
      | Email Queue Name
-     | eg 'sync' or 'redis'
      |--------------------------------------------------------------------------
      |
     */
 
-    'queue_name' => env('LARAVEL_ACTIVITY_LOG_QUEUE_CONNECTION', 'sync'),
+    'queue_name' => env('LARAVEL_ACTIVITY_LOG_QUEUE_NAME', 'default'),
 ];
 
 
