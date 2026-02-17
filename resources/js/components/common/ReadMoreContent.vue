@@ -1,14 +1,19 @@
 <template>
   <div>
     <div class="readmore-container">
-      <span v-if="!isOpen && isNeedStrip" v-html="stripedContent"></span>
+      <span
+        v-if="!isOpen && isNeedStrip && !showFullComment"
+        v-html="stripedContent"
+      ></span>
       <span v-else v-html="content"></span>
-      <span v-if="isEdited" class="readmore-container--edited"
+      <span
+        v-if="isEdited && !showFullComment"
+        class="readmore-container--edited"
         >({{ $t("activity-log.words.edited") }})</span
       >
     </div>
-    <template v-if="this.enable && isNeedStrip">
-      <a @click.prevent="toggle" class="inline text-blue-600 cursor-pointer">{{
+    <template v-if="this.enable && isNeedStrip && !showFullComment">
+      <a class="inline text-blue-600 cursor-pointer" @click.prevent="toggle">{{
         isOpen
           ? $t("activity-log.words.read_less")
           : $t("activity-log.words.read_more")
@@ -34,6 +39,10 @@ export default {
       default: true,
     },
     open: {
+      type: Boolean,
+      default: false,
+    },
+    showFullComment: {
       type: Boolean,
       default: false,
     },
