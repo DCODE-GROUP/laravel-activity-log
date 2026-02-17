@@ -77,8 +77,8 @@
       <template v-if="activities.length">
         <div
           v-for="(activity, index) in activities"
-          class="activity activity--min relative !mt-0 pl-0"
           :class="{ 'pt-8': !isWidgetView, 'pb-lgSpace': isWidgetView }"
+          class="activity activity--min relative !mt-0 pl-0"
         >
           <div
             v-show="index < activities.length - 1"
@@ -147,10 +147,10 @@
                       </button>
                       <button
                         v-if="allowResend"
+                        :disabled="resent"
                         class="btn btn--secondary max-h-[32px] rounded-lg"
                         type="button"
                         @click="resentCommunication(activity.communication)"
-                        :disabled="resent"
                       >
                         <div
                           class="flex items-center flex-row-reverse space-x-reverse"
@@ -186,6 +186,7 @@
                     <read-more-content
                       :content="activity.description"
                       :is-edited="activity.is_edited"
+                      :show-full-comment="showFullComment"
                     ></read-more-content>
                   </div>
                   <div
@@ -193,8 +194,8 @@
                     class="flex items-center space-x-2 sm:flex-col sm:space-x-0 sm:space-y-smSpace sm:items-start py-smSpace"
                   >
                     <a
-                      class="btn btn--secondary max-h-[32px] rounded-lg"
                       :href="activity.meta"
+                      class="btn btn--secondary max-h-[32px] rounded-lg"
                     >
                       <div
                         class="flex items-center flex-row-reverse space-x-reverse"
@@ -377,6 +378,10 @@ export default {
     },
     extra_models: {
       type: String,
+    },
+    showFullComment: {
+      type: Boolean,
+      default: false,
     },
   },
 
