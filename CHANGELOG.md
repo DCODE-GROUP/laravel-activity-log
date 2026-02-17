@@ -2,6 +2,9 @@
 
 lists items that might need to run manually.
 
+* 20260217
+  Add ability to pass a new flag through to show the full comment text and not have to expand it.
+
 * 20250612
   The package provides the following listener:
 
