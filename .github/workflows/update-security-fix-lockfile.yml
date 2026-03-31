@@ -1,0 +1,265 @@
+name: Update lockfile
+
+on:
+  push:
+    branches:
+      - 'security-fix/**'
+    paths:
+      - 'package.json'
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to update lockfile on'
+        required: false
+        default: 'security-fix/axios-supply-chain-attack'
+
+permissions:
+  contents: write
+
+jobs:
+  update-security-fix-lockfile:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch || github.ref_name }}
+
+      - name: Detect Node.js version
+        id: detect-node
+        run: |
+          # Priority: 1. .nvmrc/.node-version/.tool-versions → 2. CI workflows → 3. package.json engines → 4. lts/*
+          VERSION=""
+          USE_FILE="false"
+          FILE=""
+          SOURCE=""
+
+          # --- 1. Version files (.nvmrc, .node-version, .tool-versions) ---
+          if [ -f ".nvmrc" ]; then
+            VERSION=$(cat .nvmrc | tr -d 'v \n')
+            USE_FILE="true"
+            FILE=".nvmrc"
+            SOURCE=".nvmrc"
+          elif [ -f ".node-version" ]; then
+            VERSION=$(cat .node-version | tr -d 'v \n')
+            USE_FILE="true"
+            FILE=".node-version"
+            SOURCE=".node-version"
+          elif [ -f ".tool-versions" ] && grep -q '^nodejs' .tool-versions; then
+            VERSION=$(grep '^nodejs' .tool-versions | awk '{print $2}')
+            USE_FILE="true"
+            FILE=".tool-versions"
+            SOURCE=".tool-versions"
+          fi
+
+          # --- 2. Scrape CI workflows (e.g. deploy.yml) ---
+          if [ -z "$VERSION" ] && [ -d ".github/workflows" ]; then
+            CI_NODE=$(grep -rh --include='*.yml' --include='*.yaml' 'node-version:' .github/workflows/ 2>/dev/null | grep -v 'node-version-file' | grep -v 'detect-node' | grep -v 'update-security-fix' | head -1 | sed 's/.*node-version:\s*//' | tr -d "\"' " || true)
+
+            if [ -n "$CI_NODE" ]; then
+              case "$CI_NODE" in
+                lts/*|lts/jod)   VERSION="22" ;;
+                lts/iron)        VERSION="20" ;;
+                lts/hydrogen)    VERSION="18" ;;
+                lts/gallium)     VERSION="16" ;;
+                *)               VERSION=$(echo "$CI_NODE" | grep -oP '\d+' | head -1) ;;
+              esac
+              [ -n "$VERSION" ] && SOURCE="CI workflow (node-version: $CI_NODE)"
+            fi
+          fi
+
+          # --- 3. package.json engines.node ---
+          if [ -z "$VERSION" ] && [ -f "package.json" ]; then
+            ENGINE=$(node -e "
+              const pkg = JSON.parse(require('fs').readFileSync('package.json','utf8'));
+              const eng = pkg.engines?.node;
+              if (eng) process.stdout.write(eng);
+            " 2>/dev/null || true)
+            if [ -n "$ENGINE" ]; then
+              VERSION=$(echo "$ENGINE" | grep -oP '\d+' | head -1)
+              SOURCE="package.json engines.node ($ENGINE)"
+            fi
+          fi
+
+          # --- 4. Default: current LTS (auto-updates with new LTS releases) ---
+          if [ -z "$VERSION" ]; then
+            VERSION="lts/*"
+            SOURCE="default (lts/*)"
+          fi
+
+          echo "source=$SOURCE"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "use-file=$USE_FILE" >> "$GITHUB_OUTPUT"
+          echo "file=$FILE" >> "$GITHUB_OUTPUT"
+          echo "Node.js: $VERSION (from $SOURCE)"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ steps.detect-node.outputs.use-file == 'true' && '' || steps.detect-node.outputs.version }}
+          node-version-file: ${{ steps.detect-node.outputs.use-file == 'true' && steps.detect-node.outputs.file || '' }}
+
+      - name: Respect .npmrc
+        run: |
+          if [ -f ".npmrc" ]; then
+            echo "Found .npmrc — will be used by package manager"
+            cat .npmrc
+          fi
+
+      - name: Detect and align package manager version
+        run: |
+          # --- npm version detection ---
+          # Priority: package.json engines.npm → package-lock.json lockfileVersion → .tool-versions → default
+          NPM_VERSION=""
+
+          # 1. Check package.json engines.npm
+          if [ -f "package.json" ]; then
+            ENGINE_NPM=$(node -e "
+              const pkg = JSON.parse(require('fs').readFileSync('package.json','utf8'));
+              if (pkg.engines?.npm) process.stdout.write(pkg.engines.npm);
+            " 2>/dev/null || true)
+            if [ -n "$ENGINE_NPM" ]; then
+              # Extract major version from constraint (e.g. ">=6" → 6, "8.x" → 8, "^9.0.0" → 9)
+              NPM_VERSION=$(echo "$ENGINE_NPM" | grep -oP '\d+' | head -1)
+              echo "Detected npm version from engines.npm: $ENGINE_NPM → installing npm@$NPM_VERSION"
+            fi
+          fi
+
+          # 2. Infer from package-lock.json lockfileVersion
+          if [ -z "$NPM_VERSION" ] && [ -f "package-lock.json" ]; then
+            LOCKFILE_VERSION=$(node -e "
+              const lock = JSON.parse(require('fs').readFileSync('package-lock.json','utf8'));
+              process.stdout.write(String(lock.lockfileVersion || ''));
+            " 2>/dev/null || true)
+            if [ -n "$LOCKFILE_VERSION" ]; then
+              case "$LOCKFILE_VERSION" in
+                1) NPM_VERSION="6" ; echo "lockfileVersion 1 → npm@6" ;;
+                2) NPM_VERSION="8" ; echo "lockfileVersion 2 → npm@8" ;;
+                3) NPM_VERSION=""   ; echo "lockfileVersion 3 → using default npm (9+)" ;;
+                *) echo "Unknown lockfileVersion: $LOCKFILE_VERSION → using default npm" ;;
+              esac
+            fi
+          fi
+
+          # 3. Check .tool-versions
+          if [ -z "$NPM_VERSION" ] && [ -f ".tool-versions" ] && grep -q '^npm' .tool-versions; then
+            NPM_VERSION=$(grep '^npm' .tool-versions | awk '{print $2}')
+            echo "Detected npm version from .tool-versions: $NPM_VERSION"
+          fi
+
+          # 4. Install specific npm version if needed
+          if [ -n "$NPM_VERSION" ]; then
+            CURRENT_NPM=$(npm --version | cut -d. -f1)
+            if [ "$CURRENT_NPM" != "$NPM_VERSION" ]; then
+              echo "Switching npm: v$CURRENT_NPM → v$NPM_VERSION"
+              npm install -g "npm@$NPM_VERSION" --force 2>&1 | tail -1
+            else
+              echo "npm v$CURRENT_NPM already matches"
+            fi
+          fi
+
+          echo "Using npm: $(npm --version)"
+          echo "Using node: $(node --version)"
+
+          # --- pnpm version detection ---
+          if [ -f "pnpm-lock.yaml" ]; then
+            PNPM_VERSION=""
+
+            # Check package.json packageManager field (e.g. "pnpm@8.15.0")
+            if [ -f "package.json" ]; then
+              PNPM_VERSION=$(node -e "
+                const pkg = JSON.parse(require('fs').readFileSync('package.json','utf8'));
+                const pm = pkg.packageManager || '';
+                const match = pm.match(/^pnpm@(\d+)/);
+                if (match) process.stdout.write(match[1]);
+              " 2>/dev/null || true)
+              [ -n "$PNPM_VERSION" ] && echo "Detected pnpm major version from packageManager: $PNPM_VERSION"
+            fi
+
+            # Check engines.pnpm
+            if [ -z "$PNPM_VERSION" ] && [ -f "package.json" ]; then
+              PNPM_VERSION=$(node -e "
+                const pkg = JSON.parse(require('fs').readFileSync('package.json','utf8'));
+                if (pkg.engines?.pnpm) {
+                  const match = pkg.engines.pnpm.match(/\d+/);
+                  if (match) process.stdout.write(match[0]);
+                }
+              " 2>/dev/null || true)
+              [ -n "$PNPM_VERSION" ] && echo "Detected pnpm major version from engines.pnpm: $PNPM_VERSION"
+            fi
+
+            # Infer from lockfile version
+            if [ -z "$PNPM_VERSION" ]; then
+              PNPM_LOCK_VERSION=$(head -5 pnpm-lock.yaml | grep 'lockfileVersion' | grep -oP '[\d.]+' | head -1 || true)
+              case "$PNPM_LOCK_VERSION" in
+                5.*|5)   PNPM_VERSION="7" ; echo "pnpm lockfileVersion $PNPM_LOCK_VERSION → pnpm@7" ;;
+                6.*|6)   PNPM_VERSION="8" ; echo "pnpm lockfileVersion $PNPM_LOCK_VERSION → pnpm@8" ;;
+                7.*|7|9.*|9) PNPM_VERSION="" ; echo "pnpm lockfileVersion $PNPM_LOCK_VERSION → using latest" ;;
+                *)       echo "Unknown pnpm lockfileVersion: $PNPM_LOCK_VERSION → using latest" ;;
+              esac
+            fi
+
+            # Scrape pnpm version from CI workflows (e.g. deploy.yml using pnpm/action-setup)
+            if [ -z "$PNPM_VERSION" ] && [ -d ".github/workflows" ]; then
+              CI_PNPM=$(grep -rh -A2 --include='*.yml' --include='*.yaml' 'pnpm/action-setup' .github/workflows/ 2>/dev/null | grep 'version:' | head -1 | sed 's/.*version:\s*//' | tr -d "\"' " || true)
+              if [ -n "$CI_PNPM" ]; then
+                PNPM_VERSION=$(echo "$CI_PNPM" | grep -oP '\d+' | head -1)
+                [ -n "$PNPM_VERSION" ] && echo "Detected pnpm version from CI workflow: $CI_PNPM → pnpm@$PNPM_VERSION"
+              fi
+            fi
+
+            if [ -n "$PNPM_VERSION" ]; then
+              echo "Installing pnpm@$PNPM_VERSION"
+              npm install -g "pnpm@$PNPM_VERSION" --force 2>&1 | tail -1
+            fi
+          fi
+
+      - name: Setup pnpm (fallback if not installed by version detection)
+        if: hashFiles('pnpm-lock.yaml') != ''
+        run: |
+          if ! command -v pnpm &>/dev/null; then
+            echo "Installing pnpm via corepack"
+            corepack enable
+            corepack prepare pnpm@latest --activate 2>/dev/null || npm install -g pnpm
+          fi
+          echo "Using pnpm: $(pnpm --version)"
+
+      - name: Setup bun
+        if: hashFiles('bun.lockb', 'bun.lock') != ''
+        uses: oven-sh/setup-bun@v2
+
+      - name: Detect package manager and update lockfile
+        run: |
+          if [ -f "pnpm-lock.yaml" ]; then
+            echo "Detected: pnpm"
+            pnpm install --lockfile-only --ignore-scripts
+          elif [ -f "bun.lockb" ] || [ -f "bun.lock" ]; then
+            echo "Detected: bun"
+            bun install --frozen-lockfile=false --ignore-scripts
+          elif [ -f "yarn.lock" ]; then
+            echo "Detected: yarn"
+            if [ -f ".yarnrc.yml" ]; then
+              corepack enable
+              yarn install --mode update-lockfile
+            else
+              yarn install --frozen-lockfile=false --ignore-scripts || yarn install --ignore-scripts
+            fi
+          elif [ -f "package-lock.json" ]; then
+            echo "Detected: npm"
+            npm install --package-lock-only --ignore-scripts
+          else
+            echo "No lockfile found, generating with npm"
+            npm install --package-lock-only --ignore-scripts
+          fi
+
+      - name: Commit updated lockfile
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No lockfile changes to commit"
+          else
+            git commit -m "chore: update lockfile after axios pin"
+            git push
+          fi
