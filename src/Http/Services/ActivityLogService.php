@@ -34,9 +34,10 @@ class ActivityLogService
         $this->communicationLogRelationship = config('activity-log.communication_log_relationship');
     }
 
-    public function getActivityLogs($model): ActivityLogCollection
+    public function getActivityLogs($model, $type = null): ActivityLogCollection
     {
         return new ActivityLogCollection($model->activityLogs()
+            ->when($type, fn (Builder $builder) => $builder->where('type', $type))
             ->with([
                 $this->userRelationship,
                 $this->communicationLogRelationship,

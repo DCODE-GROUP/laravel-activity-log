@@ -41,6 +41,6 @@ class CommentController extends Controller
             $this->service->mentionUserInComment($comment, $activity, $email);
         }
 
-        return $this->service->getActivityLogs($model);
+        return $this->service->getActivityLogs($model, ActivityLog::TYPE_COMMENT);
     }
 }
