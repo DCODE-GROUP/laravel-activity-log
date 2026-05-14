@@ -53,11 +53,6 @@ class ActivityLog extends Model
         self::TYPE_PHONE => 'orange',
     ];
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'activitiable_type',
         'activitiable_id',

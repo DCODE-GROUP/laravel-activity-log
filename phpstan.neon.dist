@@ -8,6 +8,8 @@ parameters:
         - config
         - database
     tmpDir: build/phpstan
+    configDirectories:
+        - config/
 
     checkOctaneCompatibility: true
     checkModelProperties: true
@@ -18,3 +20,5 @@ parameters:
         - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\\Model::allowedFilters#'
         - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Model::getActivityLogUserName#'
         - '#Class App\\Models\\User not found#'
+        - '#Trait Dcodegroup\\ActivityLog\\Support\\Traits\\ModelDeterminable is used zero times and is not analysed#'
+        - '#Trait Dcodegroup\\ActivityLog\\Support\\Traits\\ActivityLoggable is used zero times and is not analysed#'

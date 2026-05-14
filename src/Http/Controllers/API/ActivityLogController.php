@@ -3,6 +3,7 @@
 namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
 use Dcodegroup\ActivityLog\Http\Requests\ExistingRequest;
+use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Resources\ActivityLogCollection;
 use Dcodegroup\ActivityLog\Support\QueryBuilder\Filters\DateRangeFilter;
 use Dcodegroup\ActivityLog\Support\QueryBuilder\Filters\TermFilter;
@@ -20,7 +21,9 @@ class ActivityLogController extends Controller
     {
         $communication = config('activity-log.communication_log_relationship');
 
-        // @phpstan-ignore-next-line
+        /**
+         * @var QueryBuilder<ActivityLog> $queryBuilder
+         */
         $queryBuilder = QueryBuilder::for(config('activity-log.activity_log_model'))
             ->where(fn ($query) => $query
                 ->when($request->has('modelClass'), fn (Builder $q) => $q->where('activitiable_type', $request->input('modelClass')))
@@ -70,8 +73,23 @@ class ActivityLogController extends Controller
                 }
             }
         }
-        // @phpstan-ignore-next-line
+
         $query = $queryBuilder
+            ->allowedFilters(
+                'created_by',
+                AllowedFilter::exact('id'),
+                AllowedFilter::exact('type'),
+                AllowedFilter::custom('date', new DateRangeFilter('created_at')),
+                AllowedFilter::custom('term', new TermFilter),
+            )
+            ->allowedSorts(
+                'id',
+                'created_by',
+                'activitiable_type',
+                'content',
+                'created_at',
+            )
+            ->defaultSort('-id')
             ->where(fn (Builder $builder) => $builder
                 ->whereNull('communication_log_id')
                 ->orWhere(fn (Builder $builder) => $builder
@@ -83,22 +101,7 @@ class ActivityLogController extends Controller
                 config('activity-log.user_relationship'),
                 $communication,
                 "$communication.reads",
-            ])
-            ->allowedFilters([
-                'created_by',
-                AllowedFilter::exact('id'),
-                AllowedFilter::exact('type'),
-                AllowedFilter::custom('date', new DateRangeFilter('created_at')),
-                AllowedFilter::custom('term', new TermFilter),
-            ])
-            ->allowedSorts([
-                'id',
-                'created_by',
-                'activitiable_type',
-                'content',
-                'created_at',
-            ])
-            ->defaultSort('-id');
+            ]);
 
         return new ActivityLogCollection(
             $query->paginate($request->has('pagination') ? $request->input('pagination') : config('activity-log.default_filter_pagination'))

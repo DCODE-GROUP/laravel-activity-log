@@ -29,11 +29,6 @@ class CommunicationLog extends Model
         self::TYPE_EMAIL => 'EnvelopeIcon',
     ];
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'type',
         'to',

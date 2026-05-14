@@ -14,9 +14,8 @@ class DateRangeFilter implements Filter
         $this->propertyOverride = $propertyOverride;
     }
 
-    public function __invoke(Builder $query, $value, string $property): Builder
+    public function __invoke(Builder $query, $value, string $property): void
     {
-        // @phpstan-ignore-next-line
-        return $query->whereBetween($this->propertyOverride ?? $property, $value);
+        $query->whereBetween($this->propertyOverride ?? $property, $value);
     }
 }
