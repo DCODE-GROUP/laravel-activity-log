@@ -8,9 +8,9 @@ use Spatie\QueryBuilder\Filters\Filter;
 
 class TermFilter implements Filter
 {
-    public function __invoke(Builder $query, $value, string $property): Builder
+    public function __invoke(Builder $query, $value, string $property): void
     {
-        return $query->whereHas('user', function (Builder $q) use ($value) {
+        $query->whereHas('user', function (Builder $q) use ($value) {
             if (Schema::hasColumns('user', ['username', 'first_name', 'middle_name', 'last_name'])) {
                 return $q->where('username', 'like', "%$value%")
                     ->orWhere('first_name', 'like', "%$value%")
