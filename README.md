@@ -24,6 +24,7 @@ updating
     "floating-vue": "^5.2.2",
     "vue-markdown-render": "^2.1.1",
     "@dcodegroup/vue-mention": "^0.0.2",
+    "@heroicons/vue": "^2.2.0",
 }
 ```
 
