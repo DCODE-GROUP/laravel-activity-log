@@ -10,7 +10,7 @@
     </div>
 
     <div class="">
-      <div class="content__text">
+      <div :class="growWrap" class="content__text">
         <Mentionable
           v-if="canMentionInComment"
           :allowSpace="canMentionSpace"
@@ -22,15 +22,13 @@
           @open="loadUsers()"
           @search="loadUsers($event)"
         >
-          <div id="comment-input" :class="growWrap">
-            <textarea
-              v-model="comment"
-              :placeholder="$t('activity-log.placeholders.add_comment')"
-              class="content__text--textarea"
-              rows="3"
-              @keyup.enter="addCommentByEnter"
-            ></textarea>
-          </div>
+          <textarea
+            v-model="comment"
+            :placeholder="$t('activity-log.placeholders.add_comment')"
+            class="content__text--textarea"
+            rows="3"
+            @keyup.enter="addCommentByEnter"
+          ></textarea>
           <template #no-result>
             <div class="dim">
               {{
@@ -56,15 +54,13 @@
           </template>
         </Mentionable>
         <div v-else>
-          <div id="comment-input" :class="growWrap">
-            <textarea
-              v-model="comment"
-              :placeholder="$t('activity-log.placeholders.add_comment')"
-              class="content__text--textarea focus:ring-0"
-              rows="3"
-              @keyup.enter="addCommentByEnter"
-            ></textarea>
-          </div>
+          <textarea
+            v-model="comment"
+            :placeholder="$t('activity-log.placeholders.add_comment')"
+            class="content__text--textarea focus:ring-0"
+            rows="3"
+            @keyup.enter="addCommentByEnter"
+          ></textarea>
         </div>
       </div>
 
