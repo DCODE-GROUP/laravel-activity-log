@@ -3,8 +3,8 @@
     <!-- Overlay shown when loading -->
     <div
       v-if="loading"
-      class="absolute inset-0 z-10 flex items-center justify-center bg-white bg-opacity-70"
       :aria-label="$t('activity-log.words.loading')"
+      class="absolute inset-0 z-10 flex items-center justify-center bg-white bg-opacity-70"
     >
       <Icon class="h-lgSpace w-lgSpace animate-spin" icon="ArrowPathIcon" />
     </div>
@@ -13,22 +13,24 @@
       <div class="content__text">
         <Mentionable
           v-if="canMentionInComment"
+          :allowSpace="canMentionSpace"
           :items="items"
           :keys="['@']"
           filtering-disabled
           insert-space
-          :allowSpace="canMentionSpace"
           offset="10"
           @open="loadUsers()"
           @search="loadUsers($event)"
         >
-          <textarea
-            v-model="comment"
-            :placeholder="$t('activity-log.placeholders.add_comment')"
-            class="content__text--textarea"
-            rows="3"
-            @keyup.enter="addCommentByEnter"
-          ></textarea>
+          <div id="comment-input" :class="growWrap">
+            <textarea
+              v-model="comment"
+              :placeholder="$t('activity-log.placeholders.add_comment')"
+              class="content__text--textarea"
+              rows="3"
+              @keyup.enter="addCommentByEnter"
+            ></textarea>
+          </div>
           <template #no-result>
             <div class="dim">
               {{
@@ -54,13 +56,15 @@
           </template>
         </Mentionable>
         <div v-else>
-          <textarea
-            v-model="comment"
-            :placeholder="$t('activity-log.placeholders.add_comment')"
-            class="content__text--textarea focus:ring-0"
-            rows="3"
-            @keyup.enter="addCommentByEnter"
-          ></textarea>
+          <div id="comment-input" :class="growWrap">
+            <textarea
+              v-model="comment"
+              :placeholder="$t('activity-log.placeholders.add_comment')"
+              class="content__text--textarea focus:ring-0"
+              rows="3"
+              @keyup.enter="addCommentByEnter"
+            ></textarea>
+          </div>
         </div>
       </div>
 
@@ -148,6 +152,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    autoExpandCommentInput: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -155,6 +163,11 @@ export default {
       comment: this.activity ? this.activity.meta : null,
       items: [],
     };
+  },
+  computed: {
+    growWrap() {
+      return this.autoExpandCommentInput ? "grow-wrap" : "";
+    },
   },
   methods: {
     async loadUsers(searchText = null) {
@@ -220,6 +233,41 @@ export default {
 </script>
 
 <style scoped>
+.grow-wrap {
+  /* easy way to plop the elements on top of each other and have them both sized based on the tallest one's height */
+  display: grid;
+}
+
+.grow-wrap::after {
+  /* Note the weird space! Needed to preventy jumpy behavior */
+  content: attr(data-replicated-value) " ";
+
+  /* This is how textarea text behaves */
+  white-space: pre-wrap;
+
+  /* Hidden from view, clicks, and screen readers */
+  visibility: hidden;
+}
+
+.grow-wrap > textarea {
+  /* You could leave this, but after a user resizes, then it ruins the auto sizing */
+  resize: none;
+
+  /* Firefox shows scrollbar on growth, you can hide like this. */
+  overflow: hidden;
+}
+
+.grow-wrap > textarea,
+.grow-wrap::after {
+  /* Identical styling required!! */
+  border: 1px solid black;
+  padding: 0.5rem;
+  font: inherit;
+
+  /* Place on top of each other */
+  grid-area: 1 / 1 / 2 / 2;
+}
+
 .mention-wrapper {
   display: flex;
   padding: 6px;
