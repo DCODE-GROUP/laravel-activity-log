@@ -11,6 +11,11 @@
 
     <div class="">
       <div class="content__text">
+        <pre>
+ in here 
+        {{ growWrap }}
+        </pre>
+
         <Mentionable
           v-if="canMentionInComment"
           :allowSpace="canMentionSpace"
