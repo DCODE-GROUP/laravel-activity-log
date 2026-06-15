@@ -8,6 +8,7 @@
         }}</span>
       </div>
       <comment
+        :auto-grow-input="autoGrowInput"
         :can-mention-in-comment="canMentionInComment"
         :can-mention-space="canMentionSpace"
         :comment-url="commentUrl"
@@ -250,6 +251,7 @@
             <template v-else>
               <comment
                 :activity="activity"
+                :auto-grow-input="autoGrowInput"
                 :comment-url="commentUrl"
                 :load-users-url="loadUsersUrl"
                 :model-class="modelClass"
@@ -380,6 +382,10 @@ export default {
       type: String,
     },
     showFullComment: {
+      type: Boolean,
+      default: false,
+    },
+    autoGrowInput: {
       type: Boolean,
       default: false,
     },
