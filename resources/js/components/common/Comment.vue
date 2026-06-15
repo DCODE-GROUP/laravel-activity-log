@@ -11,11 +11,6 @@
 
     <div class="">
       <div class="content__text">
-        <pre>
- in here 
-        {{ growWrap }}
-        </pre>
-
         <Mentionable
           v-if="canMentionInComment"
           :allowSpace="canMentionSpace"
@@ -157,7 +152,7 @@ export default {
       type: Boolean,
       default: true,
     },
-    autoExpandCommentInput: {
+    autoGrowInput: {
       type: Boolean,
       default: false,
     },
@@ -171,7 +166,7 @@ export default {
   },
   computed: {
     growWrap() {
-      return this.autoExpandCommentInput ? "grow-wrap" : "";
+      return this.autoGrowInput ? "grow-wrap" : "";
     },
   },
   methods: {
