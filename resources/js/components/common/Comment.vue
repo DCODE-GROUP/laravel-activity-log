@@ -10,7 +10,11 @@
     </div>
 
     <div class="">
-      <div :class="growWrap" class="content__text">
+      <div
+        :class="growWrap"
+        class="content__text"
+        :data-replicated-value="comment"
+      >
         <Mentionable
           v-if="canMentionInComment"
           :allowSpace="canMentionSpace"
@@ -245,7 +249,7 @@ export default {
   visibility: hidden;
 }
 
-.grow-wrap > textarea {
+.grow-wrap textarea {
   /* You could leave this, but after a user resizes, then it ruins the auto sizing */
   resize: none;
 
@@ -253,7 +257,7 @@ export default {
   overflow: hidden;
 }
 
-.grow-wrap > textarea,
+.grow-wrap textarea,
 .grow-wrap::after {
   /* Identical styling required!! */
   border: 1px solid black;
