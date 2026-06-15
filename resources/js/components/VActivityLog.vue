@@ -250,6 +250,7 @@
             <template v-else>
               <comment
                 :activity="activity"
+                :auto-grow-input="autoGrowInput"
                 :comment-url="commentUrl"
                 :load-users-url="loadUsersUrl"
                 :model-class="modelClass"
@@ -380,6 +381,10 @@ export default {
       type: String,
     },
     showFullComment: {
+      type: Boolean,
+      default: false,
+    },
+    autoGrowInput: {
       type: Boolean,
       default: false,
     },
