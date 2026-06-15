@@ -8,6 +8,7 @@
         }}</span>
       </div>
       <comment
+        :auto-grow-input="autoGrowInput"
         :can-mention-in-comment="canMentionInComment"
         :can-mention-space="canMentionSpace"
         :comment-url="commentUrl"
