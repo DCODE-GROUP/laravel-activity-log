@@ -2,6 +2,9 @@
 
 lists items that might need to run manually.
 
+* 20260615
+  Add ability to pass prop `auto-grow-input` prop to auto-grow textarea.
+
 * 20260217
   Add ability to pass a new flag through to show the full comment text and not have to expand it.
 

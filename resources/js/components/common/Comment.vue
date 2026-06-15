@@ -3,8 +3,8 @@
     <!-- Overlay shown when loading -->
     <div
       v-if="loading"
-      class="absolute inset-0 z-10 flex items-center justify-center bg-white bg-opacity-70"
       :aria-label="$t('activity-log.words.loading')"
+      class="absolute inset-0 z-10 flex items-center justify-center bg-white bg-opacity-70"
     >
       <Icon class="h-lgSpace w-lgSpace animate-spin" icon="ArrowPathIcon" />
     </div>
@@ -13,11 +13,11 @@
       <div class="content__text">
         <Mentionable
           v-if="canMentionInComment"
+          :allowSpace="canMentionSpace"
           :items="items"
           :keys="['@']"
           filtering-disabled
           insert-space
-          :allowSpace="canMentionSpace"
           offset="10"
           @open="loadUsers()"
           @search="loadUsers($event)"
@@ -148,6 +148,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    autoGrowInput: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -155,6 +159,17 @@ export default {
       comment: this.activity ? this.activity.meta : null,
       items: [],
     };
+  },
+  watch: {
+    comment() {
+      if (!this.autoGrowInput) return;
+      this.$nextTick(() => {
+        const textarea = this.$el.querySelector("textarea");
+        if (!textarea) return;
+        textarea.style.height = "auto";
+        textarea.style.height = textarea.scrollHeight + "px";
+      });
+    },
   },
   methods: {
     async loadUsers(searchText = null) {
