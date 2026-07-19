@@ -2,9 +2,9 @@
 
 namespace Dcodegroup\ActivityLog\Resources;
 
+use Dcodegroup\ActivityLog\Resources\ActivityLog as ActivityLogResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Dcodegroup\ActivityLog\Resources\ActivityLog as ActivityLogResource;
 
 class ActivityLogCollection extends ResourceCollection
 {
