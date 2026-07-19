@@ -76,11 +76,13 @@ class ActivityLog extends JsonResource
             'delete_comment_endpoint' => $this->resource->type === ActivityLogModel::TYPE_COMMENT ? route(config('activity-log.route_name').'.comment.delete', $this->resource->id) : null,
 
             // reactions (use both snake_case and camelCase to match different clients)
-            'reactions' => array_map(fn($r) => [
+            'reactions' => array_map(fn ($r) => [
                 'id' => $r['id'],
                 'emoji' => $r['emoji'] ?? null,
                 'user' => $r['user'] ?? null,
-            ], array_map(function ($item) { return is_object($item) ? (array) $item : $item; }, $reactions->map(function ($r) {
+            ], array_map(function ($item) {
+                return is_object($item) ? (array) $item : $item;
+            }, $reactions->map(function ($r) {
                 return [
                     'id' => $r->id,
                     'emoji' => $r->emoji,
