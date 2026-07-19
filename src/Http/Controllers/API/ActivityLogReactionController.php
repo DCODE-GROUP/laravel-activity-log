@@ -26,14 +26,19 @@ class ActivityLogReactionController extends Controller
             $userId = auth()->id();
         }
 
-        $existing = ActivityLogReaction::query()
-            ->where('activity_log_id', $activity_log->id)
+        $existing = ActivityLogReaction::withTrashed()->where('activity_log_id', $activity_log->id)
             ->when($userId, fn ($q) => $q->where('user_id', $userId))
             ->where('emoji', $emoji)
             ->first();
 
         if ($existing) {
-            $existing->delete();
+            if (method_exists($existing, 'trashed') && $existing->trashed()) {
+                // was soft-deleted: restore it (toggle on)
+                $existing->restore();
+            } else {
+                // active reaction exists: soft-delete (toggle off)
+                $existing->delete();
+            }
         } else {
             ActivityLogReaction::create([
                 'activity_log_id' => $activity_log->id,
