@@ -690,6 +690,10 @@ export default {
       }
     },
     reactionGroups(activity) {
+      // prefer server-provided grouped data when available
+      if (activity.reactionGroups) return activity.reactionGroups;
+      if (activity.reaction_groups) return activity.reaction_groups;
+
       const groups = {};
       (activity.reactions || []).forEach((r) => {
         if (!groups[r.emoji]) groups[r.emoji] = [];
@@ -697,6 +701,7 @@ export default {
       });
       return groups;
     },
+
 
     userReaction(activity) {
       if (!this.currentUser) return null;

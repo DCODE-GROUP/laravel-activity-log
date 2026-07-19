@@ -92,11 +92,8 @@ class ActivityLog extends JsonResource
                     ] : null,
                 ];
             })->toArray())),
-            'reaction_groups' => $groups,
             'reactionGroups' => $groups,
-            'reaction_counts' => $counts,
             'reactionCounts' => $counts,
-            'current_user_reaction' => $currentUserReaction,
             'currentUserReaction' => $currentUserReaction,
         ];
     }
