@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Dcodegroup\ActivityLog\Models\ActivityLogReaction;
 
 /**
  * @property int $id
@@ -92,7 +91,7 @@ class ActivityLog extends Model
         return $this->belongsTo(config('activity-log.communication_log_model'), 'communication_log_id');
     }
 
-    public function reactions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function reactions(): HasMany
     {
         return $this->hasMany(ActivityLogReaction::class, 'activity_log_id');
     }
