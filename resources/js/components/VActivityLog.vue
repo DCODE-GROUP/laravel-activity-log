@@ -112,7 +112,7 @@
                 <span v-html="activity.title"></span>
                 <div
                     class="relative inline-block"
-                    @mouseenter="enterPopover(activity.id)"
+                    @mouseenter="enterPopover(activity, $event)"
                     @mouseleave="leavePopover"
                 >
                   <button
@@ -121,7 +121,7 @@
                    <span
                        :class="userReaction(activity) ? '' : 'grayscale opacity-60'"
                        class="text-xl"
-                   >{{ userReaction(activity) || '👍' }}</span>
+                   >{{'👍' }}</span>
                   </button>
 
                   <Transition
@@ -136,7 +136,8 @@
                         v-if="showPopoverFor === activity.id"
                         @mouseenter="cancelHidePopover"
                         @mouseleave="leavePopover"
-                        class="absolute bottom-10 left-1/2 -translate-x-1/2 mt-2 flex flex-col gap-2 rounded bg-white px-3 py-2 shadow-xl ring-1 ring-gray-200 z-50"
+                        class="absolute top-full left-1/2 -translate-x-1/2 mt-2 flex flex-col gap-2 rounded bg-white px-3 py-2 shadow-xl ring-1 ring-gray-200"
+                        style="z-index: 99999;"
                     >
                       <!-- First row: emojis -->
                       <div class="flex items-center gap-2">
@@ -463,6 +464,7 @@ export default {
     return {
     showPopoverFor: null,
       hidePopoverTimeout: null,
+      popoverPosition: null,
       emojis: ['👍', '👎', '👀', '✅'],
       selectedReaction: null,
       username: this.currentUser
@@ -537,6 +539,19 @@ export default {
   beforeUnmount: function created() {
     this.bus.$off(this.filterEvent);
     this.bus.$off("activityLogTermChanged");
+  },
+
+  computed: {
+    popoverStyle() {
+      if (!this.popoverPosition) return {};
+      return {
+        position: 'absolute',
+        top: `${this.popoverPosition.top}px`,
+        left: `${this.popoverPosition.left}px`,
+        transform: 'translateX(-50%)',
+        zIndex: 9999,
+      };
+    },
   },
 
   methods: {
@@ -669,12 +684,15 @@ export default {
     editComment($event) {
       this.editId = $event;
     },
-    enterPopover(id) {
+    enterPopover(activity, event) {
       if (this.hidePopoverTimeout) {
         clearTimeout(this.hidePopoverTimeout);
         this.hidePopoverTimeout = null;
       }
-      this.showPopoverFor = id;
+
+      // older browsers or missing event: ignore positioning and show inline popover
+      this.popoverPosition = null;
+      this.showPopoverFor = activity.id;
     },
     leavePopover() {
       if (this.hidePopoverTimeout) clearTimeout(this.hidePopoverTimeout);
