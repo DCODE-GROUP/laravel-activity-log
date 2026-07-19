@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ActivityLogReaction extends Model
 {
-
     protected $table = 'activity_log_reactions';
 
     protected $fillable = [
