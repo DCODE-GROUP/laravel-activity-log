@@ -112,8 +112,8 @@
                 <span v-html="activity.title"></span>
                 <div
                     class="relative inline-block"
-                    @mouseenter="show = true"
-                    @mouseleave="show = false"
+                    @mouseenter="showPopoverFor = activity.id"
+                    @mouseleave="showPopoverFor = null"
                 >
                   <button
                       class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition"
@@ -133,20 +133,34 @@
                       leave-to-class="opacity-0 translate-y-2 scale-90"
                   >
                     <div
-                        v-if="show"
-                        class="absolute bottom-10 left-1/2 -translate-x-1/2
-               flex items-center gap-1
-               rounded-full bg-white px-2 py-1
-               shadow-xl ring-1 ring-gray-200 z-50"
+                        v-if="showPopoverFor === activity.id"
+                        class="mt-2 flex flex-col gap-2 rounded bg-white px-3 py-2 shadow-xl ring-1 ring-gray-200 z-50"
                     >
-                      <button
+                      <!-- First row: emojis -->
+                      <div class="flex items-center gap-2">
+                        <button
                           v-for="emoji in emojis"
                           :key="emoji"
                           @click="react(emoji, activity)"
-                          class="text-2xl transition duration-150 hover:-translate-y-2 hover:scale-125"
-                      >
-                        {{ emoji }}
-                      </button>
+                          class="text-2xl px-2 py-1 transition duration-150 hover:-translate-y-1 hover:scale-110"
+                        >
+                          {{ emoji }}
+                        </button>
+                      </div>
+
+                      <!-- Following rows: users per emoji -->
+                      <div class="flex flex-col gap-1 max-h-40 overflow-auto">
+                        <div v-for="emoji in emojis" :key="emoji + '_users'" class="flex items-start gap-2">
+                          <div class="w-6">{{ emoji }}</div>
+                          <div class="flex flex-wrap gap-2">
+                            <span v-for="r in (reactionGroups(activity)[emoji] || [])" :key="r.id" class="text-sm text-tertiary-500 px-2 py-1 rounded bg-gray-50">
+                              {{ getReactionUserName(r.user) }}
+                            </span>
+                            <span v-if="!(reactionGroups(activity)[emoji] || []).length" class="text-sm text-tertiary-400">—</span>
+                          </div>
+                        </div>
+                      </div>
+
                     </div>
                   </Transition>
 
@@ -445,7 +459,7 @@ export default {
 
   data() {
     return {
-      show: false,
+    showPopoverFor: null,
       emojis: ['👍', '👎', '👀', '✅'],
       selectedReaction: null,
       username: this.currentUser
@@ -664,9 +678,13 @@ export default {
       const found = (activity.reactions || []).find((r) => r.user && this.currentUser && r.user.id === (this.currentUser.id));
       return found ? found.emoji : null;
     },
+    getReactionUserName(user) {
+      if (!user) return this.$t('activity-log.words.unknown') || 'Someone';
+      return user.full_name || user.name || user.email || this.$t('activity-log.words.unknown') || 'Someone';
+    },
     async react(emoji, activity) {
       this.selectedReaction = emoji;
-      this.show = false;
+      this.showPopoverFor = null;
 
       if (!activity || !activity.id) return;
 
