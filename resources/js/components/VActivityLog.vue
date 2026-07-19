@@ -3,164 +3,216 @@
     <div v-if="allowComment" class="activity activity--comment">
       <div class="activity__user--avatar !w-[48px] !h-[48px]">
         <span class="font-bold !text-lg">{{
-          username.charAt(0).toUpperCase() +
-          getUserKeyName(username).toUpperCase()
-        }}</span>
+            username.charAt(0).toUpperCase() +
+            getUserKeyName(username).toUpperCase()
+          }}</span>
       </div>
       <comment
-        :auto-grow-input="autoGrowInput"
-        :can-mention-in-comment="canMentionInComment"
-        :can-mention-space="canMentionSpace"
-        :comment-url="commentUrl"
-        :enter-to-comment="enterToComment"
-        :load-users-url="loadUsersUrl"
-        :model-class="modelClass"
-        :model-id="modelId"
-        :timezone="timezone"
-        :user="username"
-        @addComment="addComment($event)"
+          :auto-grow-input="autoGrowInput"
+          :can-mention-in-comment="canMentionInComment"
+          :can-mention-space="canMentionSpace"
+          :comment-url="commentUrl"
+          :enter-to-comment="enterToComment"
+          :load-users-url="loadUsersUrl"
+          :model-class="modelClass"
+          :model-id="modelId"
+          :timezone="timezone"
+          :user="username"
+          @addComment="addComment($event)"
       ></comment>
     </div>
     <div
-      v-if="!isWidgetView"
-      class="flex items-end justify-between space-x-2 py-smSpace"
+        v-if="!isWidgetView"
+        class="flex items-end justify-between space-x-2 py-smSpace"
     >
       <div class="flex justify-start space-x-2">
         <div class="w-[48px]"></div>
         <toggle
-          :title="$t('activity-log.fields.collapsed_view')"
-          :value="isCollapsedView"
-          class="pr-smSpace"
-          @input="collapView($event)"
+            :title="$t('activity-log.fields.collapsed_view')"
+            :value="isCollapsedView"
+            class="pr-smSpace"
+            @input="collapView($event)"
         ></toggle>
         <toggle
-          :title="$t('activity-log.fields.my_activities')"
-          :value="isFilterUser"
-          @input="filterUser($event)"
+            :title="$t('activity-log.fields.my_activities')"
+            :value="isFilterUser"
+            @input="filterUser($event)"
         ></toggle>
       </div>
       <div class="flex justify-end w-[21.875rem] space-x-1">
         <label class="relative block w-9/12">
           <input
-            v-model="searchKey"
-            :placeholder="$t('activity-log.placeholders.search_description')"
-            class="pl-8"
-            name="name"
-            type="text"
-            v-on:keydown.enter.stop.prevent="searchTerm"
+              v-model="searchKey"
+              :placeholder="$t('activity-log.placeholders.search_description')"
+              class="pl-8"
+              name="name"
+              type="text"
+              v-on:keydown.enter.stop.prevent="searchTerm"
           />
           <button
-            class="absolute left-2.5 top-1/2 -translate-y-1/2"
-            type="button"
-            @click="searchTerm"
+              class="absolute left-2.5 top-1/2 -translate-y-1/2"
+              type="button"
+              @click="searchTerm"
           >
             <icon
-              classes="text-primary-400 w-4 h-4"
-              icon="MagnifyingGlassIcon"
+                classes="text-primary-400 w-4 h-4"
+                icon="MagnifyingGlassIcon"
             ></icon>
           </button>
         </label>
-        <slot class="w-3/12" />
+        <slot class="w-3/12"/>
       </div>
     </div>
     <div
-      v-if="loading"
-      :aria-label="$t('activity-log.words.loading')"
-      class="flex h-full items-center justify-center space-x-2 py-8"
-      role="status"
+        v-if="loading"
+        :aria-label="$t('activity-log.words.loading')"
+        class="flex h-full items-center justify-center space-x-2 py-8"
+        role="status"
     >
-      <icon class="h-lgSpace w-lgSpace animate-spin" icon="ArrowPathIcon" />
+      <icon class="h-lgSpace w-lgSpace animate-spin" icon="ArrowPathIcon"/>
       <span class="text-lg font-medium text-tertiary-500">{{
-        $t("activity-log.words.loading")
-      }}</span>
+          $t("activity-log.words.loading")
+        }}</span>
     </div>
     <div v-if="!loading">
       <template v-if="activities.length">
         <div
-          v-for="(activity, index) in activities"
-          :class="{ 'pt-8': !isWidgetView, 'pb-lgSpace': isWidgetView }"
-          class="activity activity--min relative !mt-0 pl-0"
+            v-for="(activity, index) in activities"
+            :class="{ 'pt-8': !isWidgetView, 'pb-lgSpace': isWidgetView }"
+            class="activity activity--min relative !mt-0 pl-0"
         >
           <div
-            v-show="index < activities.length - 1"
-            class="absolute left-[24px] h-full w-[1px] bg-slate-200"
+              v-show="index < activities.length - 1"
+              class="absolute left-[24px] h-full w-[1px] bg-slate-200"
           ></div>
           <div
-            :class="'bg-' + activity.color + '-50'"
-            class="flex justify-center items-center relative rounded-xl min-w-[48px] w-[48px] h-[48px] cursor-pointer"
+              :class="'bg-' + activity.color + '-50'"
+              class="flex justify-center items-center relative rounded-xl min-w-[48px] w-[48px] h-[48px] cursor-pointer"
           >
             <icon
-              v-if="activity.type"
-              :classes="'w-[18px] h-[18px] text-' + activity.color + '-500'"
-              :icon="activity.icon"
+                v-if="activity.type"
+                :classes="'w-[18px] h-[18px] text-' + activity.color + '-500'"
+                :icon="activity.icon"
             ></icon>
             <span
-              class="absolute -right-1 -bottom-1 justify-center text-[10px] font-bold tracking-widest w-[24px] h-[24px] flex justify-center items-center text-white rounded-full bg-gray-600 ring-0 ring-neutral-500"
-              >{{
+                class="absolute -right-1 -bottom-1 justify-center text-[10px] font-bold tracking-widest w-[24px] h-[24px] flex justify-center items-center text-white rounded-full bg-gray-600 ring-0 ring-neutral-500"
+            >{{
                 activity.user.charAt(0).toUpperCase() +
                 getUserKeyName(activity.user).toUpperCase()
               }}</span
             >
           </div>
           <div :id="'activity_' + activity.id" class="content">
-            <div v-if="activity.id !== editId" class="content__status">
+            <div v-if="activity.id !== editId" class="content__status min-h-[120px]">
               <div class="content__status--meta">
                 <a class="font-medium text-gray-900" href="#">{{
-                  activity.user
-                }}</a
+                    activity.user
+                  }}</a
                 >&nbsp
                 <span v-html="activity.title"></span>
-                <br />
+                <div
+                    class="relative inline-block"
+                    @mouseenter="show = true"
+                    @mouseleave="show = false"
+                >
+                  <button
+                      class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition"
+                  >
+                   <span
+                       :class="userReaction(activity) ? '' : 'grayscale opacity-60'"
+                       class="text-xl"
+                   >{{ userReaction(activity) || '👍' }}</span>
+                  </button>
+
+                  <Transition
+                      enter-active-class="transition duration-150 ease-out"
+                      enter-from-class="opacity-0 translate-y-2 scale-90"
+                      enter-to-class="opacity-100 translate-y-0 scale-100"
+                      leave-active-class="transition duration-100 ease-in"
+                      leave-from-class="opacity-100"
+                      leave-to-class="opacity-0 translate-y-2 scale-90"
+                  >
+                    <div
+                        v-if="show"
+                        class="absolute bottom-10 left-1/2 -translate-x-1/2
+               flex items-center gap-1
+               rounded-full bg-white px-2 py-1
+               shadow-xl ring-1 ring-gray-200 z-50"
+                    >
+                      <button
+                          v-for="emoji in emojis"
+                          :key="emoji"
+                          @click="react(emoji, activity)"
+                          class="text-2xl transition duration-150 hover:-translate-y-2 hover:scale-125"
+                      >
+                        {{ emoji }}
+                      </button>
+                    </div>
+                  </Transition>
+
+                  <div class="mt-2 flex items-center gap-2">
+                    <button
+                      v-for="(group, emoji) in reactionGroups(activity)"
+                      :key="emoji"
+                      @click.prevent="react(emoji, activity)"
+                      class="flex items-center space-x-1 text-sm px-2 py-1 rounded-full bg-gray-100"
+                    >
+                      <span :class="{'text-primary-500': group.some(r => r.user && currentUser && r.user.id === currentUser.id)}">{{ emoji }}</span>
+                      <span class="text-xs text-tertiary-500">{{ group.length }}</span>
+                    </button>
+                  </div>
+                </div>
+                <br/>
                 <div v-if="!collapseStage[index]" class="pt-smSpace">
                   <div
-                    v-if="activity.communication"
-                    class="flex items-center space-x-2 sm:flex-col sm:space-x-0 sm:space-y-smSpace sm:items-start"
+                      v-if="activity.communication"
+                      class="flex items-center space-x-2 sm:flex-col sm:space-x-0 sm:space-y-smSpace sm:items-start"
                   >
                     <div class="flex gap-2">
                       <button
-                        class="btn btn--secondary max-h-[32px] rounded-lg"
-                        type="button"
-                        @click="openModal(activity)"
+                          class="btn btn--secondary max-h-[32px] rounded-lg"
+                          type="button"
+                          @click="openModal(activity)"
                       >
                         <div
-                          v-if="activity.communication.type === 'Email'"
-                          class="flex items-center flex-row-reverse space-x-reverse"
+                            v-if="activity.communication.type === 'Email'"
+                            class="flex items-center flex-row-reverse space-x-reverse"
                         >
                           <span>{{
-                            $t("activity-log.buttons.preview_email")
-                          }}</span>
+                              $t("activity-log.buttons.preview_email")
+                            }}</span>
                           <div class="btn-icon btn__icon--left">
                             <icon icon="EnvelopeIcon"></icon>
                           </div>
                         </div>
 
                         <div
-                          v-if="activity.communication.type === 'Sms'"
-                          class="flex items-center flex-row-reverse space-x-reverse"
+                            v-if="activity.communication.type === 'Sms'"
+                            class="flex items-center flex-row-reverse space-x-reverse"
                         >
                           <span>{{
-                            $t("activity-log.buttons.preview_sms")
-                          }}</span>
+                              $t("activity-log.buttons.preview_sms")
+                            }}</span>
                           <div class="btn-icon btn__icon--left">
                             <icon icon="ChatBubbleLeftRightIcon"></icon>
                           </div>
                         </div>
                       </button>
                       <button
-                        v-if="allowResend"
-                        :disabled="resent"
-                        class="btn btn--secondary max-h-[32px] rounded-lg"
-                        type="button"
-                        @click="resentCommunication(activity.communication)"
+                          v-if="allowResend"
+                          :disabled="resent"
+                          class="btn btn--secondary max-h-[32px] rounded-lg"
+                          type="button"
+                          @click="resentCommunication(activity.communication)"
                       >
                         <div
-                          class="flex items-center flex-row-reverse space-x-reverse"
+                            class="flex items-center flex-row-reverse space-x-reverse"
                         >
                           <span>{{
-                            resent
-                              ? $t("activity-log.buttons.resent")
-                              : $t("activity-log.buttons.resend")
-                          }}</span>
+                              resent
+                                  ? $t("activity-log.buttons.resent")
+                                  : $t("activity-log.buttons.resend")
+                            }}</span>
                           <div class="btn-icon btn__icon--left">
                             <icon icon="ArrowPathIcon"></icon>
                           </div>
@@ -169,41 +221,41 @@
                     </div>
                     <div v-if="activity.communication.type === 'Email'">
                       <span v-if="activity.communication.reads_count"
-                        >{{ $t("activity-log.phases.opened_on") }}
+                      >{{ $t("activity-log.phases.opened_on") }}
                         {{ activity.communication.read_at_date }} ({{
                           activity.communication.reads_count
                         }}
                         {{ $t("activity-log.words.views") }})</span
                       >
                       <span v-else>{{
-                        $t("activity-log.phases.email_has_not_been_opened")
-                      }}</span>
+                          $t("activity-log.phases.email_has_not_been_opened")
+                        }}</span>
                     </div>
                   </div>
                   <div
-                    v-else-if="activity.description"
-                    class="content__status--description"
+                      v-else-if="activity.description"
+                      class="content__status--description"
                   >
                     <read-more-content
-                      :content="activity.description"
-                      :is-edited="activity.is_edited"
-                      :show-full-comment="showFullComment"
+                        :content="activity.description"
+                        :is-edited="activity.is_edited"
+                        :show-full-comment="showFullComment"
                     ></read-more-content>
                   </div>
                   <div
-                    v-if="activity.type === 'Phone Call'"
-                    class="flex items-center space-x-2 sm:flex-col sm:space-x-0 sm:space-y-smSpace sm:items-start py-smSpace"
+                      v-if="activity.type === 'Phone Call'"
+                      class="flex items-center space-x-2 sm:flex-col sm:space-x-0 sm:space-y-smSpace sm:items-start py-smSpace"
                   >
                     <a
-                      :href="activity.meta"
-                      class="btn btn--secondary max-h-[32px] rounded-lg"
+                        :href="activity.meta"
+                        class="btn btn--secondary max-h-[32px] rounded-lg"
                     >
                       <div
-                        class="flex items-center flex-row-reverse space-x-reverse"
+                          class="flex items-center flex-row-reverse space-x-reverse"
                       >
                         <span>{{
-                          $t("activity-log.buttons.download_phone_call")
-                        }}</span>
+                            $t("activity-log.buttons.download_phone_call")
+                          }}</span>
                         <div class="btn-icon btn__icon--left">
                           <icon icon="ArrowDownTrayIcon"></icon>
                         </div>
@@ -215,64 +267,64 @@
               <div class="content__status--time block">
                 <div class="flex">
                   <span
-                    :class="{ 'pr-7': !activity.description }"
-                    class="pr-smSpace"
+                      :class="{ 'pr-7': !activity.description }"
+                      class="pr-smSpace"
                   >
                     {{ activity.created_at_date }}
                   </span>
                   <a
-                    v-if="activity.description"
-                    class="cursor-pointer pr-3xsSpace items-center"
-                    @click.prevent="individualCollapse(index)"
+                      v-if="activity.description"
+                      class="cursor-pointer pr-3xsSpace items-center"
+                      @click.prevent="individualCollapse(index)"
                   >
                     <icon
-                      v-if="collapseStage[index]"
-                      classes="text-primary-400 w-4 h-4"
-                      icon="ChevronUpIcon"
+                        v-if="collapseStage[index]"
+                        classes="text-primary-400 w-4 h-4"
+                        icon="ChevronUpIcon"
                     ></icon>
                     <icon
-                      v-else
-                      classes="text-primary-400 w-4 h-4"
-                      icon="ChevronDownIcon"
+                        v-else
+                        classes="text-primary-400 w-4 h-4"
+                        icon="ChevronDownIcon"
                     ></icon>
                   </a>
                 </div>
                 <div v-if="activity.type === 'Comment' && !isWidgetView">
                   <action
-                    :activity="activity"
-                    :get-url="getUrl"
-                    :modal-event="modalEvent"
-                    @addComment="addComment($event)"
-                    @editComment="editComment($event)"
+                      :activity="activity"
+                      :get-url="getUrl"
+                      :modal-event="modalEvent"
+                      @addComment="addComment($event)"
+                      @editComment="editComment($event)"
                   ></action>
                 </div>
               </div>
             </div>
             <template v-else>
               <comment
-                :activity="activity"
-                :auto-grow-input="autoGrowInput"
-                :comment-url="commentUrl"
-                :load-users-url="loadUsersUrl"
-                :model-class="modelClass"
-                :model-id="modelId"
-                :timezone="timezone"
-                :user="username"
-                @addComment="addComment($event)"
-                @cancelEditComment="editId = null"
+                  :activity="activity"
+                  :auto-grow-input="autoGrowInput"
+                  :comment-url="commentUrl"
+                  :load-users-url="loadUsersUrl"
+                  :model-class="modelClass"
+                  :model-id="modelId"
+                  :timezone="timezone"
+                  :user="username"
+                  @addComment="addComment($event)"
+                  @cancelEditComment="editId = null"
               ></comment>
             </template>
           </div>
         </div>
       </template>
       <div
-        v-else
-        class="flex h-full items-center justify-center space-x-2 py-8"
-        role="status"
+          v-else
+          class="flex h-full items-center justify-center space-x-2 py-8"
+          role="status"
       >
         <span class="text-lg font-medium text-tertiary-500">{{
-          noActivityText
-        }}</span>
+            noActivityText
+          }}</span>
       </div>
     </div>
     <activity-log-modal></activity-log-modal>
@@ -288,7 +340,7 @@ import ReadMoreContent from "./common/ReadMoreContent.vue";
 
 export default {
   inject: ["bus"],
-  components: { ReadMoreContent, Icon, Toggle, Comment, Action },
+  components: {ReadMoreContent, Icon, Toggle, Comment, Action},
   props: {
     getUrl: {
       type: String,
@@ -393,9 +445,12 @@ export default {
 
   data() {
     return {
+      show: false,
+      emojis: ['👍', '👎', '👀', '✅'],
+      selectedReaction: null,
       username: this.currentUser
-        ? this.currentUser.full_name
-        : this.$t("activity-log.fields.system"),
+          ? this.currentUser.full_name
+          : this.$t("activity-log.fields.system"),
       collapseStage: {},
       isCollapsedView: this.defaultCollapView,
       isFilterUser: false,
@@ -439,14 +494,14 @@ export default {
       }
     });
 
-    this.bus.$on(this.filterEvent, ({ params }) => {
+    this.bus.$on(this.filterEvent, ({params}) => {
       this.filters = Object.assign({}, params, {
         "filter[term]": this.filters["filter[term]"],
       });
       this.$nextTick(() => this.getActivityLog());
     });
 
-    this.bus.$on("activityLogTermChanged", ({ term, name }) => {
+    this.bus.$on("activityLogTermChanged", ({term, name}) => {
       this.filters[`filter[${name}]`] = term;
       this.$nextTick(() => this.getActivityLog());
     });
@@ -470,8 +525,8 @@ export default {
     getUserKeyName(username) {
       const spaceIndex = username.indexOf(" ");
       return spaceIndex > -1
-        ? username.charAt(spaceIndex + 1)
-        : username.charAt(1);
+          ? username.charAt(spaceIndex + 1)
+          : username.charAt(1);
     },
     searchTerm() {
       this.filters[`filter[term]`] = this.searchKey;
@@ -484,20 +539,20 @@ export default {
       const params = {
         modelClass: this.modelClass,
         modelId: this.modelId,
-        ...{ timezone: this.timezone },
-        ...{ extra_models: this.extra_models },
+        ...{timezone: this.timezone},
+        ...{extra_models: this.extra_models},
         ...this.filters,
       };
       return axios
-        .get(this.getUrl, { params })
-        .then(({ data }) => {
-          this.loading = false;
-          this.activities = [];
-          if (data.data.length) {
-            this.activities = data.data;
-          }
-        })
-        .catch(console.error);
+          .get(this.getUrl, {params})
+          .then(({data}) => {
+            this.loading = false;
+            this.activities = [];
+            if (data.data.length) {
+              this.activities = data.data;
+            }
+          })
+          .catch(console.error);
     },
 
     collapView($event) {
@@ -524,7 +579,7 @@ export default {
 
       this.$nextTick(() => {
         const allIsCollapsedView = Object.values(this.collapseStage).every(
-          (isCollapsed) => isCollapsed,
+            (isCollapsed) => isCollapsed,
         );
 
         if (!allIsCollapsedView) {
@@ -561,15 +616,15 @@ export default {
     resentCommunication(communication) {
       this.loading = true;
       axios
-        .post(`${this.resendUrl}/${communication.id}`)
-        .then(() => {
-          this.loading = false;
-          this.resent = true;
-        })
-        .catch(console.error)
-        .finally(() => {
-          this.loading = false;
-        });
+          .post(`${this.resendUrl}/${communication.id}`)
+          .then(() => {
+            this.loading = false;
+            this.resent = true;
+          })
+          .catch(console.error)
+          .finally(() => {
+            this.loading = false;
+          });
     },
     addComment($event) {
       this.activities = [];
@@ -596,6 +651,41 @@ export default {
     editComment($event) {
       this.editId = $event;
     },
+    reactionGroups(activity) {
+      const groups = {};
+      (activity.reactions || []).forEach((r) => {
+        if (!groups[r.emoji]) groups[r.emoji] = [];
+        groups[r.emoji].push(r);
+      });
+      return groups;
+    },
+    userReaction(activity) {
+      if (!this.currentUser) return null;
+      const found = (activity.reactions || []).find((r) => r.user && this.currentUser && r.user.id === (this.currentUser.id));
+      return found ? found.emoji : null;
+    },
+    async react(emoji, activity) {
+      this.selectedReaction = emoji;
+      this.show = false;
+
+      if (!activity || !activity.id) return;
+
+      try {
+        this.loading = true;
+        const payload = { emoji, modelClass: this.modelClass, modelId: this.modelId };
+        if (this.currentUser) payload.currentUser = this.currentUser;
+        const { data } = await axios.post(`${this.getUrl}/${activity.id}/reactions`, payload);
+        this.loading = false;
+        this.activities = [];
+        if (data && data.data && data.data.length) {
+          this.activities = data.data;
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        this.loading = false;
+      }
+    }
   },
 };
 </script>

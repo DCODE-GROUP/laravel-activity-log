@@ -101,6 +101,8 @@ class ActivityLogController extends Controller
                 config('activity-log.user_relationship'),
                 $communication,
                 "$communication.reads",
+                'reactions',
+                'reactions.user',
             ]);
 
         return new ActivityLogCollection(

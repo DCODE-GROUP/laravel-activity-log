@@ -7,6 +7,7 @@ use Dcodegroup\ActivityLog\Http\Controllers\API\EditCommentController;
 use Dcodegroup\ActivityLog\Http\Controllers\API\FilterController;
 use Dcodegroup\ActivityLog\Http\Controllers\API\ReadEmailController;
 use Dcodegroup\ActivityLog\Http\Controllers\API\ResendCommunicationController;
+use Dcodegroup\ActivityLog\Http\Controllers\API\ActivityLogReactionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/'.config('activity-log.route_path'), ActivityLogController::class)->name(config('activity-log.route_name'));
@@ -17,3 +18,5 @@ Route::delete('/'.config('activity-log.route_path').'/comment/{comment}', Delete
 Route::get('/'.config('activity-log.route_path').'/filters', FilterController::class)->name(config('activity-log.route_name').'.filters');
 Route::get('/'.config('activity-log.route_path').'/filters/facets/{facet}', [FilterController::class, 'search'])->name(config('activity-log.route_name').'.facets.search');
 Route::get('/'.config('activity-log.route_path').'/{activity_log}/read-email', ReadEmailController::class)->withoutMiddleware('auth')->name(config('activity-log.route_name').'.read-email');
+
+Route::post('/'.config('activity-log.route_path').'/{activity_log}/reactions', ActivityLogReactionController::class)->name(config('activity-log.route_name').'.reaction');
