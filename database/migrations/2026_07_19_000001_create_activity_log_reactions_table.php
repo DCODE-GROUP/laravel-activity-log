@@ -17,7 +17,7 @@ return new class extends Migration
 
             $table->index('activity_log_id');
             $table->index('user_id');
-            $table->unique(['activity_log_id', 'user_id', 'emoji']);
+            $table->unique(['activity_log_id', 'user_id']);
         });
     }
 
