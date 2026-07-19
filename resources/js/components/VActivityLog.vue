@@ -112,8 +112,8 @@
                 <span v-html="activity.title"></span>
                 <div
                     class="relative inline-block"
-                    @mouseenter="showPopoverFor = activity.id"
-                    @mouseleave="showPopoverFor = null"
+                    @mouseenter="enterPopover(activity.id)"
+                    @mouseleave="leavePopover"
                 >
                   <button
                       class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition"
@@ -134,7 +134,9 @@
                   >
                     <div
                         v-if="showPopoverFor === activity.id"
-                        class="mt-2 flex flex-col gap-2 rounded bg-white px-3 py-2 shadow-xl ring-1 ring-gray-200 z-50"
+                        @mouseenter="cancelHidePopover"
+                        @mouseleave="leavePopover"
+                        class="absolute bottom-10 left-1/2 -translate-x-1/2 mt-2 flex flex-col gap-2 rounded bg-white px-3 py-2 shadow-xl ring-1 ring-gray-200 z-50"
                     >
                       <!-- First row: emojis -->
                       <div class="flex items-center gap-2">
@@ -164,17 +166,17 @@
                     </div>
                   </Transition>
 
-                  <div class="mt-2 flex items-center gap-2">
-                    <button
-                      v-for="(group, emoji) in reactionGroups(activity)"
-                      :key="emoji"
-                      @click.prevent="react(emoji, activity)"
-                      class="flex items-center space-x-1 text-sm px-2 py-1 rounded-full bg-gray-100"
-                    >
-                      <span :class="{'text-primary-500': group.some(r => r.user && currentUser && r.user.id === currentUser.id)}">{{ emoji }}</span>
-                      <span class="text-xs text-tertiary-500">{{ group.length }}</span>
-                    </button>
-                  </div>
+<!--                  <div class="mt-2 flex items-center gap-2">-->
+<!--                    <button-->
+<!--                      v-for="(group, emoji) in reactionGroups(activity)"-->
+<!--                      :key="emoji"-->
+<!--                      @click.prevent="react(emoji, activity)"-->
+<!--                      class="flex items-center space-x-1 text-sm px-2 py-1 rounded-full bg-gray-100"-->
+<!--                    >-->
+<!--                      <span :class="{'text-primary-500': group.some(r => r.user && currentUser && r.user.id === currentUser.id)}">{{ emoji }}</span>-->
+<!--                      <span class="text-xs text-tertiary-500">{{ group.length }}</span>-->
+<!--                    </button>-->
+<!--                  </div>-->
                 </div>
                 <br/>
                 <div v-if="!collapseStage[index]" class="pt-smSpace">
@@ -460,12 +462,14 @@ export default {
   data() {
     return {
     showPopoverFor: null,
+      hidePopoverTimeout: null,
       emojis: ['👍', '👎', '👀', '✅'],
       selectedReaction: null,
       username: this.currentUser
           ? this.currentUser.full_name
           : this.$t("activity-log.fields.system"),
       collapseStage: {},
+
       isCollapsedView: this.defaultCollapView,
       isFilterUser: false,
       loading: false,
@@ -665,6 +669,26 @@ export default {
     editComment($event) {
       this.editId = $event;
     },
+    enterPopover(id) {
+      if (this.hidePopoverTimeout) {
+        clearTimeout(this.hidePopoverTimeout);
+        this.hidePopoverTimeout = null;
+      }
+      this.showPopoverFor = id;
+    },
+    leavePopover() {
+      if (this.hidePopoverTimeout) clearTimeout(this.hidePopoverTimeout);
+      this.hidePopoverTimeout = setTimeout(() => {
+        this.showPopoverFor = null;
+        this.hidePopoverTimeout = null;
+      }, 150);
+    },
+    cancelHidePopover() {
+      if (this.hidePopoverTimeout) {
+        clearTimeout(this.hidePopoverTimeout);
+        this.hidePopoverTimeout = null;
+      }
+    },
     reactionGroups(activity) {
       const groups = {};
       (activity.reactions || []).forEach((r) => {
@@ -673,6 +697,7 @@ export default {
       });
       return groups;
     },
+
     userReaction(activity) {
       if (!this.currentUser) return null;
       const found = (activity.reactions || []).find((r) => r.user && this.currentUser && r.user.id === (this.currentUser.id));
