@@ -23,8 +23,8 @@ class ActivityLogController extends Controller
         // @phpstan-ignore-next-line
         $queryBuilder = QueryBuilder::for(config('activity-log.activity_log_model'))
             ->where(function (Builder $query) use ($request) {
-                $query->when($request->has('modelClass'), fn(Builder $q) => $q->where('activitiable_type', $request->input('modelClass')))
-                    ->when($request->has('modelId'), fn(Builder $q) => $q->where('activitiable_id', $request->input('modelId')));
+                $query->when($request->has('modelClass'), fn (Builder $q) => $q->where('activitiable_type', $request->input('modelClass')))
+                    ->when($request->has('modelId'), fn (Builder $q) => $q->where('activitiable_id', $request->input('modelId')));
 
                 if (
                     $request->filled(['modelClass', 'modelId', 'extra_models']) &&
