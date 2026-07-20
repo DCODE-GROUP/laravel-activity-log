@@ -517,7 +517,12 @@ free to contribute, report issues, or suggest improvements. Your insights make u
 
 ## Development
 
-You can use `pnpm run dev` to start the testbench development server and Vite.  The /vue endpoint allows you to interact with the components and will hotreload components during development.
+This package is a backend-only Laravel package. For local PHP development and testing, use the included testbench setup and run PHPUnit:
+
+```bash
+composer install
+vendor/bin/phpunit
+```
 
 # Security
 
