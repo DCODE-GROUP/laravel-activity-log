@@ -8,9 +8,9 @@ use Spatie\QueryBuilder\Filters\Filter;
 
 class TermFilter implements Filter
 {
-    public function __invoke(Builder $query, $value, string $property): void
+    public function __invoke(Builder $query, $value, string $property): Builder
     {
-        $query->whereHas('user', function (Builder $q) use ($value) {
+        return $query->whereHas('user', function (Builder $q) use ($value) {
             if (Schema::hasColumns('user', ['username', 'first_name', 'middle_name', 'last_name'])) {
                 return $q->where('username', 'like', "%$value%")
                     ->orWhere('first_name', 'like', "%$value%")
@@ -23,9 +23,38 @@ class TermFilter implements Filter
         })
             ->where(function (Builder $q) use ($value) {
                 $q->where('created_at', 'like', "%$value%")
-                    ->orWhere('description', 'like', "%$value%")
-                    ->orWhere('title', 'like', "%$value%");
+                    ->orWhere('title', 'like', "%$value%")
+                    ->orWhere(function (Builder $subQuery) use ($value) {
+                        $this->searchDescription($subQuery, $value);
+                    });
             });
 
+    }
+
+    protected function searchDescription(Builder $query, string $searchTerm): void
+    {
+        $cleanedDescription = 'REGEXP_REPLACE(description, "<[^>]*>", "")';
+
+        // New syntax: "fieldname:value" (e.g., "sync:false")
+        if (strpos($searchTerm, ':') !== false) {
+            [$fieldPattern, $newValue] = explode(':', $searchTerm, 2);
+            $fieldPattern = trim($fieldPattern);
+            $newValue = trim($newValue);
+
+            $query->whereRaw(
+                "$cleanedDescription REGEXP ?",
+                [preg_quote($fieldPattern, '/') . '.*->.*' . preg_quote($newValue, '/')]
+            );
+            return;
+        }
+
+        // Check if search term already contains " -> " pattern
+        if (strpos($searchTerm, '->') !== false) {
+            $query->whereRaw("$cleanedDescription LIKE ?", ["%$searchTerm%"]);
+            return;
+        }
+
+        // Fallback: standard description search
+        $query->whereRaw("$cleanedDescription LIKE ?", ["%$searchTerm%"]);
     }
 }
