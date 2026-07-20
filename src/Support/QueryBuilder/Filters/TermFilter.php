@@ -43,14 +43,16 @@ class TermFilter implements Filter
 
             $query->whereRaw(
                 "$cleanedDescription REGEXP ?",
-                [preg_quote($fieldPattern, '/') . '.*->.*' . preg_quote($newValue, '/')]
+                [preg_quote($fieldPattern, '/').'.*->.*'.preg_quote($newValue, '/')]
             );
+
             return;
         }
 
         // Check if search term already contains " -> " pattern
         if (strpos($searchTerm, '->') !== false) {
             $query->whereRaw("$cleanedDescription LIKE ?", ["%$searchTerm%"]);
+
             return;
         }
 
