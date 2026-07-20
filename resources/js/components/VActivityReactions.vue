@@ -13,10 +13,13 @@
             <span class="font-semibold">{{ (reactionGroups[emoji] || []).length }}</span>
           </button>
           <!-- Tooltip -->
-          <div v-if="hoveredReaction === emoji" class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-gray-900 text-white text-xs px-2 py-1 rounded z-50">
-            <div v-for="r in (reactionGroups[emoji] || [])" :key="r.id" class="whitespace-nowrap">
-              {{ emoji }} {{ getReactionUserName(r.user) }}
-              <span v-if="r.created_at" class="text-gray-300">at {{ formatReactionTime(r.created_at) }}</span>
+          <div v-if="hoveredReaction === emoji"
+               class="absolute top-full left-1/2 -translate-x-1/2 mt-2 flex flex-col gap-2 rounded bg-white px-3 py-2 shadow-xl ring-1 ring-gray-200 z-50 max-w-xs max-h-48 overflow-auto">
+            <div v-for="r in (reactionGroups[emoji] || [])" :key="r.id" class="text-sm text-gray-700">
+              <div class="flex items-center justify-between gap-2">
+                <div class="truncate">{{ emoji }} {{ getReactionUserName(r.user) }}</div>
+                <div v-if="r.user.created_at" class="text-xs text-gray-400">at {{ r.user.created_at  }}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -62,19 +65,19 @@
         </div>
 
         <!-- Following rows: users per emoji -->
-        <div class="flex flex-col gap-1 max-h-40 overflow-auto">
-          <div v-for="emoji in emojis" :key="emoji + '_users'" class="flex items-start gap-2">
-            <div class="w-6">{{ emoji }}</div>
-            <div class="flex flex-wrap gap-2">
-              <span v-for="r in (reactionGroups[emoji] || [])" :key="r.id"
-                    class="text-sm text-tertiary-500 px-2 py-1 rounded bg-gray-50">
-                {{ getReactionUserName(r.user) }}
-              </span>
-              <span v-if="!(reactionGroups[emoji] || []).length"
-                    class="text-sm text-tertiary-400">—</span>
-            </div>
-          </div>
-        </div>
+        <!--        <div class="flex flex-col gap-1 max-h-40 overflow-auto">-->
+        <!--          <div v-for="emoji in emojis" :key="emoji + '_users'" class="flex items-start gap-2">-->
+        <!--            <div class="w-6">{{ emoji }}</div>-->
+        <!--            <div class="flex flex-wrap gap-2">-->
+        <!--              <span v-for="r in (reactionGroups[emoji] || [])" :key="r.id"-->
+        <!--                    class="text-sm text-tertiary-500 px-2 py-1 rounded bg-gray-50">-->
+        <!--                {{ getReactionUserName(r.user) }}-->
+        <!--              </span>-->
+        <!--              <span v-if="!(reactionGroups[emoji] || []).length"-->
+        <!--                    class="text-sm text-tertiary-400">—</span>-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--        </div>-->
 
       </div>
     </Transition>
@@ -82,10 +85,11 @@
 </template>
 
 <script>
-import axios from 'axios';
+import Icon from "./common/Icon.vue";
 
 export default {
   name: 'VActivityReactions',
+  components: {Icon},
   props: {
     activity: {
       type: Object,
@@ -155,16 +159,6 @@ export default {
     getReactionUserName(user) {
       if (!user) return this.$t('activity-log.words.unknown') || 'Someone';
       return user.full_name || user.name || user.email || this.$t('activity-log.words.unknown') || 'Someone';
-    },
-    formatReactionTime(timestamp) {
-      if (!timestamp) return '';
-      const date = new Date(timestamp);
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
-      const hours = String(date.getHours()).padStart(2, '0');
-      const minutes = String(date.getMinutes()).padStart(2, '0');
-      return `${hours}:${minutes} on ${day}/${month}/${year}`;
     },
     async handleReact(emoji) {
       this.$emit('react', emoji);
