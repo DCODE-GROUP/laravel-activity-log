@@ -16,43 +16,30 @@ updating
 
 ## Installation
 
-#### Add the following to your package.json file:
+#### Installation (PHP package only)
 
-```bash
-"dependencies": {
-   ...
-    "floating-vue": "^5.2.2",
-    "vue-markdown-render": "^2.1.1",
-    "@dcodegroup/vue-mention": "^0.0.2",
-    "@heroicons/vue": "^2.2.0",
-}
-```
+This package is a PHP Laravel package and no longer includes any frontend (Vue/JS/CSS) assets or components. All previous frontend instructions have been removed.
 
-#### PHP
-
-You can install the package via composer:
+Install via Composer:
 
 ```bash
 composer require dcodegroup/activity-log
 ```
 
-Then run the install command.
+Run the installer and migrations:
 
 ```bash
 php artisan activity-log:install
-```
-
-Run the migrations
-
-```bash
 php artisan migrate
 ```
+
+If upgrading from an earlier version that used frontend assets, remove any imports, aliases, or build steps (vite/webpack/npm) that referenced `@dcodegroup/activity-log` components or styles from your application.
 
 ## User Model
 
 Add the following contract to the `User` model.
 
-```php  
+```php
 <?php
 namespace App\Models;
 
@@ -60,17 +47,16 @@ use Dcodegroup\ActivityLog\Contracts\HasActivityUser;
 
 class User extends Authenticatable implements HasActivityUser
 {
-
     public function getActivityLogUserName(): string
     {
         return $this->name;
     }
-    
+
     public function getActivityLogEmail(): string
     {
         return $this->email;
     }
-    
+
     public function getActivityLogUser(): array
     {
         return [
@@ -79,105 +65,27 @@ class User extends Authenticatable implements HasActivityUser
             'email' => $this->getActivityLogEmail(),
         ];
     }
-   
+}
 ```
-
 
 ## Service Provider
 
-Add the following contract to the `EventServiceProvider`.
+Add the following to the `EventServiceProvider` if you want to listen for mail events:
 
-```php  
+```php
 <?php
 use Dcodegroup\ActivityLog\Listeners\ActivityLogMessageSentListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Mail\Events\MessageSent;
 
-
 class EventServiceProvider extends ServiceProvider
 {
     protected $listen = [
-
         MessageSent::class => [
             ActivityLogMessageSentListener::class,
         ],
     ];
 }
-   
-```
-
-
-#### JS
-
-Add the following alias to `vite.config.js`
-
-```javascript
-resolve: {
-  alias: {
-    "@dcodegroup": path.resolve(__dirname, "./vendor/dcodegroup/"),
-```
-
-Add the following js to your `index.js` file.
-
-```javascript
-import VActivityLog from "@dcodegroup/activity-log/resources/js/components/VActivityLog.vue";
-import ActivityLogList from "@dcodegroup/activity-log/resources/js/components/ActivityLogList.vue";
-import ActivityEmail from "@dcodegroup/activity-log/resources/js/components/ActivityEmail.vue";
-
-app.component("VActivityLog", VActivityLog);
-app.component("ActivityLogList", ActivityLogList);
-app.component("ActivityEmail", ActivityEmail);
-```
-
-In your `app.scss` file add the following
-
-```scss
-@import "@dcodegroup/activity-log/resources/sass/index.scss";
-@import "floating-vue/dist/style.css";
-```
-
-Seem to need this in `tailwind.config.js` under spacing:
-
-```js
-spacing: {
-  "3xlSpace": "96px",
-  "2xlSpace": "64px",
-  xlSpace: "32px",
-  lgSpace: "24px",
-  mdSpace: "16px",
-  smSpace: "12px",
-  xsSpace: "8px",
-  "2xsSpace": "4px",
-  "3xsSpace": "2px",
-}
-```
-
-Update the module exports under content:
-
-```js
-content: [
-  ...
-    "./vendor/dcodegroup/**/*.{blade.php,vue,js,ts}",
-  ...
-],
-```
-
-Update the vue il8n package to load additional paths
-
-```javascript
-i18n({
-  // you can also change your langPath here
-  // langPath: 'locales'
-  additionalLangPaths: [
-    "vendor/dcodegroup/activity-log/lang", // Load translations from this path too!
-  ],
-}),
-```
-
-Run the npm build (dev/prod)
-
-```bash
-npm run prod:assets
 ```
 
 ## Configuration
@@ -556,15 +464,8 @@ Located in
 src\Support\Traits\ReadMailableTrait.php
 ```
 
-Using `<activity-log-list>` or `<v-activity-log>` to display activity log list. Pass filter as a slot if filter
-functionality is needed
+Frontend components have been removed from this package. To display activity logs in your application, use the package routes and controllers (see the "Usage" section and run `php artisan route:list --name=activity-log`) or implement your own Blade views or frontend components that call the provided endpoints.
 
-```html
-
-<ActivityLogList :model-id="tender.id" :model-class="tenderModel">
-    <v-filter entity="activity-logs" class="flex flex-row-reverse space-x-2 space-x-reverse"></v-filter>
-</ActivityLogList>
-```
 
 ## Events
 
@@ -616,7 +517,12 @@ free to contribute, report issues, or suggest improvements. Your insights make u
 
 ## Development
 
-You can use `pnpm run dev` to start the testbench development server and Vite.  The /vue endpoint allows you to interact with the components and will hotreload components during development.
+This package is a backend-only Laravel package. For local PHP development and testing, use the included testbench setup and run PHPUnit:
+
+```bash
+composer install
+vendor/bin/phpunit
+```
 
 # Security
 

@@ -23,9 +23,39 @@ class TermFilter implements Filter
         })
             ->where(function (Builder $q) use ($value) {
                 $q->where('created_at', 'like', "%$value%")
-                    ->orWhere('description', 'like', "%$value%")
-                    ->orWhere('title', 'like', "%$value%");
+                    ->orWhere('title', 'like', "%$value%")
+                    ->orWhere(function (Builder $subQuery) use ($value) {
+                        $this->searchDescription($subQuery, $value);
+                    });
             });
+    }
 
+    protected function searchDescription(Builder $query, string $searchTerm): void
+    {
+        $cleanedDescription = 'REGEXP_REPLACE(description, "<[^>]*>", "")';
+
+        // New syntax: "fieldname:value" (e.g., "sync:false")
+        if (str_contains($searchTerm, ':')) {
+            [$fieldPattern, $newValue] = explode(':', $searchTerm, 2);
+            $fieldPattern = trim($fieldPattern);
+            $newValue = trim($newValue);
+
+            $query->whereRaw(
+                "$cleanedDescription REGEXP ?",
+                [preg_quote($fieldPattern, '/').'.*->.*'.preg_quote($newValue, '/')]
+            );
+
+            return;
+        }
+
+        // Check if search term already contains " -> " pattern
+        if (str_contains($searchTerm, '->')) {
+            $query->whereRaw("$cleanedDescription LIKE ?", ["%$searchTerm%"]);
+
+            return;
+        }
+
+        // Fallback: standard description search
+        $query->whereRaw("$cleanedDescription LIKE ?", ["%$searchTerm%"]);
     }
 }

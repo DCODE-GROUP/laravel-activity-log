@@ -3,7 +3,6 @@
 namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
 use Dcodegroup\ActivityLog\Http\Requests\ExistingRequest;
-use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Resources\ActivityLogCollection;
 use Dcodegroup\ActivityLog\Support\QueryBuilder\Filters\DateRangeFilter;
 use Dcodegroup\ActivityLog\Support\QueryBuilder\Filters\TermFilter;
@@ -21,75 +20,59 @@ class ActivityLogController extends Controller
     {
         $communication = config('activity-log.communication_log_relationship');
 
-        /**
-         * @var QueryBuilder<ActivityLog> $queryBuilder
-         */
+        // @phpstan-ignore-next-line
         $queryBuilder = QueryBuilder::for(config('activity-log.activity_log_model'))
-            ->where(fn ($query) => $query
-                ->when($request->has('modelClass'), fn (Builder $q) => $q->where('activitiable_type', $request->input('modelClass')))
-                ->when($request->has('modelId'), fn (Builder $q) => $q->where('activitiable_id', $request->input('modelId')))
-            );
+            ->where(function (Builder $query) use ($request) {
+                $query->when($request->has('modelClass'), fn (Builder $q) => $q->where('activitiable_type', $request->input('modelClass')))
+                    ->when($request->has('modelId'), fn (Builder $q) => $q->where('activitiable_id', $request->input('modelId')));
 
-        if (
-            $request->filled(['modelClass', 'modelId', 'extra_models']) &&
-            class_exists($request->modelClass) &&
-            is_subclass_of($request->modelClass, Model::class)
-        ) {
-            $modelClass = $request->modelClass;
-            $modelId = $request->modelId;
-            $extraModels = explode(',', $request->extra_models);
+                if (
+                    $request->filled(['modelClass', 'modelId', 'extra_models']) &&
+                    class_exists($request->modelClass) &&
+                    is_subclass_of($request->modelClass, Model::class)
+                ) {
+                    $modelClass = $request->modelClass;
+                    $modelId = $request->modelId;
+                    $extraModels = explode(',', $request->extra_models);
 
-            $model = $modelClass::find($modelId);
+                    $model = $modelClass::find($modelId);
 
-            if ($model) {
-                foreach ($extraModels as $relation) {
-                    if (! method_exists($model, $relation)) {
-                        continue;
-                    }
+                    if ($model) {
+                        foreach ($extraModels as $relation) {
+                            if (! method_exists($model, $relation)) {
+                                continue;
+                            }
 
-                    $relationInstance = $model->$relation();
-                    if ($relationInstance instanceof Relation) {
-                        $relatedItems = $model->$relation;
-                        $relatedClass = get_class($relationInstance->getRelated());
-                    } elseif ($relationInstance instanceof Builder) {
-                        $relatedItems = $relationInstance->get();
-                        if ($relatedItems->isEmpty()) {
-                            continue;
+                            $relationInstance = $model->$relation();
+                            if ($relationInstance instanceof Relation) {
+                                $relatedItems = $model->$relation;
+                                $relatedClass = get_class($relationInstance->getRelated());
+                            } elseif ($relationInstance instanceof Builder) {
+                                $relatedItems = $relationInstance->get();
+                                if ($relatedItems->isEmpty()) {
+                                    continue;
+                                }
+                                $relatedClass = get_class($relatedItems->first());
+                            } else {
+                                continue;
+                            }
+
+                            $ids = $relatedItems instanceof Collection
+                                ? $relatedItems->pluck('id')->toArray()
+                                : ($relatedItems ? [$relatedItems->id] : []);
+
+                            if (! empty($ids)) {
+                                $query->orWhere(fn ($query) => $query->where('activitiable_type', $relatedClass)
+                                    ->whereIn('activitiable_id', $ids)
+                                );
+                            }
                         }
-                        $relatedClass = get_class($relatedItems->first());
-                    } else {
-                        continue;
-                    }
-
-                    $ids = $relatedItems instanceof Collection
-                        ? $relatedItems->pluck('id')->toArray()
-                        : ($relatedItems ? [$relatedItems->id] : []);
-
-                    if (! empty($ids)) {
-                        $queryBuilder->orWhere(fn ($query) => $query->where('activitiable_type', $relatedClass)
-                            ->whereIn('activitiable_id', $ids)
-                        );
                     }
                 }
-            }
-        }
+            });
 
+        // @phpstan-ignore-next-line
         $query = $queryBuilder
-            ->allowedFilters(
-                'created_by',
-                AllowedFilter::exact('id'),
-                AllowedFilter::exact('type'),
-                AllowedFilter::custom('date', new DateRangeFilter('created_at')),
-                AllowedFilter::custom('term', new TermFilter),
-            )
-            ->allowedSorts(
-                'id',
-                'created_by',
-                'activitiable_type',
-                'content',
-                'created_at',
-            )
-            ->defaultSort('-id')
             ->where(fn (Builder $builder) => $builder
                 ->whereNull('communication_log_id')
                 ->orWhere(fn (Builder $builder) => $builder
@@ -101,7 +84,23 @@ class ActivityLogController extends Controller
                 config('activity-log.user_relationship'),
                 $communication,
                 "$communication.reads",
-            ]);
+            ])
+            // @phpstan-ignore-next-line
+            ->allowedFilters([
+                'created_by',
+                AllowedFilter::exact('id'),
+                AllowedFilter::exact('type'),
+                AllowedFilter::custom('date', new DateRangeFilter('created_at')),
+                AllowedFilter::custom('term', new TermFilter),
+            ])
+            ->allowedSorts([
+                'id',
+                'created_by',
+                'activitiable_type',
+                'content',
+                'created_at',
+            ])
+            ->defaultSort('-id');
 
         return new ActivityLogCollection(
             $query->paginate($request->has('pagination') ? $request->input('pagination') : config('activity-log.default_filter_pagination'))
