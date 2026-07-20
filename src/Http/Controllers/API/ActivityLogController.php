@@ -85,6 +85,7 @@ class ActivityLogController extends Controller
                 $communication,
                 "$communication.reads",
             ])
+            // @phpstan-ignore-next-line
             ->allowedFilters([
                 'created_by',
                 AllowedFilter::exact('id'),

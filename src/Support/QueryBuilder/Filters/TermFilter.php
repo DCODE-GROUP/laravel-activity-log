@@ -8,9 +8,9 @@ use Spatie\QueryBuilder\Filters\Filter;
 
 class TermFilter implements Filter
 {
-    public function __invoke(Builder $query, $value, string $property): Builder
+    public function __invoke(Builder $query, $value, string $property): void
     {
-        return $query->whereHas('user', function (Builder $q) use ($value) {
+        $query->whereHas('user', function (Builder $q) use ($value) {
             if (Schema::hasColumns('user', ['username', 'first_name', 'middle_name', 'last_name'])) {
                 return $q->where('username', 'like', "%$value%")
                     ->orWhere('first_name', 'like', "%$value%")
@@ -28,7 +28,6 @@ class TermFilter implements Filter
                         $this->searchDescription($subQuery, $value);
                     });
             });
-
     }
 
     protected function searchDescription(Builder $query, string $searchTerm): void
@@ -36,7 +35,7 @@ class TermFilter implements Filter
         $cleanedDescription = 'REGEXP_REPLACE(description, "<[^>]*>", "")';
 
         // New syntax: "fieldname:value" (e.g., "sync:false")
-        if (strpos($searchTerm, ':') !== false) {
+        if (str_contains($searchTerm, ':')) {
             [$fieldPattern, $newValue] = explode(':', $searchTerm, 2);
             $fieldPattern = trim($fieldPattern);
             $newValue = trim($newValue);
@@ -49,7 +48,7 @@ class TermFilter implements Filter
         }
 
         // Check if search term already contains " -> " pattern
-        if (strpos($searchTerm, '->') !== false) {
+        if (str_contains($searchTerm, '->')) {
             $query->whereRaw("$cleanedDescription LIKE ?", ["%$searchTerm%"]);
             return;
         }
