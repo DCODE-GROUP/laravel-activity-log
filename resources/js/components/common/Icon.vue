@@ -19,6 +19,8 @@ import {
   PhoneIcon,
   ArrowDownTrayIcon,
   XMarkIcon,
+  PlusIcon,
+  FaceSmileIcon
 } from "@heroicons/vue/24/outline";
 
 export default {
@@ -39,6 +41,8 @@ export default {
     EllipsisHorizontalIcon,
     TrashIcon,
     XMarkIcon,
+    PlusIcon,
+    FaceSmileIcon
   },
   props: {
     icon: {

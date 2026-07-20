@@ -110,75 +110,14 @@
                   }}</a
                 >&nbsp
                 <span v-html="activity.title"></span>
-                <div
-                    class="relative inline-block"
-                    @mouseenter="enterPopover(activity, $event)"
-                    @mouseleave="leavePopover"
-                >
-                  <button
-                      class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition"
-                  >
-                   <span
-                       :class="userReaction(activity) ? '' : 'grayscale opacity-60'"
-                       class="text-xl"
-                   >{{'👍' }}</span>
-                  </button>
-
-                  <Transition
-                      enter-active-class="transition duration-150 ease-out"
-                      enter-from-class="opacity-0 translate-y-2 scale-90"
-                      enter-to-class="opacity-100 translate-y-0 scale-100"
-                      leave-active-class="transition duration-100 ease-in"
-                      leave-from-class="opacity-100"
-                      leave-to-class="opacity-0 translate-y-2 scale-90"
-                  >
-                    <div
-                        v-if="showPopoverFor === activity.id"
-                        @mouseenter="cancelHidePopover"
-                        @mouseleave="leavePopover"
-                        class="absolute top-full left-1/2 -translate-x-1/2 mt-2 flex flex-col gap-2 rounded bg-white px-3 py-2 shadow-xl ring-1 ring-gray-200"
-                        style="z-index: 99999;"
-                    >
-                      <!-- First row: emojis -->
-                      <div class="flex items-center gap-2">
-                        <button
-                          v-for="emoji in emojis"
-                          :key="emoji"
-                          @click="react(emoji, activity)"
-                          class="text-2xl px-2 py-1 transition duration-150 hover:-translate-y-1 hover:scale-110"
-                        >
-                          {{ emoji }}
-                        </button>
-                      </div>
-
-                      <!-- Following rows: users per emoji -->
-                      <div class="flex flex-col gap-1 max-h-40 overflow-auto">
-                        <div v-for="emoji in emojis" :key="emoji + '_users'" class="flex items-start gap-2">
-                          <div class="w-6">{{ emoji }}</div>
-                          <div class="flex flex-wrap gap-2">
-                            <span v-for="r in (reactionGroups(activity)[emoji] || [])" :key="r.id" class="text-sm text-tertiary-500 px-2 py-1 rounded bg-gray-50">
-                              {{ getReactionUserName(r.user) }}
-                            </span>
-                            <span v-if="!(reactionGroups(activity)[emoji] || []).length" class="text-sm text-tertiary-400">—</span>
-                          </div>
-                        </div>
-                      </div>
-
-                    </div>
-                  </Transition>
-
-<!--                  <div class="mt-2 flex items-center gap-2">-->
-<!--                    <button-->
-<!--                      v-for="(group, emoji) in reactionGroups(activity)"-->
-<!--                      :key="emoji"-->
-<!--                      @click.prevent="react(emoji, activity)"-->
-<!--                      class="flex items-center space-x-1 text-sm px-2 py-1 rounded-full bg-gray-100"-->
-<!--                    >-->
-<!--                      <span :class="{'text-primary-500': group.some(r => r.user && currentUser && r.user.id === currentUser.id)}">{{ emoji }}</span>-->
-<!--                      <span class="text-xs text-tertiary-500">{{ group.length }}</span>-->
-<!--                    </button>-->
-<!--                  </div>-->
-                </div>
+                <VActivityReactions
+                    :activity="activity"
+                    :current-user="currentUser"
+                    :get-url="getUrl"
+                    :model-class="modelClass"
+                    :model-id="modelId"
+                    @react="react($event, activity)"
+                />
                 <br/>
                 <div v-if="!collapseStage[index]" class="pt-smSpace">
                   <div
@@ -354,10 +293,11 @@ import Toggle from "./common/Toggle.vue";
 import Comment from "./common/Comment.vue";
 import Action from "./common/Action.vue";
 import ReadMoreContent from "./common/ReadMoreContent.vue";
+import VActivityReactions from "./VActivityReactions.vue";
 
 export default {
   inject: ["bus"],
-  components: {ReadMoreContent, Icon, Toggle, Comment, Action},
+  components: {ReadMoreContent, Icon, Toggle, Comment, Action, VActivityReactions},
   props: {
     getUrl: {
       type: String,
@@ -462,11 +402,6 @@ export default {
 
   data() {
     return {
-    showPopoverFor: null,
-      hidePopoverTimeout: null,
-      popoverPosition: null,
-      emojis: ['👍', '👎', '👀', '✅'],
-      selectedReaction: null,
       username: this.currentUser
           ? this.currentUser.full_name
           : this.$t("activity-log.fields.system"),
@@ -540,20 +475,6 @@ export default {
     this.bus.$off(this.filterEvent);
     this.bus.$off("activityLogTermChanged");
   },
-
-  computed: {
-    popoverStyle() {
-      if (!this.popoverPosition) return {};
-      return {
-        position: 'absolute',
-        top: `${this.popoverPosition.top}px`,
-        left: `${this.popoverPosition.left}px`,
-        transform: 'translateX(-50%)',
-        zIndex: 9999,
-      };
-    },
-  },
-
   methods: {
     getUserKeyName(username) {
       const spaceIndex = username.indexOf(" ");
@@ -684,63 +605,14 @@ export default {
     editComment($event) {
       this.editId = $event;
     },
-    enterPopover(activity, event) {
-      if (this.hidePopoverTimeout) {
-        clearTimeout(this.hidePopoverTimeout);
-        this.hidePopoverTimeout = null;
-      }
-
-      // older browsers or missing event: ignore positioning and show inline popover
-      this.popoverPosition = null;
-      this.showPopoverFor = activity.id;
-    },
-    leavePopover() {
-      if (this.hidePopoverTimeout) clearTimeout(this.hidePopoverTimeout);
-      this.hidePopoverTimeout = setTimeout(() => {
-        this.showPopoverFor = null;
-        this.hidePopoverTimeout = null;
-      }, 150);
-    },
-    cancelHidePopover() {
-      if (this.hidePopoverTimeout) {
-        clearTimeout(this.hidePopoverTimeout);
-        this.hidePopoverTimeout = null;
-      }
-    },
-    reactionGroups(activity) {
-      // prefer server-provided grouped data when available
-      if (activity.reactionGroups) return activity.reactionGroups;
-      if (activity.reaction_groups) return activity.reaction_groups;
-
-      const groups = {};
-      (activity.reactions || []).forEach((r) => {
-        if (!groups[r.emoji]) groups[r.emoji] = [];
-        groups[r.emoji].push(r);
-      });
-      return groups;
-    },
-
-
-    userReaction(activity) {
-      if (!this.currentUser) return null;
-      const found = (activity.reactions || []).find((r) => r.user && this.currentUser && r.user.id === (this.currentUser.id));
-      return found ? found.emoji : null;
-    },
-    getReactionUserName(user) {
-      if (!user) return this.$t('activity-log.words.unknown') || 'Someone';
-      return user.full_name || user.name || user.email || this.$t('activity-log.words.unknown') || 'Someone';
-    },
     async react(emoji, activity) {
-      this.selectedReaction = emoji;
-      this.showPopoverFor = null;
-
       if (!activity || !activity.id) return;
 
       try {
         this.loading = true;
-        const payload = { emoji, modelClass: this.modelClass, modelId: this.modelId };
+        const payload = {emoji, modelClass: this.modelClass, modelId: this.modelId};
         if (this.currentUser) payload.currentUser = this.currentUser;
-        const { data } = await axios.post(`${this.getUrl}/${activity.id}/reactions`, payload);
+        const {data} = await axios.post(`${this.getUrl}/${activity.id}/reactions`, payload);
         this.loading = false;
         this.activities = [];
         if (data && data.data && data.data.length) {

@@ -89,6 +89,7 @@ class ActivityLog extends JsonResource
                     'user' => $r->user ? [
                         'id' => $r->user->id ?? null,
                         'full_name' => $r->user->getActivityLogUserName() ?? ($r->user->full_name ?? $r->user->name ?? $r->user->email ?? null),
+                        'created_at' => $r->created_at->format(config('activity-log.datetime_format')),
                     ] : null,
                 ];
             })->toArray())),
