@@ -464,15 +464,8 @@ Located in
 src\Support\Traits\ReadMailableTrait.php
 ```
 
-Using `<activity-log-list>` or `<v-activity-log>` to display activity log list. Pass filter as a slot if filter
-functionality is needed
+Frontend components have been removed from this package. To display activity logs in your application, use the package routes and controllers (see the "Usage" section and run `php artisan route:list --name=activity-log`) or implement your own Blade views or frontend components that call the provided endpoints.
 
-```html
-
-<ActivityLogList :model-id="tender.id" :model-class="tenderModel">
-    <v-filter entity="activity-logs" class="flex flex-row-reverse space-x-2 space-x-reverse"></v-filter>
-</ActivityLogList>
-```
 
 ## Events
 
