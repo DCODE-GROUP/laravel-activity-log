@@ -19,5 +19,4 @@ Route::get('/'.config('activity-log.route_path').'/filters', FilterController::c
 Route::get('/'.config('activity-log.route_path').'/filters/facets/{facet}', [FilterController::class, 'search'])->name(config('activity-log.route_name').'.facets.search');
 Route::get('/'.config('activity-log.route_path').'/{activity_log}/read-email', ReadEmailController::class)->withoutMiddleware('auth')->name(config('activity-log.route_name').'.read-email');
 
-
 Route::post('/'.config('activity-log.route_path').'/{activity_log}/reactions', ActivityLogReactionController::class)->name(config('activity-log.route_name').'.reaction');
