@@ -38,11 +38,24 @@ return new class extends Migration
             $table->softDeletes();
             $table->timestamps();
         });
+
+        Schema::create('activity_log_reactions', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('activity_log_id');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('emoji', 10);
+            $table->timestamps();
+
+            $table->index('activity_log_id');
+            $table->index('user_id');
+            $table->unique(['activity_log_id', 'user_id']);
+        });
     }
 
     public function down(): void
     {
         Schema::dropIfExists('activity_logs');
         Schema::dropIfExists('communication_logs');
+        Schema::dropIfExists('activity_log_reactions');
     }
 };
