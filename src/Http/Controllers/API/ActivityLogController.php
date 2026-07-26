@@ -84,6 +84,8 @@ class ActivityLogController extends Controller
                 config('activity-log.user_relationship'),
                 $communication,
                 "$communication.reads",
+                'reactions',
+                'reactions.user',
             ])
             // @phpstan-ignore-next-line
             ->allowedFilters([

@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Dcodegroup\ActivityLog\Support\Traits\LastModifiedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -88,6 +89,11 @@ class ActivityLog extends Model
     public function communicationLog(): BelongsTo
     {
         return $this->belongsTo(config('activity-log.communication_log_model'), 'communication_log_id');
+    }
+
+    public function reactions(): HasMany
+    {
+        return $this->hasMany(ActivityLogReaction::class, 'activity_log_id');
     }
 
     public function getAvailableTypes(): array

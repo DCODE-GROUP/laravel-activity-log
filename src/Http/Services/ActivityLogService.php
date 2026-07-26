@@ -42,6 +42,8 @@ class ActivityLogService
                 $this->userRelationship,
                 $this->communicationLogRelationship,
                 $this->communicationLogRelationship.'.reads',
+                'reactions',
+                'reactions.user',
             ])->where(fn (Builder $builder) => $builder
             ->whereNull('communication_log_id')
             ->orWhere(fn (Builder $builder) => $builder
