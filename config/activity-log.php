@@ -55,6 +55,7 @@ return [
      |
     */
 
+    'timedate_format' => env('LARAVEL_ACTIVITY_LOG_TIMEDATE_FORMAT', 'H:ia j M Y '),
     'datetime_format' => env('LARAVEL_ACTIVITY_LOG_DATETIME_FORMAT', 'j M Y H:ia'),
     'date_format' => env('LARAVEL_ACTIVITY_LOG_DATE_FORMAT', 'j.m.Y'),
 
