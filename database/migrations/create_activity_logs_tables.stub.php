@@ -43,7 +43,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('activity_log_id');
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->string('emoji', 10);
+            $table->string('emoji', 10)->charset('utf8mb4')->collation('utf8mb4_unicode_ci');
             $table->timestamps();
 
             $table->index('activity_log_id');
