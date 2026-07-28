@@ -8,6 +8,19 @@ auditing in your application in a centralised and consistent approach.
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/DCODE-GROUP/laravel-activity-log/ci.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/DCODE-GROUP/laravel-activity-log/actions/worflows/ci.yml/badge.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/dcodegroup/activity-log.svg?style=flat-square)](https://packagist.org/packages/dcodegroup/activity-log)
 
+## Compatibility
+
+| Package version | PHP | Laravel |
+| --- | --- | --- |
+| 4.0.1+ / 4.x | `^8.3` | `^10.10`, `^11`, `^12`, `^13` |
+| 4.0.0 | `^8.3` | `^11`, `^12`, `^13` |
+| 3.x | `^8.3` | `^11`, `^12`, `^13` |
+| 2.x | `^8.2` | `^10.2`, `^11`, `^12` (later 2.x) |
+| 1.1.x | `^8.2` / `^8.3` | `^10`, `^11` |
+| 1.0.x | `^8.0`–`^8.2` | `^7`–`^10` |
+
+Upgrading to 4.x? See [UPGRADE.md](./UPGRADE.md) for the step-by-step file changes.
+
 ## Update note
 
 Since `version 1.1.1` we are no longer need to use observers to listen for changes from the
@@ -18,9 +31,12 @@ updating
 
 #### Installation (PHP package only)
 
-This package is a PHP Laravel package and no longer includes any frontend (Vue/JS/CSS) assets or components. All previous frontend instructions have been removed.
+This package is a **PHP Laravel package** and no longer ships Vue/JS/CSS. Frontend components live in a separate package (install with pnpm):
 
-Install via Composer:
+- Package: [`@dcodegroup-au/vue-activity-log`](https://www.npmjs.com/package/@dcodegroup-au/vue-activity-log)
+- GitHub: [DCODE-GROUP/laravel-activity-log-vue](https://github.com/DCODE-GROUP/laravel-activity-log-vue)
+
+Install the backend via Composer:
 
 ```bash
 composer require dcodegroup/activity-log
@@ -33,7 +49,7 @@ php artisan activity-log:install
 php artisan migrate
 ```
 
-If upgrading from an earlier version that used frontend assets, remove any imports, aliases, or build steps (vite/webpack/npm) that referenced `@dcodegroup/activity-log` components or styles from your application.
+If you need the UI, install the Vue package and follow its README (or the [4.x upgrade guide](./UPGRADE.md) if migrating from 3.x).
 
 ## User Model
 
@@ -464,7 +480,7 @@ Located in
 src\Support\Traits\ReadMailableTrait.php
 ```
 
-Frontend components have been removed from this package. To display activity logs in your application, use the package routes and controllers (see the "Usage" section and run `php artisan route:list --name=activity-log`) or implement your own Blade views or frontend components that call the provided endpoints.
+Frontend components have been removed from this package. Use [`@dcodegroup-au/vue-activity-log`](https://www.npmjs.com/package/@dcodegroup-au/vue-activity-log) ([repo](https://github.com/DCODE-GROUP/laravel-activity-log-vue)), call the package routes/controllers directly (`php artisan route:list --name=activity-log`), or build your own UI against those endpoints. See [UPGRADE.md](./UPGRADE.md) when moving from ≤ 3.x.
 
 
 ## Events
@@ -505,6 +521,10 @@ In addition, we can add activity log wherever we want the model
             'description' => 'left a comment',
         ]);
 ```
+
+# Upgrade
+
+Please see [UPGRADE.md](./UPGRADE.md) for upgrading to 4.x (including moving frontend assets to `@dcodegroup-au/vue-activity-log` via pnpm).
 
 # Changelog
 

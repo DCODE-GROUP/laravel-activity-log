@@ -25,6 +25,7 @@ class ActivityLogServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->offerPublishing();
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations/package');
         $this->registerRoutes();
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'activity-log-translations');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'activity-log');

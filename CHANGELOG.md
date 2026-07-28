@@ -2,6 +2,23 @@
 
 lists items that might need to run manually.
 
+For upgrading to **4.x** (PHP/Composer package split from Vue frontend), see [UPGRADE.md](./UPGRADE.md).
+
+* 20260728
+  Added `activity_log_reactions` table for emoji reactions on activity log comments.
+  After updating the package, run:
+
+```bash
+php artisan migrate
+```
+
+  The migration is auto-loaded from the package (`loadMigrationsFrom`). Fresh installs still get the table via the published create tables stub.
+
+* 20260720
+  **4.x** — frontend (Vue/JS/CSS) removed from this Composer package.
+  Use [`@dcodegroup-au/vue-activity-log`](https://www.npmjs.com/package/@dcodegroup-au/vue-activity-log) instead.
+  Full file-by-file upgrade steps: [UPGRADE.md](./UPGRADE.md).
+
 * 20260615
   Add ability to pass prop `auto-grow-input` prop to auto-grow textarea.
 
