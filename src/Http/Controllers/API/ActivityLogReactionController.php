@@ -3,15 +3,13 @@
 namespace Dcodegroup\ActivityLog\Http\Controllers\API;
 
 use Dcodegroup\ActivityLog\Http\Requests\ExistingRequest;
-use Dcodegroup\ActivityLog\Http\Services\ActivityLogService;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Models\ActivityLogReaction;
+use Dcodegroup\ActivityLog\Resources\ActivityLog as ActivityLogResource;
 use Illuminate\Routing\Controller;
 
 class ActivityLogReactionController extends Controller
 {
-    public function __construct(protected ActivityLogService $service) {}
-
     public function __invoke(ExistingRequest $request, ActivityLog $activity_log)
     {
         $emoji = $request->input('emoji');
@@ -47,11 +45,12 @@ class ActivityLogReactionController extends Controller
             ]);
         }
 
-        // return updated list for the same model that activity_log belongs to
-        $modelClass = $activity_log->activitiable_type;
-        $modelId = $activity_log->activitiable_id;
-        $model = $modelClass::find($modelId);
-
-        return $this->service->getActivityLogs($model);
+        return new ActivityLogResource(
+            $activity_log->load([
+                'user',
+                'communicationLog.reads',
+                'reactions.user',
+            ])
+        );
     }
 }
