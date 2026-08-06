@@ -4,6 +4,7 @@ namespace Dcodegroup\ActivityLog\Models;
 
 use Carbon\Carbon;
 use Dcodegroup\ActivityLog\Support\Traits\LastModifiedBy;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -22,7 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property array $meta
  * @property string $description
  * @property string $title
- * @property-read \Illuminate\Database\Eloquent\Collection<int, ActivityLogAttachment> $attachments
+ * @property-read Collection<int, ActivityLogAttachment> $attachments
  */
 class ActivityLog extends Model
 {
