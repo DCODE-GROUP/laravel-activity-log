@@ -50,12 +50,27 @@ return new class extends Migration
             $table->index('user_id');
             $table->unique(['activity_log_id', 'user_id']);
         });
+
+        Schema::create('activity_log_attachments', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedInteger('activity_log_id');
+            $table->unsignedBigInteger('attachment_id');
+            $table->timestamps();
+
+            $table->foreign('activity_log_id')
+                ->references('id')
+                ->on('activity_logs')
+                ->cascadeOnDelete();
+            $table->index('attachment_id');
+            $table->unique(['activity_log_id', 'attachment_id']);
+        });
     }
 
     public function down(): void
     {
+        Schema::dropIfExists('activity_log_attachments');
+        Schema::dropIfExists('activity_log_reactions');
         Schema::dropIfExists('activity_logs');
         Schema::dropIfExists('communication_logs');
-        Schema::dropIfExists('activity_log_reactions');
     }
 };

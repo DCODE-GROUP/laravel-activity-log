@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property array $meta
  * @property string $description
  * @property string $title
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, ActivityLogAttachment> $attachments
  */
 class ActivityLog extends Model
 {
@@ -94,6 +95,11 @@ class ActivityLog extends Model
     public function reactions(): HasMany
     {
         return $this->hasMany(ActivityLogReaction::class, 'activity_log_id');
+    }
+
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(ActivityLogAttachment::class, 'activity_log_id');
     }
 
     public function getAvailableTypes(): array

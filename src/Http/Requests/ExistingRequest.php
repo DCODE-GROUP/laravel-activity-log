@@ -20,9 +20,9 @@ class ExistingRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
-        return [
+        $rules = [
             'modelClass' => [
                 'required',
                 'string',
@@ -32,5 +32,23 @@ class ExistingRequest extends FormRequest
                 Rule::exists($this->input('modelClass'), 'id'),
             ],
         ];
+
+        $attachmentModel = config('activity-log.attachment_model');
+
+        if (! $attachmentModel) {
+            return array_merge($rules, [
+                'attachment_id' => ['prohibited'],
+                'attachment_ids' => ['prohibited'],
+                'attachments' => ['prohibited'],
+            ]);
+        }
+
+        return array_merge($rules, [
+            'attachment_id' => ['nullable', 'integer', Rule::exists($attachmentModel, 'id')],
+            'attachment_ids' => ['nullable', 'array'],
+            'attachment_ids.*' => ['integer', 'distinct', Rule::exists($attachmentModel, 'id')],
+            'attachments' => ['nullable', 'array'],
+            'attachments.*' => ['integer', 'distinct', Rule::exists($attachmentModel, 'id')],
+        ]);
     }
 }

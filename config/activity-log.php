@@ -48,6 +48,20 @@ return [
 
     /*
      |--------------------------------------------------------------------------
+     | Attachments
+     |--------------------------------------------------------------------------
+     |
+     | Configure these values when comments can contain attachments.
+     | attachment_url may contain an "{attachment}" placeholder. If it does
+     | not, the attachment id is appended to the configured URL.
+     |
+    */
+
+    'attachment_url' => env('LARAVEL_ACTIVITY_LOG_ATTACHMENT_URL'),
+    'attachment_model' => null,
+
+    /*
+     |--------------------------------------------------------------------------
      | Formatting
      |--------------------------------------------------------------------------
      |

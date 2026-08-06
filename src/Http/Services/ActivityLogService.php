@@ -36,15 +36,22 @@ class ActivityLogService
 
     public function getActivityLogs($model, $type = null): ActivityLogCollection
     {
+        $relationships = [
+            $this->userRelationship,
+            $this->communicationLogRelationship,
+            $this->communicationLogRelationship.'.reads',
+            'reactions',
+            'reactions.user',
+        ];
+
+        if (config('activity-log.attachment_model')) {
+            $relationships[] = 'attachments.attachment';
+        }
+
         return new ActivityLogCollection($model->activityLogs()
             ->when($type, fn (Builder $builder) => $builder->where('type', $type))
-            ->with([
-                $this->userRelationship,
-                $this->communicationLogRelationship,
-                $this->communicationLogRelationship.'.reads',
-                'reactions',
-                'reactions.user',
-            ])->where(fn (Builder $builder) => $builder
+            ->with($relationships)
+            ->where(fn (Builder $builder) => $builder
             ->whereNull('communication_log_id')
             ->orWhere(fn (Builder $builder) => $builder
                 ->whereNotNull('communication_log_id')
