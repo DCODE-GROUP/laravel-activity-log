@@ -13,9 +13,7 @@ use Illuminate\Support\Str;
 
 class CommentController extends Controller
 {
-    public function __construct(protected ActivityLogService $service)
-    {
-    }
+    public function __construct(protected ActivityLogService $service) {}
 
     public function __invoke(ExistingRequest $request)
     {
