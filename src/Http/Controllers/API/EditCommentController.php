@@ -17,6 +17,10 @@ class EditCommentController extends Controller
         $this->service->mentionUserInComment($request->input('comment'), $comment);
         $model = $comment->activitiable()->first();
 
+        if (config('activity-log.attachment_model') && $model) {
+            $this->service->syncAttachments($comment, $this->service->resolveAttachmentIds($request, $model));
+        }
+
         /**
          * Where does the edit occur?
          */
