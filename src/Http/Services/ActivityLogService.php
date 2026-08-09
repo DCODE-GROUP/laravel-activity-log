@@ -6,6 +6,9 @@ use Dcodegroup\ActivityLog\Jobs\SendCommentNotificationJob;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Resources\ActivityLogCollection;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -36,22 +39,81 @@ class ActivityLogService
 
     public function getActivityLogs($model, $type = null): ActivityLogCollection
     {
+        $relationships = [
+            $this->userRelationship,
+            $this->communicationLogRelationship,
+            $this->communicationLogRelationship.'.reads',
+            'reactions',
+            'reactions.user',
+        ];
+
+        if (config('activity-log.attachment_model')) {
+            $relationships[] = 'attachments.attachment';
+        }
+
         return new ActivityLogCollection($model->activityLogs()
             ->when($type, fn (Builder $builder) => $builder->where('type', $type))
-            ->with([
-                $this->userRelationship,
-                $this->communicationLogRelationship,
-                $this->communicationLogRelationship.'.reads',
-                'reactions',
-                'reactions.user',
-            ])->where(fn (Builder $builder) => $builder
-            ->whereNull('communication_log_id')
-            ->orWhere(fn (Builder $builder) => $builder
-                ->whereNotNull('communication_log_id')
-                ->whereNot('title', 'like', '% read an %')
-                ->whereNot('title', 'like', '% view a %'))
+            ->with($relationships)
+            ->where(fn (Builder $builder) => $builder
+                ->whereNull('communication_log_id')
+                ->orWhere(fn (Builder $builder) => $builder
+                    ->whereNotNull('communication_log_id')
+                    ->whereNot('title', 'like', '% read an %')
+                    ->whereNot('title', 'like', '% view a %'))
             )
             ->orderByDesc('created_at')->get());
+    }
+
+    /**
+     * Upload any new files on the request and return every attachment id the comment should end up with.
+     */
+    public function resolveAttachmentIds(Request $request, $model): Collection
+    {
+        $uploadedBy = $request->input('currentUser', 'System');
+
+        $uploadedAttachmentIds = collect($request->file('attachments', []))
+            ->map(function (UploadedFile $file) use ($model, $uploadedBy) {
+                $type = $file->getMimeType() ? Str::before($file->getMimeType(), '/') : 'default';
+
+                return $model->addMedia($file)
+                    ->usingFileName($file->hashName())
+                    ->withCustomProperties([
+                        'original_filename' => $file->getClientOriginalName(),
+                        'encoding_format' => $file->extension(),
+                        'uploaded_by' => $uploadedBy,
+                    ])
+                    ->toMediaCollection($type)
+                    ->getKey();
+            });
+
+        return collect($request->input('attachment_ids', []))
+            ->when($request->filled('attachment_id'), fn (Collection $ids) => $ids->push($request->integer('attachment_id')))
+            ->merge($uploadedAttachmentIds)
+            ->map(fn ($attachmentId) => (int) $attachmentId)
+            ->unique()
+            ->values();
+    }
+
+    /**
+     * Make the comment attachments match the given ids, detaching anything no longer present.
+     */
+    public function syncAttachments(ActivityLog $activityLog, Collection $attachmentIds): void
+    {
+        DB::transaction(function () use ($activityLog, $attachmentIds) {
+            $activityLog->attachments()->whereNotIn('attachment_id', $attachmentIds->all())->delete();
+
+            $existingAttachmentIds = $activityLog->attachments()
+                ->pluck('attachment_id')
+                ->map(fn ($attachmentId) => (int) $attachmentId);
+
+            $activityLog->attachments()->createMany(
+                $attachmentIds->diff($existingAttachmentIds)
+                    ->map(fn (int $attachmentId) => ['attachment_id' => $attachmentId])
+                    ->all()
+            );
+        });
+
+        $activityLog->load('attachments.attachment');
     }
 
     public function mentionUserInComment(string $comment, ActivityLog $activityLog, ?array $mailable = null): ActivityLog

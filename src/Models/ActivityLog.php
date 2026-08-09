@@ -4,6 +4,7 @@ namespace Dcodegroup\ActivityLog\Models;
 
 use Carbon\Carbon;
 use Dcodegroup\ActivityLog\Support\Traits\LastModifiedBy;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property array $meta
  * @property string $description
  * @property string $title
+ * @property-read Collection<int, ActivityLogAttachment> $attachments
  */
 class ActivityLog extends Model
 {
@@ -94,6 +96,11 @@ class ActivityLog extends Model
     public function reactions(): HasMany
     {
         return $this->hasMany(ActivityLogReaction::class, 'activity_log_id');
+    }
+
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(ActivityLogAttachment::class, 'activity_log_id');
     }
 
     public function getAvailableTypes(): array

@@ -160,6 +160,15 @@ return [
 
     /*
      |--------------------------------------------------------------------------
+     | Attachments
+     |--------------------------------------------------------------------------
+     */
+
+    'attachment_url' => env('LARAVEL_ACTIVITY_LOG_ATTACHMENT_URL'),
+    'attachment_model' => \Dcodegroup\LaravelAttachments\Models\Media::class,
+
+    /*
+     |--------------------------------------------------------------------------
      | Formatting
      |--------------------------------------------------------------------------
      |
@@ -247,6 +256,29 @@ return [
 | middleware      |         | Include a specification of what middleware this package should include.                     |
 | layout_path     |         | The dot notation path to the resource/view that you would like to use for the Activity Log. |
 | content_section |         | The variable in the view that will contain the output of the Activtity Log.                 |
+
+### Comment attachments
+
+Set `attachment_model` to the attachment library's Eloquent model. `attachment_url`
+accepts either a base URL or a URL containing `{attachment}` (or
+`{attachment_id}`), for example `/attachments/{attachment}`.
+
+Create comments with files by sending `multipart/form-data`. Add every file
+under the `attachments[]` field:
+
+```text
+modelClass=App\Models\Post
+modelId=123
+comment=See the attached files.
+currentUrl=https://example.test/posts/123
+attachments[]=@first-file.png
+attachments[]=@second-file.pdf
+```
+
+The target model must support the attachment package's `addMedia` method.
+Existing media can still be linked with `attachment_id` or `attachment_ids[]`.
+The activity resource returns the linked models in its `attachments` array and
+includes the resolved `url` for each attachment.
 
 ## Usage
 

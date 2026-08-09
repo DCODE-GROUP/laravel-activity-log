@@ -72,6 +72,7 @@ class ActivityLog extends JsonResource
             'created_at' => $createdAt,
             'created_at_date' => $createdDate,
             'communication' => $this->getCommunicationLog(),
+            'attachments' => $this->getAttachments(),
             'icon' => ActivityLogModel::ICON_TYPE_MAP[$this->resource->type] ?? ActivityLogModel::ICON_TYPE_MAP[ActivityLogModel::TYPE_DATA],
             'color' => ActivityLogModel::COLOR_TYPE_MAP[$this->resource->type] ?? ActivityLogModel::COLOR_TYPE_MAP[ActivityLogModel::TYPE_DATA],
             'delete_comment_endpoint' => $this->resource->type === ActivityLogModel::TYPE_COMMENT ? route(config('activity-log.route_name').'.comment.delete', $this->resource->id) : null,
@@ -98,6 +99,41 @@ class ActivityLog extends JsonResource
             'reactionCounts' => $counts,
             'currentUserReaction' => $currentUserReaction,
         ];
+    }
+
+    private function getAttachments(): array
+    {
+        if (! config('activity-log.attachment_model')) {
+            return [];
+        }
+
+        $this->resource->loadMissing('attachments.attachment');
+
+        return $this->resource->attachments
+            ->map(function ($activityLogAttachment) {
+                $attachment = $activityLogAttachment->attachment;
+                $configuredUrl = config('activity-log.attachment_url');
+                $url = data_get($attachment, 'url');
+
+                if (is_string($configuredUrl) && $configuredUrl !== '') {
+                    $url = str_replace(
+                        ['{attachment}', '{attachment_id}'],
+                        (string) $activityLogAttachment->attachment_id,
+                        $configuredUrl
+                    );
+
+                    if ($url === $configuredUrl) {
+                        $url = rtrim($configuredUrl, '/').'/'.$activityLogAttachment->attachment_id;
+                    }
+                }
+
+                return array_merge($attachment?->toArray() ?? [], [
+                    'id' => $activityLogAttachment->attachment_id,
+                    'url' => $url,
+                ]);
+            })
+            ->values()
+            ->all();
     }
 
     private function getCommunicationLog(): ?array
