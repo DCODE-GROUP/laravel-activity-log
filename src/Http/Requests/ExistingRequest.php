@@ -17,8 +17,6 @@ class ExistingRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -48,7 +46,7 @@ class ExistingRequest extends FormRequest
             'attachment_ids' => ['nullable', 'array'],
             'attachment_ids.*' => ['integer', 'distinct', Rule::exists($attachmentModel, 'id')],
             'attachments' => ['nullable', 'array'],
-            'attachments.*' => ['integer', 'distinct', Rule::exists($attachmentModel, 'id')],
+            'attachments.*' => ['file'],
         ]);
     }
 }

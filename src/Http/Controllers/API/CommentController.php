@@ -6,12 +6,16 @@ use Dcodegroup\ActivityLog\Events\ActivityLogCommentCreated;
 use Dcodegroup\ActivityLog\Http\Requests\ExistingRequest;
 use Dcodegroup\ActivityLog\Http\Services\ActivityLogService;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CommentController extends Controller
 {
-    public function __construct(protected ActivityLogService $service) {}
+    public function __construct(protected ActivityLogService $service)
+    {
+    }
 
     public function __invoke(ExistingRequest $request)
     {
@@ -20,8 +24,24 @@ class CommentController extends Controller
         $model = $modelClass::find($modelId);
         if ($request->filled('comment') && $request->filled('currentUrl')) {
             $comment = $request->input('comment');
-            $attachmentIds = collect($request->input('attachment_ids', $request->input('attachments', [])))
+            $uploadedBy = $request->input('currentUser', 'System');
+            $uploadedAttachmentIds = collect($request->file('attachments', []))
+                ->map(function (UploadedFile $file) use ($model, $uploadedBy) {
+                    $type = $file->getMimeType() ? Str::before($file->getMimeType(), '/') : 'default';
+
+                    return $model->addMedia($file)
+                        ->usingFileName($file->hashName())
+                        ->withCustomProperties([
+                            'original_filename' => $file->getClientOriginalName(),
+                            'encoding_format' => $file->extension(),
+                            'uploaded_by' => $uploadedBy,
+                        ])
+                        ->toMediaCollection($type)
+                        ->getKey();
+                });
+            $attachmentIds = collect($request->input('attachment_ids', []))
                 ->when($request->filled('attachment_id'), fn ($ids) => $ids->push($request->integer('attachment_id')))
+                ->merge($uploadedAttachmentIds)
                 ->unique()
                 ->values();
 

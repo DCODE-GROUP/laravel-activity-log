@@ -263,21 +263,22 @@ Set `attachment_model` to the attachment library's Eloquent model. `attachment_u
 accepts either a base URL or a URL containing `{attachment}` (or
 `{attachment_id}`), for example `/attachments/{attachment}`.
 
-Send one or more existing attachment IDs when creating a comment:
+Create comments with files by sending `multipart/form-data`. Add every file
+under the `attachments[]` field:
 
-```json
-{
-  "modelClass": "App\\Models\\Post",
-  "modelId": 123,
-  "comment": "See the attached files.",
-  "currentUrl": "https://example.test/posts/123",
-  "attachment_ids": [10, 11]
-}
+```text
+modelClass=App\Models\Post
+modelId=123
+comment=See the attached files.
+currentUrl=https://example.test/posts/123
+attachments[]=@first-file.png
+attachments[]=@second-file.pdf
 ```
 
-For a single file, `attachment_id` is also accepted. The activity resource
-returns the linked models in its `attachments` array and includes the resolved
-`url` for each attachment.
+The target model must support the attachment package's `addMedia` method.
+Existing media can still be linked with `attachment_id` or `attachment_ids[]`.
+The activity resource returns the linked models in its `attachments` array and
+includes the resolved `url` for each attachment.
 
 ## Usage
 
