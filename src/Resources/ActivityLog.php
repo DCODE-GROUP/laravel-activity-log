@@ -33,7 +33,7 @@ class ActivityLog extends JsonResource
                 'user' => $r->user ? [
                     'id' => $r->user->id ?? null,
                     'full_name' => $r->user->getActivityLogUserName() ?? ($r->user->full_name ?? $r->user->name ?? $r->user->email ?? null),
-                    'created_at' => $r->created_at->format(config('activity-log.datetime_format')),
+                    'created_at' => $r->created_at->setTimezone($request->input('timezone', config('app.timezone', 'UTC')))->format(config('activity-log.timedate_format', 'h:ia \o\n d/m/y')),
                 ] : null,
             ];
         }
