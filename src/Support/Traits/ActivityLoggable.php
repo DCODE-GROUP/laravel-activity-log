@@ -2,9 +2,9 @@
 
 namespace Dcodegroup\ActivityLog\Support\Traits;
 
-use Coduo\ToString\StringConverter;
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Models\CommunicationLog;
+use Dcodegroup\ActivityLog\Support\ActivityLogValueFormatterRegistry;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -132,13 +132,7 @@ trait ActivityLoggable
 
     private function formatValue($value)
     {
-        if (is_array($value)) {
-            return collect($value)
-                ->map(fn ($item) => is_string($item) ? $item : new StringConverter($item))
-                ->join('|');
-        }
-
-        return is_string($value) ? $value : new StringConverter($value);
+        return app(ActivityLogValueFormatterRegistry::class)->format($value);
     }
 
     public function prepareModelChange($attribute, $from, $to): array
