@@ -2,6 +2,11 @@
 
 use Dcodegroup\ActivityLog\Models\ActivityLog;
 use Dcodegroup\ActivityLog\Models\CommunicationLog;
+use Dcodegroup\ActivityLog\Support\ValueFormatters\ArrayValueFormatter;
+use Dcodegroup\ActivityLog\Support\ValueFormatters\BooleanValueFormatter;
+use Dcodegroup\ActivityLog\Support\ValueFormatters\DateValueFormatter;
+use Dcodegroup\ActivityLog\Support\ValueFormatters\EnumValueFormatter;
+use Dcodegroup\ActivityLog\Support\ValueFormatters\FallbackValueFormatter;
 
 return [
 
@@ -72,6 +77,39 @@ return [
     'timedate_format' => env('LARAVEL_ACTIVITY_LOG_TIMEDATE_FORMAT', 'H:ia j M Y '),
     'datetime_format' => env('LARAVEL_ACTIVITY_LOG_DATETIME_FORMAT', 'j M Y H:ia'),
     'date_format' => env('LARAVEL_ACTIVITY_LOG_DATE_FORMAT', 'j.m.Y'),
+
+    /*
+     |--------------------------------------------------------------------------
+     | Value formatters
+     |--------------------------------------------------------------------------
+     |
+     | Ordered handlers used when an attribute is written to the activity log.
+     | The first formatter whose supports() method returns true formats the value.
+     |
+     | EnumValueFormatter: label() when the enum defines it, otherwise the
+     | backed value, or the case name for a unit enum.
+     | DateValueFormatter: date_format when the time is 00:00:00, otherwise
+     | datetime_format. Applies to DateTimeInterface values (including Carbon).
+     | BooleanValueFormatter: "Yes" / "No". Only actual booleans, not 0/1.
+     | ArrayValueFormatter: each item is formatted by this same list, then
+     | joined with "|".
+     | FallbackValueFormatter: strings are unchanged. Null becomes an empty
+     | string. Every other value uses Coduo\ToString\StringConverter, which
+     | falls back to the class name when __toString is missing.
+     |
+     | Prepend or replace a class here to change formatting without forking.
+     | Keep the fallback last: its supports() method always returns true.
+     | Use activityLogFieldFormatters() for per-field domain mapping.
+     |
+     */
+
+    'value_formatters' => [
+        EnumValueFormatter::class,
+        DateValueFormatter::class,
+        BooleanValueFormatter::class,
+        ArrayValueFormatter::class,
+        FallbackValueFormatter::class,
+    ],
 
     /*
      |--------------------------------------------------------------------------
