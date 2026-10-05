@@ -457,6 +457,34 @@ public function activityLogFieldFormatters(): Collection
 `price` is the key for the field.
 Right hand side should be a closure than can then be used for format the value that will be present.
 
+Field formatters stay responsible for domain-specific mapping. Generic value types are formatted by the ordered `value_formatters` list in `config/activity-log.php`. The first handler that supports a value is used:
+
+| Handler | Formats |
+| --- | --- |
+| `EnumValueFormatter` | `label()` when present, otherwise the backed `value`, or the case `name` for a unit enum |
+| `DateValueFormatter` | `DateTimeInterface` / Carbon. Midnight (`00:00:00`) uses `date_format`; other times use `datetime_format` |
+| `BooleanValueFormatter` | `true` / `false` as `Yes` / `No` |
+| `ArrayValueFormatter` | Each item through the same list, joined with a pipe |
+| `FallbackValueFormatter` | Strings unchanged. Other values go through `Coduo\ToString\StringConverter` |
+
+Replace or prepend a class in that list to override a handler. Keep `FallbackValueFormatter` last.
+
+```php
+use App\ActivityLog\StatusLabelFormatter;
+use Dcodegroup\ActivityLog\Support\ValueFormatters\ArrayValueFormatter;
+use Dcodegroup\ActivityLog\Support\ValueFormatters\BooleanValueFormatter;
+use Dcodegroup\ActivityLog\Support\ValueFormatters\DateValueFormatter;
+use Dcodegroup\ActivityLog\Support\ValueFormatters\FallbackValueFormatter;
+
+'value_formatters' => [
+    StatusLabelFormatter::class,
+    DateValueFormatter::class,
+    BooleanValueFormatter::class,
+    ArrayValueFormatter::class,
+    FallbackValueFormatter::class,
+],
+```
+
 ### Entity name override
 
 You can override the default name / label for an entity. Simply create a method named `` that returns a string. Below is

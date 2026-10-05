@@ -4,6 +4,13 @@ lists items that might need to run manually.
 
 For upgrading to **4.x** (PHP/Composer package split from Vue frontend), see [UPGRADE.md](./UPGRADE.md).
 
+* 20261005
+  Attribute values are formatted by the ordered `value_formatters` list in `config/activity-log.php`.
+  Enums log `label()` when present, otherwise the backed value or the unit enum case name.
+  Dates, booleans, and arrays have default handlers. Prepend or replace a class in that list to override formatting.
+  `activityLogFieldFormatters()` remains the place for per-field mapping.
+  Republish `activity-log-config` if you maintain a published config and want the new key written into it. Missing keys still fall back to the package defaults.
+
 * 20260728
   Added `activity_log_reactions` table for emoji reactions on activity log comments.
   After updating the package, run:
